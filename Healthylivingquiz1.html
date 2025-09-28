@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Healthy Living Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9; /* soft neutral */
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .quiz-container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      max-width: 650px;
+      width: 100%;
+      text-align: left;
+    }
+
+    h1 {
+      color: #2a5d84; /* primary navy */
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .question {
+      margin-bottom: 25px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #f2f7fb; /* light blue card */
+    }
+
+    .question p {
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      margin: 6px 0;
+      cursor: pointer;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      background: #2a5d84; /* primary navy */
+      color: #fff;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #1f466b;
+    }
+
+    #result {
+      margin-top: 25px;
+      padding: 15px;
+      background: #e6f4ea; /* soft green */
+      border: 1px solid #4caf50; /* green accent */
+      color: #155724;
+      border-radius: 8px;
+      font-weight: bold;
+      display: none;
+      text-align: center;
+    }
+
+    /* Highlight selected answers after submission */
+    .correct {
+      background-color: #d4edda; /* green highlight */
+    }
+
+    .incorrect {
+      background-color: #f8d7da; /* red highlight */
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>Healthy Living Quiz</h1>
+
+  <form id="quizForm">
+    <div class="question">
+      <p>1. How much water should you drink daily?</p>
+      <label><input type="radio" name="q1" value="0"> 1 glass</label>
+      <label><input type="radio" name="q1" value="0"> 4–6 glasses</label>
+      <label><input type="radio" name="q1" value="1"> 6–8 glasses</label>
+    </div>
+
+    <div class="question">
+      <p>2. Which food is highest in vitamin C?</p>
+      <label><input type="radio" name="q2" value="0"> Banana</label>
+      <label><input type="radio" name="q2" value="1"> Orange</label>
+      <label><input type="radio" name="q2" value="0"> Bread</label>
+    </div>
+
+    <div class="question">
+      <p>3. How many minutes of daily activity is recommended for older adults?</p>
+      <label><input type="radio" name="q3" value="0"> 10 minutes</label>
+      <label><input type="radio" name="q3" value="1"> 30 minutes</label>
+      <label><input type="radio" name="q3" value="0"> 2 hours</label>
+    </div>
+
+    <div class="question">
+      <p>4. Which of these is considered a healthy fat?</p>
+      <label><input type="radio" name="q4" value="1"> Avocado</label>
+      <label><input type="radio" name="q4" value="0"> Doughnut</label>
+      <label><input type="radio" name="q4" value="0"> Chips</label>
+    </div>
+
+    <div class="question">
+      <p>5. How many hours of sleep should adults aim for each night?</p>
+      <label><input type="radio" name="q5" value="0"> 4 hours</label>
+      <label><input type="radio" name="q5" value="1"> 7–8 hours</label>
+      <label><input type="radio" name="q5" value="0"> 10–12 hours</label>
+    </div>
+
+    <div class="btn-container">
+      <button type="submit">Submit Quiz</button>
+      <button type="button" id="resetBtn">Reset Quiz</button>
+    </div>
+  </form>
+
+  <div id="result"></div>
+</div>
+
+<script>
+  const form = document.getElementById('quizForm');
+  const resultDiv = document.getElementById('result');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const correctAnswers = {
+    q1: '1',
+    q2: '1',
+    q3: '1',
+    q4: '1',
+    q5: '1'
+  };
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    let score = 0;
+    const totalQuestions = 5;
+
+    // Remove previous highlights
+    document.querySelectorAll('.question').forEach(q => {
+      q.classList.remove('correct', 'incorrect');
+    });
+
+    for (let i = 1; i <= totalQuestions; i++) {
+      const radios = document.getElementsByName('q' + i);
+      for (let radio of radios) {
+        if (radio.checked) {
+          if (radio.value === '1') {
+            score++;
+            radio.parentElement.parentElement.classList.add('correct');
+          } else {
+            radio.parentElement.parentElement.classList.add('incorrect');
+          }
+        }
+      }
+    }
+
+    let feedback = "";
+    if (score === totalQuestions) {
+      feedback = "🌟 Excellent! You got them all right!";
+    } else if (score >= 3) {
+      feedback = "👍 Great job! You're on the right track.";
+    } else if (score >= 1) {
+      feedback = "📘 Not bad! A little more learning and you'll improve.";
+    } else {
+      feedback = "💡 Keep trying — healthy habits take practice!";
+    }
+
+    resultDiv.style.display = 'block';
+    resultDiv.textContent = `You scored ${score} out of ${totalQuestions}. ${feedback}`;
+  });
+
+  resetBtn.addEventListener('click', function() {
+    form.reset();
+    resultDiv.style.display = 'none';
+    document.querySelectorAll('.question').forEach(q => {
+      q.classList.remove('correct', 'incorrect');
+    });
+  });
+</script>
+
+</body>
+</html>

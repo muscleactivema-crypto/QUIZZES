@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Health & Wellness Quiz</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f4f4f9; margin:20px; }
+h1 { text-align:center; color:#0b3c5d; }
+.quiz-container { max-width:700px; margin:auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+.question { margin-bottom:20px; padding:15px; border:1px solid #eee; border-radius:8px; }
+.question:hover { background:#f9fdfd; }
+label { display:block; margin-bottom:8px; cursor:pointer; }
+input[type="radio"] { margin-right:8px; accent-color:#0073e6; }
+button { background:#0073e6; color:#fff; border:none; padding:12px 18px; border-radius:8px; cursor:pointer; margin-top:15px; font-size:1rem; }
+button:hover { background:#005bb5; }
+#result { margin-top:20px; padding:15px; border-radius:8px; font-weight:bold; display:none; text-align:center; font-size:1.1rem; }
+#badge { display:none; margin-top:15px; text-align:center; font-size:1.5rem; color:#064420; animation: pop 1s ease-in-out; }
+#nextLevelBtn, #retryBtn, #email-container, #pdf-link, #discount-section { display:none; margin-top:15px; }
+input[type="email"] { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; box-sizing:border-box; }
+#pdf-link a { font-weight:bold; color:#0073e6; text-decoration:none; }
+#pdf-link a:hover { text-decoration:underline; }
+@keyframes pop { 0% { transform: scale(0); opacity:0; } 50% { transform: scale(1.2); opacity:1; } 100% { transform: scale(1); opacity:1; } }
+#discount-section { padding:15px; border-radius:8px; background:#e0f7e9; text-align:center; }
+</style>
+</head>
+<body>
+
+<h1>🌿 Health & Wellness Quiz</h1>
+<div class="quiz-container">
+
+<!-- EASY LEVEL -->
+<form id="easyQuiz" class="quizLevel">
+<h2>Easy Level (5 Questions)</h2>
+<div class="question">
+  <h3>1. How many servings of fruits and vegetables are recommended daily?</h3>
+  <label><input type="radio" name="q1" value="correct" required> 5 or more</label>
+  <label><input type="radio" name="q1" value="wrong"> 1–2</label>
+  <label><input type="radio" name="q1" value="wrong"> 10+</label>
+</div>
+<div class="question">
+  <h3>2. Drinking water is important because it:</h3>
+  <label><input type="radio" name="q2" value="correct" required> Maintains hydration and body function</label>
+  <label><input type="radio" name="q2" value="wrong"> Causes weight gain</label>
+  <label><input type="radio" name="q2" value="wrong"> Is only needed during exercise</label>
+</div>
+<div class="question">
+  <h3>3. Moderate exercise is recommended at least:</h3>
+  <label><input type="radio" name="q3" value="correct" required> 150 minutes per week</label>
+  <label><input type="radio" name="q3" value="wrong"> 30 minutes per month</label>
+  <label><input type="radio" name="q3" value="wrong"> 300 minutes per day</label>
+</div>
+<div class="question">
+  <h3>4. Sleep helps your body:</h3>
+  <label><input type="radio" name="q4" value="correct" required> Repair and restore</label>
+  <label><input type="radio" name="q4" value="wrong"> Only relax muscles</label>
+  <label><input type="radio" name="q4" value="wrong"> Gain weight</label>
+</div>
+<div class="question">
+  <h3>5. Mental wellbeing can be improved by:</h3>
+  <label><input type="radio" name="q5" value="correct" required> Mindfulness and stress management</label>
+  <label><input type="radio" name="q5" value="wrong"> Watching TV all day</label>
+  <label><input type="radio" name="q5" value="wrong"> Ignoring health advice</label>
+</div>
+<button type="button" onclick="submitLevel('easy')">Submit Easy Quiz</button>
+</form>
+
+<!-- MODERATE LEVEL -->
+<form id="moderateQuiz" class="quizLevel" style="display:none;">
+<h2>Moderate Level (5 Questions)</h2>
+<div class="question">
+  <h3>1. Whole grains are beneficial because they:</h3>
+  <label><input type="radio" name="mq1" value="correct" required> Provide fiber and nutrients</label>
+  <label><input type="radio" name="mq1" value="wrong"> Are high in sugar</label>
+  <label><input type="radio" name="mq1" value="wrong"> Are mostly protein</label>
+</div>
+<div class="question">
+  <h3>2. Regular strength training helps:</h3>
+  <label><input type="radio" name="mq2" value="correct" required> Build muscles and bone strength</label>
+  <label><input type="radio" name="mq2" value="wrong"> Only burn calories</label>
+  <label><input type="radio" name="mq2" value="wrong"> Improve sleep exclusively</label>
+</div>
+<div class="question">
+  <h3>3. Mindful eating encourages:</h3>
+  <label><input type="radio" name="mq3" value="correct" required> Awareness of hunger and fullness</label>
+  <label><input type="radio" name="mq3" value="wrong"> Eating quickly without thinking</label>
+  <label><input type="radio" name="mq3" value="wrong"> Ignoring portion sizes</label>
+</div>
+<div class="question">
+  <h3>4. Stress management techniques include:</h3>
+  <label><input type="radio" name="mq4" value="correct" required> Meditation and deep breathing</label>
+  <label><input type="radio" name="mq4" value="wrong"> Excessive caffeine</label>
+  <label><input type="radio" name="mq4" value="wrong"> Avoiding sleep</label>
+</div>
+<div class="question">
+  <h3>5. Cardiovascular health is improved by:</h3>
+  <label><input type="radio" name="mq5" value="correct" required> Regular aerobic exercise</label>
+  <label><input type="radio" name="mq5" value="wrong"> Sitting all day</label>
+  <label><input type="radio" name="mq5" value="wrong"> Only stretching</label>
+</div>
+<button type="button" onclick="submitLevel('moderate')">Submit Moderate Quiz</button>
+</form>
+
+<!-- DIFFICULT LEVEL -->
+<form id="difficultQuiz" class="quizLevel" style="display:none;">
+<h2>Difficult Level (5 Questions)</h2>
+<div class="question">
+  <h3>1. Which vitamin is essential for calcium absorption?</h3>
+  <label><input type="radio" name="dq1" value="correct" required> Vitamin D</label>
+  <label><input type="radio" name="dq1" value="wrong"> Vitamin C</label>
+  <label><input type="radio" name="dq1" value="wrong"> Vitamin B12</label>
+</div>
+<div class="question">
+  <h3>2. Omega-3 fatty acids help support:</h3>
+  <label><input type="radio" name="dq2" value="correct" required> Heart and brain health</label>
+  <label><input type="radio" name="dq2" value="wrong"> Only vision</label>
+  <label><input type="radio" name="dq2" value="wrong"> Skin tanning</label>
+</div>
+<div class="question">
+  <h3>3. High levels of added sugar can lead to:</h3>
+  <label><input type="radio" name="dq3" value="correct" required> Increased risk of chronic disease</label>
+  <label><input type="radio" name="dq3" value="wrong"> Improved energy permanently</label>
+  <label><input type="radio" name="dq3" value="wrong"> Lower blood pressure</label>
+</div>
+<div class="question">
+  <h3>4. Sleep hygiene includes:</h3>
+  <label><input type="radio" name="dq4" value="correct" required> Consistent bedtime and no screens before bed</label>
+  <label><input type="radio" name="dq4" value="wrong"> Sleeping at random times</label>
+  <label><input type="radio" name="dq4" value="wrong"> Only napping</label>
+</div>
+<div class="question">
+  <h3>5. Regular check-ups help with:</h3>
+  <label><input type="radio" name="dq5" value="correct" required> Early detection of health issues</label>
+  <label><input type="radio" name="dq5" value="wrong"> Guarantee perfect health</label>
+  <label><input type="radio" name="dq5" value="wrong"> Only mental health</label>
+</div>
+<button type="button" onclick="submitLevel('difficult')">Submit Difficult Quiz</button>
+</form>
+
+<!-- Result / Badge / Navigation -->
+<div id="result"></div>
+<div id="badge">🏅 Level Complete!</div>
+<button id="nextLevelBtn">Go to Next Level</button>
+<button id="retryBtn">Try Again</button>
+
+<!-- Email Capture + PDF link -->
+<div id="email-container">
+  <h3>🎁 Get Your Health & Wellness Toolkit!</h3>
+  <form id="emailForm" action="https://formspree.io/f/your-form-id" method="POST">
+    <label>Enter your email to receive your personalized toolkit:</label>
+    <input type="email" name="email" placeholder="you@example.com" required>
+    <button type="submit">Get Toolkit</button>
+  </form>
+  <div id="pdf-link"><a href="" target="_blank">📄 Download Your PDF Toolkit</a></div>
+</div>
+
+<!-- Discount Section -->
+<div id="discount-section">
+  <h3>🎉 Congratulations!</h3>
+  <p>Here’s your special <strong>20% discount</strong> on KeepWell services (excluding travel):</p>
+  <strong style="font-size:1.2rem; color:#0073e6;">KEEPWELL20</strong>
+  <p>Valid for 30 days. Use at checkout or when booking a session.</p>
+</div>
+
+<script>
+// JavaScript for tiered quiz with reward
+const levels = ['easy','moderate','difficult'];
+let currentLevelIndex = 0;
+
+function submitLevel(level) {
+  const form = document.getElementById(level + 'Quiz');
+  const resultDiv = document.getElementById('result');
+  const badgeDiv = document.getElementById('badge');
+  const nextBtn = document.getElementById('nextLevelBtn');
+  const retryBtn = document.getElementById('retryBtn');
+  const emailContainer = document.getElementById('email-container');
+  const pdfLink = document.getElementById('pdf-link');
+  const discountSection = document.getElementById('discount-section');
+
+  // Reset
+  resultDiv.style.display='none';
+  badgeDiv.style.display='none';
+  nextBtn.style.display='none';
+  retryBtn.style.display='none';
+  emailContainer.style.display='none';
+  pdfLink.style.display='none';
+  discountSection.style.display='none';
+
+  // Score
+  const questions = form.querySelectorAll('.question');
+  let score=0;
+  questions.forEach(q=>{
+    const sel=q.querySelector('input[type="radio"]:checked');
+    if(sel && sel.value==='correct'){ score++; }
+  });
+
+  // Message
+  let message='';
+  if(score===questions.length){ message='🌟 Excellent! All correct!'; }
+  else if(score>=Math.ceil(questions.length*0.6)){ message='🙂 Good job! Review the toolkit to improve further.'; }
+  else{ message='⚠️ Keep learning! Check the toolkit and try again.'; }
+
+  resultDiv.innerHTML=message; resultDiv.style.display='block';
+  badgeDiv.style.display='block';
+  retryBtn.style.display='inline-block';
+  emailContainer.style.display='block';
+
+  // PDF
+  let pdfURL='';
+  if(level==='easy') pdfURL='health-easy-toolkit.pdf';
+  if(level==='moderate') pdfURL='health-moderate-toolkit.pdf';
+  if(level==='difficult') pdfURL='health-difficult-toolkit.pdf';
+  pdfLink.querySelector('a').href=pdfURL; pdfLink.style.display='block';
+
+  // Discount
+  discountSection.style.display='block';
+  if(currentLevelIndex<levels.length-1){ nextBtn.style.display='inline-block'; }
+
+  window.scrollTo({top: resultDiv.offsetTop-20, behavior:'smooth'});
+}
+
+// Next / Retry
+document.getElementById('nextLevelBtn').addEventListener('click', ()=>{
+  document.getElementById(levels[currentLevelIndex]+'Quiz').style.display='none';
+  currentLevelIndex++;
+  document.getElementById(levels[currentLevelIndex]+'Quiz').style.display='block';
+  document.getElementById('result').style.display='none';
+  document.getElementById('badge').style.display='none';
+  document.getElementById('nextLevelBtn').style.display='none';
+  document.getElementById('retryBtn').style.display='none';
+  document.getElementById('email-container').style.display='none';
+  document.getElementById('discount-section').style.display='none';
+});
+document.getElementById('retryBtn').addEventListener('click', ()=>{
+  const form=document.getElementById(levels[currentLevelIndex]+'Quiz'); form.reset();
+  document.getElementById('result').style.display='none';
+  document.getElementById('badge').style.display='none';
+  document.getElementById('pdf-link').style.display='none';
+  document.getElementById('discount-section').style.display='none';
+});
+
+// Email submission
+document.getElementById('emailForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  fetch(this.action,{method:'POST', body:new FormData(this), headers:{'Accept':'application/json'}})
+  .then(r=>{ alert("✅ PDF toolkit link ready!"); this.reset(); })
+  .catch(e=>{ alert("❌ Error submitting email."); });
+});
+</script>
+</body>
+</html>

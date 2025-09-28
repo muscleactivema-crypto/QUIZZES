@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calorie Needs Quiz</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f7f6f3; margin: 0; padding: 0; }
+  header, footer { background-color: #4a7c59; color: #fff; text-align: center; padding: 15px; }
+  header h1, footer p { margin: 0; }
+  .container { max-width: 520px; margin: 20px auto 40px; background: #fff; border-radius: 14px; padding: 30px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+  .title-card { background-color: #4a7c59; color: #fff; text-align: center; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+  .title-card h1 { margin: 0; font-size: 24px; }
+  h2 { color: #2a5d34; text-align: center; margin-bottom: 10px; }
+  p { text-align: center; margin-bottom: 20px; }
+  .question { display: none; margin-top: 20px; }
+  .question.active { display: block; }
+  label { display: block; margin-bottom: 8px; font-weight: bold; color: #2a5d34; }
+  input, select { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
+  button { padding: 12px 20px; background-color: #2a5d34; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; width: 100%; margin-bottom: 10px; }
+  button:hover { background-color: #1e4124; }
+  #result { margin-top: 30px; font-weight: bold; text-align: center; font-size: 24px; color: #2a5d34; }
+  .progress { height: 10px; background: #ddd; border-radius: 5px; margin-top: 10px; }
+  .progress-bar { height: 10px; background: #4a7c59; width: 0%; border-radius: 5px; transition: width 0.3s; }
+  .bmi-info { font-size: 18px; margin-top: 15px; color: #444; text-align: center; }
+  #retake, #blog-link { display: none; background-color: #4a7c59; margin-top: 20px; }
+  #retake:hover, #blog-link:hover { background-color: #1e4124; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Keep Well Nutrition</h1>
+</header>
+
+<div class="container">
+  <div class="title-card">
+    <h1>What’s Your Daily Calorie Range?</h1>
+  </div>
+
+  <h2>Estimate Your Daily Calorie Needs</h2>
+  <p>Answer a few quick questions to see how your body size and activity affect your energy needs.</p>
+  
+  <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+
+  <div class="question active" id="q1">
+    <label for="sex">Select your sex:</label>
+    <select id="sex">
+      <option value="">--Select--</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <div class="question" id="q2">
+    <label for="weight">Your weight (kg):</label>
+    <input type="number" id="weight" min="30" max="200">
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <div class="question" id="q3">
+    <label for="height">Your height (cm):</label>
+    <input type="number" id="height" min="120" max="220">
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <div class="question" id="q4">
+    <label for="age">Your age:</label>
+    <input type="number" id="age" min="18" max="100">
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <div class="question" id="q5">
+    <label for="activity">Activity level:</label>
+    <select id="activity">
+      <option value="1.2">Sedentary (little or no exercise)</option>
+      <option value="1.375">Lightly active (1–3 days/week)</option>
+      <option value="1.55">Moderately active (3–5 days/week)</option>
+      <option value="1.725">Very active (6–7 days/week)</option>
+      <option value="1.9">Extra active (hard exercise or physical job)</option>
+    </select>
+    <button onclick="calculateCalories()">Get My Estimate</button>
+  </div>
+
+  <div id="result"></div>
+  <div class="bmi-info" id="bmi-info"></div>
+  <button id="retake" onclick="resetQuiz()">Retake Quiz</button>
+  <button id="blog-link" onclick="window.open('https://keepwellnutrition.com/blog/f/how-many-calories-do-you-really-need', '_blank')">Read Full Blog</button>
+</div>
+
+<footer>
+  <p>&copy; 2025 Keep Well Nutrition</p>
+</footer>
+
+<script>
+let current = 1;
+const total = 5;
+
+function nextQuestion() {
+  const input = document.querySelector(`#q${current} input, #q${current} select`);
+  if (!input.value) {
+    alert("Please fill in a value to continue.");
+    return;
+  }
+
+  document.getElementById(`q${current}`).classList.remove('active');
+  current++;
+  if (current <= total) {
+    document.getElementById(`q${current}`).classList.add('active');
+    updateProgress();
+  }
+}
+
+function updateProgress() {
+  const percent = ((current-1)/total) * 100;
+  document.getElementById('progress-bar').style.width = percent + "%";
+}
+
+function calculateCalories() {
+  const sex = document.getElementById('sex').value;
+  const weight = parseFloat(document.getElementById('weight').value);
+  const height = parseFloat(document.getElementById('height').value);
+  const age = parseFloat(document.getElementById('age').value);
+  const activity = parseFloat(document.getElementById('activity').value);
+
+  if (!sex || !weight || !height || !age) {
+    document.getElementById('result').innerText = "Please fill in all fields.";
+    return;
+  }
+
+  let bmr;
+  if (sex === "male") {
+    bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+  } else {
+    bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+  }
+
+  const calories = Math.round(bmr * activity);
+  const bmi = (weight / ((height/100) * (height/100))).toFixed(1);
+  let category = "";
+  if (bmi < 18.5) category = "underweight";
+  else if (bmi < 25) category = "a healthy weight";
+  else if (bmi < 30) category = "overweight";
+  else category = "obese";
+
+  document.getElementById(`q${total}`).style.display = 'none';
+  document.getElementById('progress-bar').style.width = "100%";
+
+  document.getElementById('result').innerText = `Calories needed to maintain your current weight: ${calories} kcal/day`;
+
+  let bmiText = `Your BMI is ${bmi}, which is considered ${category}.`;
+  if (bmi >= 25) {
+    bmiText += " Since your BMI indicates you are overweight, eating slightly less than this each day, combined with activity, can support gradual weight loss. Always consult a health professional for personalised guidance.";
+  }
+  document.getElementById('bmi-info').innerText = bmiText;
+
+  document.getElementById('retake').style.display = 'block';
+  document.getElementById('blog-link').style.display = 'block';
+}
+
+function resetQuiz() {
+  current = 1;
+  for (let i = 1; i <= total; i++) {
+    const q = document.getElementById(`q${i}`);
+    q.style.display = 'none';
+    q.classList.remove('active');
+  }
+  const firstQ = document.getElementById('q1');
+  firstQ.style.display = 'block';
+  firstQ.classList.add('active');
+
+  document.getElementById('progress-bar').style.width = "0%";
+  document.getElementById('result').innerText = "";
+  document.getElementById('bmi-info').innerText = "";
+  document.getElementById('retake').style.display = 'none';
+  document.getElementById('blog-link').style.display = 'none';
+
+  document.getElementById('sex').value = "";
+  document.getElementById('weight').value = "";
+  document.getElementById('height').value = "";
+  document.getElementById('age').value = "";
+  document.getElementById('activity').value = "1.2";
+}
+</script>
+
+</body>
+</html>

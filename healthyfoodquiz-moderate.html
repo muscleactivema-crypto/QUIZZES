@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Healthy Food Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f9;
+    margin: 20px;
+    line-height: 1.6;
+  }
+  h1 { text-align: center; color: #0b3c5d; }
+  .quiz-container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .question { 
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+  }
+  .question:hover { background: #f9fdfd; }
+  .question h3 { margin-bottom: 10px; color: #333; }
+  label { display: block; margin-bottom: 8px; cursor: pointer; }
+  input[type="radio"] { margin-right: 8px; accent-color: #0073e6; }
+  button {
+    background: #0073e6;
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 1rem;
+  }
+  button:hover { background: #005bb5; }
+  #progress { text-align: center; margin-bottom: 15px; font-weight: bold; color: #444; }
+  #result {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    display: none;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>🥗 Healthy Food Quiz</h1>
+<div class="quiz-container">
+  <div id="progress">Question 1 of 10</div>
+  <form id="quizForm">
+    <div class="question">
+      <h3>1. Which food is the best source of dietary fibre?</h3>
+      <label><input type="radio" name="q1" value="correct" required> Lentils</label>
+      <label><input type="radio" name="q1" value="wrong"> Chicken breast</label>
+      <label><input type="radio" name="q1" value="wrong"> Salmon</label>
+    </div>
+    <div class="question">
+      <h3>2. Which type of fat is healthiest for the heart?</h3>
+      <label><input type="radio" name="q2" value="correct" required> Unsaturated fats (olive oil, nuts)</label>
+      <label><input type="radio" name="q2" value="wrong"> Trans fats</label>
+      <label><input type="radio" name="q2" value="wrong"> Saturated fats</label>
+    </div>
+    <div class="question">
+      <h3>3. Which vitamin is found in carrots and helps with vision?</h3>
+      <label><input type="radio" name="q3" value="correct" required> Vitamin A</label>
+      <label><input type="radio" name="q3" value="wrong"> Vitamin D</label>
+      <label><input type="radio" name="q3" value="wrong"> Vitamin K</label>
+    </div>
+    <div class="question">
+      <h3>4. Whole grains are healthier than refined grains because they:</h3>
+      <label><input type="radio" name="q4" value="correct" required> Contain fibre, vitamins and minerals</label>
+      <label><input type="radio" name="q4" value="wrong"> Have fewer calories</label>
+      <label><input type="radio" name="q4" value="wrong"> Contain more sugar</label>
+    </div>
+    <div class="question">
+      <h3>5. Which food is richest in omega-3 fatty acids?</h3>
+      <label><input type="radio" name="q5" value="correct" required> Salmon</label>
+      <label><input type="radio" name="q5" value="wrong"> Chicken</label>
+      <label><input type="radio" name="q5" value="wrong"> Beef</label>
+    </div>
+    <div class="question">
+      <h3>6. Which of these is considered a probiotic food?</h3>
+      <label><input type="radio" name="q6" value="correct" required> Yogurt with live cultures</label>
+      <label><input type="radio" name="q6" value="wrong"> White rice</label>
+      <label><input type="radio" name="q6" value="wrong"> Crackers</label>
+    </div>
+    <div class="question">
+      <h3>7. Which mineral is most important for healthy blood pressure?</h3>
+      <label><input type="radio" name="q7" value="correct" required> Potassium</label>
+      <label><input type="radio" name="q7" value="wrong"> Sodium</label>
+      <label><input type="radio" name="q7" value="wrong"> Chloride</label>
+    </div>
+    <div class="question">
+      <h3>8. Which food is highest in antioxidants?</h3>
+      <label><input type="radio" name="q8" value="correct" required> Blueberries</label>
+      <label><input type="radio" name="q8" value="wrong"> White bread</label>
+      <label><input type="radio" name="q8" value="wrong"> Butter</label>
+    </div>
+    <div class="question">
+      <h3>9. Why is drinking enough water important?</h3>
+      <label><input type="radio" name="q9" value="correct" required> It regulates temperature, digestion and energy</label>
+      <label><input type="radio" name="q9" value="wrong"> It adds vitamins to your body</label>
+      <label><input type="radio" name="q9" value="wrong"> It replaces the need for food</label>
+    </div>
+    <div class="question">
+      <h3>10. Which plate shows the healthiest balance?</h3>
+      <label><input type="radio" name="q10" value="correct" required> ½ vegetables, ¼ protein, ¼ whole grains</label>
+      <label><input type="radio" name="q10" value="wrong"> Mostly protein with little veg</label>
+      <label><input type="radio" name="q10" value="wrong"> Mostly carbs with some meat</label>
+    </div>
+    <button type="button" id="submitBtn">Submit Quiz</button>
+    <button type="reset" id="resetBtn" style="display:none; background:#666; color:#fff;">Try Again</button>
+  </form>
+  <div id="result"></div>
+</div>
+
+<script>
+  const quizForm = document.getElementById("quizForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const resultDiv = document.getElementById("result");
+  const progress = document.getElementById("progress");
+
+  // progress tracker
+  quizForm.addEventListener("change", () => {
+    const answered = [...quizForm.querySelectorAll("input[type=radio]:checked")].length;
+    progress.textContent = "Question " + (answered+1) + " of 10";
+  });
+
+  submitBtn.addEventListener("click", () => {
+    let correct = 0;
+    const total = 10;
+    const formData = new FormData(quizForm);
+    for (let value of formData.values()) {
+      if (value === "correct") correct++;
+    }
+    const percent = Math.round((correct / total) * 100);
+
+    let message = "";
+    if (percent >= 80) {
+      message = "🥳 Excellent! You scored " + correct + "/" + total + " ("+percent+"%). Healthy food champ!";
+      resultDiv.style.background = "#e0f7e9";
+      resultDiv.style.color = "#064420";
+    } else if (percent >= 50) {
+      message = "🙂 Not bad! You scored " + correct + "/" + total + " ("+percent+"%). A little more nutrition knowledge and you’ll be there.";
+      resultDiv.style.background = "#fff4e5";
+      resultDiv.style.color = "#7a4b00";
+    } else {
+      message = "⚠️ Time for a refresh! You scored " + correct + "/" + total + " ("+percent+"%). Check out some healthy eating guides.";
+      resultDiv.style.background = "#ffe5e5";
+      resultDiv.style.color = "#7a0000";
+    }
+
+    resultDiv.innerHTML = message;
+    resultDiv.style.display = "block";
+    resetBtn.style.display = "inline-block";
+    resultDiv.scrollIntoView({behavior:"smooth"});
+  });
+
+  resetBtn.addEventListener("click", () => {
+    resultDiv.style.display = "none";
+    resetBtn.style.display = "none";
+    progress.textContent = "Question 1 of 10";
+  });
+</script>
+
+</body>
+</html>

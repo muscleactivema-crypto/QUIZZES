@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bungalow Legs Quiz</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f4f4f9; margin:20px; }
+h1 { text-align:center; color:#0b3c5d; }
+.quiz-container { max-width:700px; margin:auto; background:#fff; padding:25px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.15); }
+.question { margin-bottom:20px; padding:18px; border-left:5px solid #0073e6; border-radius:8px; transition: background 0.3s; }
+.question:hover { background:#f0f8ff; }
+label { display:block; margin-bottom:10px; padding:6px 10px; border-radius:6px; transition: background 0.3s, transform 0.2s; cursor:pointer; }
+label:hover { background:#e0f7ff; transform:scale(1.02); }
+input[type="radio"] { margin-right:8px; accent-color:#0073e6; }
+input:checked + span { background:#c8f0d6; font-weight:bold; }
+#result { margin-top:20px; padding:18px; border-radius:8px; font-weight:bold; font-size:1.1rem; text-align:center; display:none; background:#f0fdf4; border:1px solid #a8e6a3; }
+#badge { display:none; margin-top:15px; text-align:center; font-size:1.5rem; color:#064420; animation: pop 1s ease-in-out; }
+@keyframes pop { 0% { transform: scale(0); opacity:0; } 50% { transform: scale(1.2); opacity:1; } 100% { transform: scale(1); opacity:1; } }
+#email-container, #pdf-link, #discount-section, #retryBtn { display:none; margin-top:15px; }
+input[type="email"] { width:100%; padding:8px; margin-top:5px; border-radius:4px; border:1px solid #ccc; box-sizing:border-box; }
+#pdf-link a { font-weight:bold; color:#0073e6; text-decoration:none; }
+#pdf-link a:hover { text-decoration:underline; }
+button { background:#0073e6; color:#fff; border:none; padding:12px 18px; border-radius:8px; cursor:pointer; margin-top:15px; font-size:1rem; }
+button:hover { background:#005bb5; }
+</style>
+</head>
+<body>
+
+<h1>🏠 Bungalow Legs Quiz</h1>
+<div class="quiz-container">
+  <form id="quizForm">
+    <div class="question">
+      <h3>1. How easily can you climb a flight of stairs?</h3>
+      <label><input type="radio" name="q1" value="3" required><span> No problem at all </span></label>
+      <label><input type="radio" name="q1" value="2"><span> Slowly, with a little effort </span></label>
+      <label><input type="radio" name="q1" value="1"><span> I avoid stairs if I can </span></label>
+    </div>
+    <div class="question">
+      <h3>2. How often do you do leg-strengthening exercises?</h3>
+      <label><input type="radio" name="q2" value="3" required><span> 3+ times per week </span></label>
+      <label><input type="radio" name="q2" value="2"><span> 1–2 times per week </span></label>
+      <label><input type="radio" name="q2" value="1"><span> Rarely or never </span></label>
+    </div>
+    <div class="question">
+      <h3>3. Can you stand up from a chair without using your hands?</h3>
+      <label><input type="radio" name="q3" value="3" required><span> Easily </span></label>
+      <label><input type="radio" name="q3" value="2"><span> With some effort </span></label>
+      <label><input type="radio" name="q3" value="1"><span> Not without support </span></label>
+    </div>
+    <div class="question">
+      <h3>4. How steady do you feel on your feet?</h3>
+      <label><input type="radio" name="q4" value="3" required><span> Very steady </span></label>
+      <label><input type="radio" name="q4" value="2"><span> Sometimes wobbly </span></label>
+      <label><input type="radio" name="q4" value="1"><span> Often unsteady </span></label>
+    </div>
+    <div class="question">
+      <h3>5. Do you include walking or step-based activity in your week?</h3>
+      <label><input type="radio" name="q5" value="3" required><span> Yes, most days </span></label>
+      <label><input type="radio" name="q5" value="2"><span> Occasionally </span></label>
+      <label><input type="radio" name="q5" value="1"><span> Rarely </span></label>
+    </div>
+    <button type="button" id="seeResultsBtn">See My Results</button>
+  </form>
+
+  <div id="result"></div>
+  <div id="badge">🏅 Quiz Complete!</div>
+  <button id="retryBtn">Try Again</button>
+
+  <!-- Email / PDF -->
+  <div id="email-container">
+    <form id="emailForm" action="https://formspree.io/f/your-form-id" method="POST">
+      <label>Enter your email to get your Bungalow Legs Toolkit:</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+      <button type="submit">Get Toolkit</button>
+    </form>
+    <div id="pdf-link"><a href="bungalow-legs-toolkit.pdf" target="_blank">📄 Download Your PDF Toolkit</a></div>
+  </div>
+
+  <!-- Discount -->
+  <div id="discount-section">
+    <h3>🎉 Congratulations!</h3>
+    <p>Here’s a special <strong>20% discount</strong> on KeepWell services (excluding travel):</p>
+    <strong style="font-size:1.2rem; color:#0073e6;">KEEPWELL20</strong>
+    <p>Valid for 30 days.</p>
+  </div>
+</div>
+
+<script>
+const quizForm = document.getElementById("quizForm");
+const seeResultsBtn = document.getElementById("seeResultsBtn");
+const resultDiv = document.getElementById("result");
+const badgeDiv = document.getElementById("badge");
+const retryBtn = document.getElementById("retryBtn");
+const emailContainer = document.getElementById("email-container");
+const discountSection = document.getElementById("discount-section");
+
+seeResultsBtn.addEventListener("click", ()=>{
+  let score = 0;
+  const formData = new FormData(quizForm);
+  for(let value of formData.values()){ score += parseInt(value); }
+
+  let message = "";
+  if(score >= 13){ message = "💪 Strong legs! Keep climbing – your lower body strength is in great shape."; }
+  else if(score >= 9){ message = "🙂 Fair legs. A little more step work, squats, or heel raises will boost your strength."; }
+  else{ message = "⚠️ Bungalow legs alert! Time to rebuild with sit-to-stand, step-ups, and toe taps."; }
+
+  resultDiv.innerHTML = message; resultDiv.style.display="block";
+  badgeDiv.style.display="block";
+  retryBtn.style.display="inline-block";
+  emailContainer.style.display="block";
+  discountSection.style.display="block";
+  resultDiv.scrollIntoView({behavior:"smooth"});
+});
+
+retryBtn.addEventListener("click", ()=>{
+  quizForm.reset();
+  resultDiv.style.display="none";
+  badgeDiv.style.display="none";
+  retryBtn.style.display="none";
+  emailContainer.style.display="none";
+  discountSection.style.display="none";
+});
+
+// Email submission
+document.getElementById('emailForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  fetch(this.action,{method:'POST',body:new FormData(this),headers:{'Accept':'application/json'}})
+  .then(r=>{ alert("✅ Your Bungalow Legs Toolkit will be sent to your email!"); this.reset(); })
+  .catch(e=>{ alert("❌ Error submitting email. Try again."); });
+});
+</script>
+
+</body>
+</html>
