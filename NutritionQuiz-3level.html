@@ -1,224 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🥗 Nutrition Quiz</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #e6f2e6;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  margin: 0;
-  padding: 20px;
-}
-
-.quiz-container {
-  background: #ffffff;
-  max-width: 750px;
-  width: 100%;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  padding: 30px;
-  text-align: center;
-  animation: fadeIn 0.5s ease-in;
-}
-
-h1 { color: #2E7D32; margin-bottom: 15px; }
-.difficulty-title { font-weight: bold; margin-bottom: 20px; font-size: 18px; color: #1B5E20; }
-
-#difficulty-selection button {
-  padding: 12px 20px; margin: 8px; border: none; border-radius: 10px;
-  font-size: 1rem; cursor: pointer; color: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: transform 0.2s, box-shadow 0.3s;
-}
-#difficulty-selection button:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 18px rgba(0,0,0,0.2); }
-.easy { background: #A5D6A7; }
-.medium { background: #66BB6A; }
-.difficult { background: #2E7D32; }
-
-.progress-bar { height: 10px; background: #d3d3d3; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
-.progress-bar-fill { height: 100%; width: 0%; background: #2E7D32; transition: width 0.3s ease; }
-
-.question-card { border-radius: 12px; padding: 20px; margin-bottom: 20px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
-.question-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
-.question-card.easy { background: #DFF5E1; }
-.question-card.medium { background: #B2E6B0; }
-.question-card.difficult { background: #66BB6A; color:#fff; }
-
-.question-card h3 { margin-bottom: 15px; font-size: 18px; }
-
-.answers button { display: block; width: 70%; max-width: 280px; margin: 10px auto; padding: 10px; font-size: 16px; border-radius: 10px; border: none; cursor: pointer; transition: transform 0.2s, background 0.3s; }
-.answers button:hover { transform: scale(1.05); }
-.answers button.easy { background: #A8E6A3; }
-.answers button.medium { background: #81C784; }
-.answers button.difficult { background: #388E3C; color:#fff; }
-
-.result { display: none; margin-top: 20px; padding: 20px; border-radius: 12px; font-weight: bold; font-size: 18px; text-align: center; }
-.result.easy { background: #C8F2C2; color:#155724; }
-.result.medium { background: #AED581; color:#33691E; }
-.result.difficult { background: #4CAF50; color:#fff; }
-
-.answers-list { text-align: left; margin-top: 20px; background: #fdfdfd; padding: 15px; border-radius: 10px; box-shadow: inset 0 0 6px rgba(0,0,0,0.05); }
-.answers-list p { margin: 8px 0; display:flex; justify-content:space-between; padding:5px 10px; border-radius:6px; }
-.correct { color: green; font-weight: bold; }
-.wrong { color: red; font-weight: bold; }
-
-.result-buttons { display: inline-block; padding: 12px 20px; margin: 10px 5px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
-.result-buttons:hover { transform: translateY(-2px) scale(1.05); }
-.result-buttons.easy { background: #A5D6A7; color:#fff; }
-.result-buttons.medium { background: #66BB6A; color:#fff; }
-.result-buttons.difficult { background: #2E7D32; color:#fff; }
-
-.badge { font-size: 50px; margin: 15px 0; display:block; }
-
-.hidden { display: none; }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nutrition Quiz – 3 Levels</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f9f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .quiz-card {
+      background: #fff;
+      max-width: 600px;
+      width: 100%;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #2f4f2f;
+      margin-bottom: 15px;
+    }
+    .level-buttons button {
+      padding: 12px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      color: white;
+    }
+    .easy { background: #4CAF50; }
+    .medium { background: #FF9800; }
+    .difficult { background: #F44336; }
+    .question {
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .answers button {
+      display: block;
+      margin: 8px auto;
+      padding: 10px 15px;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f1f8f1;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .answers button:hover {
+      background: #dcefdc;
+    }
+    .results {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9fff9;
+      text-align: left;
+    }
+    .action-buttons button {
+      padding: 10px 16px;
+      margin: 8px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .retry { background: #2196F3; color: white; }
+    .toolkit { background: #9C27B0; color: white; }
+    .next-level { background: #009688; color: white; }
+  </style>
 </head>
 <body>
-<div class="quiz-container">
-<h1>🥗 Nutrition Quiz</h1>
+  <div class="quiz-card">
+    <h1>Nutrition Quiz</h1>
+    <div id="quiz-intro">
+      <h3>Select Difficulty Level</h3>
+      <div class="level-buttons">
+        <button class="easy" onclick="startQuiz('easy')">Easy</button>
+        <button class="medium" onclick="startQuiz('medium')">Medium</button>
+        <button class="difficult" onclick="startQuiz('difficult')">Difficult</button>
+      </div>
+    </div>
 
-<div id="start-screen">
-  <div class="difficulty-title">Select Difficulty Level</div>
-  <div id="difficulty-selection">
-    <button class="easy" onclick="startQuiz('easy')">Easy</button>
-    <button class="medium" onclick="startQuiz('medium')">Medium</button>
-    <button class="difficult" onclick="startQuiz('difficult')">Difficult</button>
+    <div id="quiz-container" style="display:none;">
+      <div id="question" class="question"></div>
+      <div id="answers" class="answers"></div>
+    </div>
+
+    <div id="results" class="results" style="display:none;"></div>
+    <div id="action-buttons" class="action-buttons"></div>
   </div>
-</div>
 
-<div class="progress-bar hidden"><div class="progress-bar-fill" id="progressFill"></div></div>
+  <script>
+    const quizData = {
+      easy: [
+        {q:"Which vitamin do we mainly get from the sun?", a:["Vitamin D","Vitamin C","Vitamin A","Vitamin B12"], correct:"Vitamin D"},
+        {q:"Which food group provides energy?", a:["Carbohydrates","Proteins","Fats","Vitamins"], correct:"Carbohydrates"},
+        {q:"Apples are a good source of which nutrient?", a:["Fibre","Iron","Protein","Vitamin B12"], correct:"Fibre"},
+        {q:"Calcium is important for…", a:["Strong bones","Eyesight","Skin health","Digestion"], correct:"Strong bones"},
+        {q:"Which of these is a healthy fat?", a:["Olive oil","Butter","Lard","Margarine"], correct:"Olive oil"}
+      ],
+      medium: [
+        {q:"How many calories are roughly in 1 gram of protein?", a:["4","9","7","2"], correct:"4"},
+        {q:"Which nutrient helps repair muscles?", a:["Protein","Carbs","Vitamin C","Fats"], correct:"Protein"},
+        {q:"Whole grains are healthier than refined grains because they contain more…", a:["Fibre","Sugar","Salt","Fat"], correct:"Fibre"},
+        {q:"Which mineral helps carry oxygen in blood?", a:["Iron","Zinc","Calcium","Magnesium"], correct:"Iron"},
+        {q:"On nutrition labels, %RI usually stands for…", a:["Reference Intake","Recommended Ingredient","Required Intake","Random Info"], correct:"Reference Intake"},
+        {q:"What type of fat is healthiest?", a:["Unsaturated","Saturated","Trans fat","None"], correct:"Unsaturated"},
+        {q:"Bananas are rich in…", a:["Potassium","Calcium","Magnesium","Iron"], correct:"Potassium"},
+        {q:"Omega-3 fats are mainly found in…", a:["Oily fish","Bread","Cheese","Apples"], correct:"Oily fish"}
+      ],
+      difficult: [
+        {q:"Which vitamin is fat-soluble?", a:["Vitamin A","Vitamin C","Vitamin B6","Vitamin B12"], correct:"Vitamin A"},
+        {q:"What is the glycaemic index (GI) a measure of?", a:["How carbs affect blood sugar","How sweet a food tastes","How much protein food has","Salt levels"], correct:"How carbs affect blood sugar"},
+        {q:"Which amino acid is essential (cannot be made by the body)?", a:["Lysine","Glycine","Alanine","Glutamine"], correct:"Lysine"},
+        {q:"What’s the main storage form of carbohydrate in the body?", a:["Glycogen","Starch","Glucose","Fibre"], correct:"Glycogen"},
+        {q:"Which vitamin deficiency causes scurvy?", a:["Vitamin C","Vitamin D","Vitamin B12","Vitamin A"], correct:"Vitamin C"},
+        {q:"What does BMI stand for?", a:["Body Mass Index","Basic Metabolism Indicator","Balanced Meal Intake","Bone Mass Indicator"], correct:"Body Mass Index"},
+        {q:"Which nutrient has the highest calories per gram?", a:["Fat","Carbohydrate","Protein","Fibre"], correct:"Fat"},
+        {q:"Which mineral helps regulate blood pressure?", a:["Potassium","Iron","Calcium","Zinc"], correct:"Potassium"},
+        {q:"Trans fats are mainly found in…", a:["Processed foods","Fresh fruit","Oily fish","Vegetables"], correct:"Processed foods"},
+        {q:"What is the role of antioxidants?", a:["Protect cells from damage","Build muscle","Increase blood sugar","Provide calories"], correct:"Protect cells from damage"}
+      ]
+    };
 
-<div id="quiz-screen" class="hidden"></div>
+    let currentLevel, currentQuestions, currentIndex, score;
 
-<div id="result-screen" class="hidden">
-  <div class="badge" id="badge"></div>
-  <div class="result" id="result"></div>
-  <div class="answers-list" id="answers-list"></div>
-  <button class="result-buttons" onclick="restartQuiz()">🔄 Retry Quiz</button>
-  <button class="result-buttons" id="next-level-btn" style="display:none;" onclick="nextLevel()">➡️ Next Level</button>
-  <button class="result-buttons" onclick="getToolkit()">📘 Get Toolkit</button>
-</div>
-</div>
+    function startQuiz(level) {
+      currentLevel = level;
+      currentQuestions = [...quizData[level]].sort(() => 0.5 - Math.random());
+      currentIndex = 0;
+      score = 0;
+      document.getElementById("quiz-intro").style.display = "none";
+      document.getElementById("results").style.display = "none";
+      document.getElementById("action-buttons").innerHTML = "";
+      document.getElementById("quiz-container").style.display = "block";
+      showQuestion();
+    }
 
-<script>
-let currentQuestions=[], currentIndex=0, score=0, userAnswers=[], currentLevel="";
-const levels=["easy","medium","difficult"];
-const toolkitLinks={
-  easy:"https://example.com/toolkit-easy.pdf",
-  medium:"https://example.com/toolkit-medium.pdf",
-  difficult:"https://example.com/toolkit-difficult.pdf"
-};
+    function showQuestion() {
+      const qData = currentQuestions[currentIndex];
+      document.getElementById("question").textContent = qData.q;
+      const answersDiv = document.getElementById("answers");
+      answersDiv.innerHTML = "";
+      qData.a.sort(() => 0.5 - Math.random()).forEach(ans => {
+        const btn = document.createElement("button");
+        btn.textContent = ans;
+        btn.onclick = () => checkAnswer(ans, qData.correct);
+        answersDiv.appendChild(btn);
+      });
+    }
 
-const questions={
-  easy:[
-    {q:"Which fruit is high in vitamin C?",a:["Orange","Apple","Banana","Grapes"],correct:"Orange"},
-    {q:"Best drink for hydration?",a:["Water","Soda","Coffee","Juice"],correct:"Water"},
-    {q:"Which is a whole grain?",a:["Brown rice","White bread","Cake","Biscuits"],correct:"Brown rice"},
-    {q:"Healthy snack?",a:["Nuts","Chips","Candy","Pastry"],correct:"Nuts"},
-    {q:"Recommended daily fruit portions?",a:["5","1","10","3"],correct:"5"}
-  ],
-  medium:[
-    {q:"Best source of plant protein?",a:["Lentils","Cheese","Bread","Eggs"],correct:"Lentils"},
-    {q:"Which fat is healthiest?",a:["Unsaturated","Saturated","Trans","Hydrogenated"],correct:"Unsaturated"},
-    {q:"Nutrient for strong bones?",a:["Calcium","Iron","Vitamin C","Magnesium"],correct:"Calcium"},
-    {q:"Veg with most fiber?",a:["Broccoli","Potato","Tomato","Lettuce"],correct:"Broccoli"},
-    {q:"Food rich in antioxidants?",a:["Blueberries","White rice","Bread","Butter"],correct:"Blueberries"},
-    {q:"Exercise boosting metabolism?",a:["Cardio","Stretching","None","Weights only"],correct:"Cardio"},
-    {q:"Good source of Omega-3?",a:["Flaxseed","Butter","Sugar","Olive oil"],correct:"Flaxseed"},
-    {q:"Healthy breakfast choice?",a:["Oatmeal","Pastry","Sugary cereal","Toast"],correct:"Oatmeal"}
-  ],
-  difficult:[
-    {q:"Glycemic index measures?",a:["Blood sugar spikes","Calories","Protein","Fat"],correct:"Blood sugar spikes"},
-    {q:"Vitamin deficiency causing scurvy?",a:["Vitamin C","Vitamin D","Vitamin A","Iron"],correct:"Vitamin C"},
-    {q:"Mineral for oxygen transport?",a:["Iron","Calcium","Potassium","Magnesium"],correct:"Iron"},
-    {q:"Food richest in soluble fiber?",a:["Oats","White bread","Apple pie","Rice"],correct:"Oats"},
-    {q:"Antioxidant in tomatoes?",a:["Lycopene","Vitamin E","Vitamin K","Beta carotene"],correct:"Lycopene"},
-    {q:"Best for probiotic intake?",a:["Yogurt","Cheese","Bread","Juice"],correct:"Yogurt"},
-    {q:"Vitamin promoting calcium absorption?",a:["Vitamin D","Vitamin C","Vitamin K","Vitamin B12"],correct:"Vitamin D"},
-    {q:"Macro important for muscle repair?",a:["Protein","Carbs","Fat","Fiber"],correct:"Protein"},
-    {q:"Micronutrient preventing anemia?",a:["Iron","Zinc","Magnesium","Potassium"],correct:"Iron"},
-    {q:"Food high in potassium?",a:["Banana","Apple","Bread","Cake"],correct:"Banana"}
-  ]
-};
+    function checkAnswer(answer, correct) {
+      if (answer === correct) score++;
+      currentIndex++;
+      if (currentIndex < currentQuestions.length) {
+        showQuestion();
+      } else {
+        showResults();
+      }
+    }
 
-function startQuiz(level){
-  currentLevel=level; currentQuestions=[...questions[level]]; currentIndex=0; score=0; userAnswers=[];
-  document.getElementById("start-screen").classList.add("hidden");
-  document.querySelector(".progress-bar").classList.remove("hidden");
-  document.getElementById("quiz-screen").classList.remove("hidden");
-  document.getElementById("result-screen").classList.add("hidden");
-  showQuestion();
-}
+    function showResults() {
+      document.getElementById("quiz-container").style.display = "none";
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.style.display = "block";
+      resultsDiv.innerHTML = `<h3>Results: ${score}/${currentQuestions.length}</h3>`;
+      resultsDiv.innerHTML += "<ul>";
+      currentQuestions.forEach((q,i) => {
+        resultsDiv.innerHTML += `<li><strong>Q${i+1}:</strong> ${q.q}<br>Correct: ${q.correct}</li>`;
+      });
+      resultsDiv.innerHTML += "</ul>";
 
-function showQuestion(){
-  const qData=currentQuestions[currentIndex];
-  const quizDiv=document.getElementById("quiz-screen");
-  quizDiv.innerHTML="";
-  const card=document.createElement("div");
-  card.className="question-card "+currentLevel;
-  const h3=document.createElement("h3");
-  h3.textContent=`${currentIndex+1}. ${qData.q}`;
-  card.appendChild(h3);
-  qData.a.sort(()=>Math.random()-0.5).forEach(ans=>{
-    const btn=document.createElement("button");
-    btn.textContent=ans;
-    btn.className=currentLevel;
-    btn.onclick=()=>checkAnswer(ans,qData.correct,btn);
-    const answersDiv=document.createElement("div");
-    answersDiv.className="answers";
-    answersDiv.appendChild(btn);
-    card.appendChild(answersDiv);
-  });
-  quizDiv.appendChild(card);
-  updateProgress();
-}
+      const actionDiv = document.getElementById("action-buttons");
+      actionDiv.innerHTML = "";
 
-function checkAnswer(ans,correct,btn){
-  if(ans===correct){ score++; btn.textContent="✅ "+ans; }
-  else { btn.textContent="❌ "+ans; }
-  userAnswers.push({question: currentQuestions[currentIndex].q, answer: ans, correct});
-  Array.from(btn.parentNode.children).forEach(b=>b.disabled=true);
-  setTimeout(()=>{ currentIndex++; if(currentIndex<currentQuestions.length) showQuestion(); else showResult(); },700);
-}
-
-function updateProgress(){
-  const percent=Math.floor((currentIndex/currentQuestions.length)*100);
-  document.getElementById("progressFill").style.width=percent+"%";
-}
-
-function showResult(){
-  document.getElementById("quiz-screen").classList.add("hidden");
-  const res=document.getElementById("result");
-  res.className="result "+currentLevel;
-  res.textContent=`🏁 Final Score: ${score}/${currentQuestions.length}`;
-
-  // Badge / Certificate
-  const badge=document.getElementById("badge");
-  if(score===currentQuestions.length) badge.textContent="🏆 Perfect!";
-  else if(score>=Math.floor(currentQuestions.length/2)) badge.textContent="🥇 Great!";
-  else badge.textContent="💡 Keep Learning!";
-
-  document.getElementById("answers-list").innerHTML="";
-  userAnswers.forEach(item=>{
-    const p=document.createElement("p");
-    p.innerHTML=`<span>${item.question}</span> <span>Your: <span class="${item.answer===item.correct?"correct":"wrong"}">${item.answer}</span> | Correct: <span class="correct">${item.correct}</span></span>`;
-    document.getElementById("answers-list").appendChild(p);
-  });
-
-  document.getElementById("result-screen").classList.remove("hidden");
-  document.getElementById("next-level-btn").style.display= (currentLevel!=="difficult") ? "inline-block" : "none";
-}
-
-function restartQuiz(){ startQuiz(currentLevel); }
-function nextLevel(){ let nextIdx=levels.indexOf(currentLevel)+1; if(nextIdx<levels.length) startQuiz(levels[nextIdx]); }
-function getToolkit(){ window.open(toolkitLinks[currentLevel], "_blank"); }
-</script>
+      if (currentLevel === "easy") {
+        actionDiv.innerHTML += `<button class="next-level" onclick="startQuiz('medium')">Next Level: Medium</button>`;
+      } else if (currentLevel === "medium") {
+        actionDiv.innerHTML += `<button class="next-level" onclick="startQuiz('difficult')">Next Level: Difficult</button>`;
+      } else {
+        actionDiv.innerHTML += `<button class="retry" onclick="location.reload()">Retry Quiz</button>`;
+        actionDiv.innerHTML += `<button class="toolkit" onclick="window.open('https://keepwell.com/toolkit.pdf')">Get Toolkit</button>`;
+      }
+    }
+  </script>
 </body>
 </html>
+
