@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healthy Living Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  .quiz-container {
+    background: linear-gradient(135deg, #ffffff, #f9f9f9);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+
+  .difficulty-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #34495e;
+  }
+
+  /* Difficulty buttons */
+  #difficulty-selection button {
+    padding: 12px 20px;
+    margin: 8px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+  }
+  #difficulty-selection button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+  }
+  #difficulty-selection button.easy { background: #3B7D3B; }
+  #difficulty-selection button.easy:hover { background: #2e5f2e; }
+  #difficulty-selection button.medium { background: #E67E22; }
+  #difficulty-selection button.medium:hover { background: #cc6a1b; }
+  #difficulty-selection button.difficult { background: #C0392B; }
+  #difficulty-selection button.difficult:hover { background: #992d22; }
+
+  .question {
+    margin: 20px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+
+  /* Smaller, narrower answer buttons */
+  .answers button {
+    display: block;
+    width: 70%;
+    max-width: 300px;
+    margin: 8px auto;
+    background: #ecf0f1;
+    color: #2c3e50;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    transition: background 0.3s;
+  }
+  .answers button:hover {
+    background: #dcdde1;
+  }
+
+  .progress {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #555;
+  }
+
+  .result {
+    margin-top: 20px;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+  }
+
+  .result.easy { background: #d4edda; color: #155724; }
+  .result.medium { background: #fff3cd; color: #856404; }
+  .result.difficult { background: #f8d7da; color: #721c24; }
+
+  /* Result buttons */
+  .result-buttons {
+    padding: 12px 20px;
+    margin: 10px 8px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  .result-buttons:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+  .result-buttons.easy { background: #3B7D3B; color: #fff; }
+  .result-buttons.easy:hover { background: #2e5f2e; }
+  .result-buttons.medium { background: #E67E22; color: #fff; }
+  .result-buttons.medium:hover { background: #cc6a1b; }
+  .result-buttons.difficult { background: #C0392B; color: #fff; }
+  .result-buttons.difficult:hover { background: #992d22; }
+
+  .answers-list {
+    text-align: left;
+    margin-top: 20px;
+    background: #fdfdfd;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.05);
+  }
+  .answers-list p { margin: 10px 0; font-size: 15px; }
+  .correct { color: green; font-weight: bold; }
+  .wrong { color: red; font-weight: bold; }
+
+  .hidden { display: none; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<div class="quiz-container">
+  <h1>🌱 Healthy Living Quiz</h1>
+
+  <div id="start-screen">
+    <div class="difficulty-title">Difficulty Level</div>
+    <div id="difficulty-selection">
+      <button class="easy" onclick="startQuiz('easy')">Easy</button>
+      <button class="medium" onclick="startQuiz('medium')">Medium</button>
+      <button class="difficult" onclick="startQuiz('difficult')">Difficult</button>
+    </div>
+  </div>
+
+  <div id="quiz-screen" class="hidden">
+    <div class="progress" id="progress"></div>
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+  </div>
+
+  <div id="result-screen" class="hidden">
+    <div class="result" id="result"></div>
+    <div class="answers-list" id="answers-list"></div>
+    <button class="result-buttons" onclick="restartQuiz()">🔄 Retry Quiz</button>
+    <button class="result-buttons" id="next-level-btn" style="display:none;" onclick="nextLevel()">➡️ Go to Next Level</button>
+    <button class="result-buttons" onclick="getToolkit()">📘 Get Toolkit</button>
+  </div>
+</div>
+
+<script>
+let currentQuestions = [], currentIndex = 0, score = 0, userAnswers = [], currentLevel = "";
+const levels = ["easy","medium","difficult"];
+
+// Example toolkit links per level
+const toolkitLinks = {
+  easy: "https://example.com/toolkit-easy.pdf",
+  medium: "https://example.com/toolkit-medium.pdf",
+  difficult: "https://example.com/toolkit-difficult.pdf"
+};
+
+const questions = {
+  easy: [
+    { q: "How many minutes of walking per day is recommended?", a: ["30","5","120","10"], correct:"30" },
+    { q: "Which vitamin comes from sunlight?", a: ["Vitamin C","Vitamin D","Vitamin B12","Vitamin A"], correct:"Vitamin D" },
+    { q: "Healthiest drink?", a: ["Water","Fizzy soda","Beer","Energy drink"], correct:"Water" },
+    { q: "Which is a whole grain?", a: ["Brown rice","White bread","Cake","Biscuits"], correct:"Brown rice" },
+    { q: "Recommended sleep hours?", a: ["7-9","3-4","12-15","5"], correct:"7-9" }
+  ],
+  medium: [
+    { q: "Healthiest fat?", a:["Unsaturated fat","Trans fat","Saturated fat","Hydrogenated fat"], correct:"Unsaturated fat" },
+    { q: "Fruit highest in potassium?", a:["Banana","Apple","Strawberry","Orange"], correct:"Banana" },
+    { q: "Nutrient for strong bones?", a:["Calcium","Iron","Magnesium","Zinc"], correct:"Calcium" },
+    { q: "Fruit & veg portions per day?", a:["5","1","10","2"], correct:"5" },
+    { q: "Plant protein source?", a:["Lentils","Sugar","White bread","Butter"], correct:"Lentils" },
+    { q: "Exercise improving heart health?", a:["Cardio","Weights only","Stretching","None"], correct:"Cardio" },
+    { q: "Better for hydration?", a:["Water","Coffee","Wine","Soft drinks"], correct:"Water" },
+    { q: "Probiotic food?", a:["Yogurt","Rice","Bread","Chicken"], correct:"Yogurt" }
+  ],
+  difficult: [
+    { q: "Glycemic index measures?", a:["Blood sugar spikes","Calories","Fat content","Protein"], correct:"Blood sugar spikes" },
+    { q: "Fat soluble vitamin?", a:["Vitamin D","Vitamin C","Vitamin B6","Vitamin B12"], correct:"Vitamin D" },
+    { q: "Mineral regulating fluid?", a:["Sodium","Calcium","Iron","Magnesium"], correct:"Sodium" },
+    { q: "Oil richest in omega-3?", a:["Flaxseed oil","Olive oil","Sunflower oil","Coconut oil"], correct:"Flaxseed oil" },
+    { q: "Fibre lowering cholesterol?", a:["Soluble","Insoluble","Artificial","Protein"], correct:"Soluble" },
+    { q: "Antioxidant in tomatoes?", a:["Lycopene","Vitamin E","Beta-carotene","Resveratrol"], correct:"Lycopene" },
+    { q: "Organ regulating blood sugar?", a:["Pancreas","Kidney","Liver","Stomach"], correct:"Pancreas" },
+    { q: "Vitamin deficiency causing night blindness?", a:["Vitamin A","Vitamin D","Vitamin K","Vitamin C"], correct:"Vitamin A" },
+    { q: "Hemoglobin role?", a:["Carrying oxygen","Digesting fat","Producing insulin","Storing calcium"], correct:"Carrying oxygen" },
+    { q: "Nutrient for red blood cell production?", a:["Iron","Calcium","Zinc","Magnesium"], correct:"Iron" }
+  ]
+};
+
+function startQuiz(level){
+  currentLevel = level;
+  currentQuestions = [...questions[level]];
+  currentIndex = 0;
+  score = 0;
+  userAnswers = [];
+  document.getElementById("start-screen").classList.add("hidden");
+  document.getElementById("quiz-screen").classList.remove("hidden");
+  document.getElementById("result-screen").classList.add("hidden");
+  showQuestion();
+}
+
+function showQuestion(){
+  const q = currentQuestions[currentIndex];
+  document.getElementById("question").textContent = q.q;
+  document.getElementById("progress").textContent = `Question ${currentIndex+1} of ${currentQuestions.length}`;
+  const answersDiv = document.getElementById("answers");
+  answersDiv.innerHTML = "";
+  const shuffled = q.a.sort(()=> Math.random()-0.5);
+  shuffled.forEach(answer=>{
+    const btn = document.createElement("button");
+    btn.textContent = answer;
+    btn.onclick = () => checkAnswer(answer,q.correct);
+    answersDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(answer, correct){
+  userAnswers.push({question: currentQuestions[currentIndex].q, chosen: answer, correct: correct});
+  if(answer===correct) score++;
+  currentIndex++;
+  if(currentIndex<currentQuestions.length) showQuestion();
+  else showResult();
+}
+
+function showResult(){
+  document.getElementById("quiz-screen").classList.add("hidden");
+  const resultScreen = document.getElementById("result-screen");
+  resultScreen.classList.remove("hidden");
+
+  const resultDiv = document.getElementById("result");
+  resultDiv.textContent = `You scored ${score} out of ${currentQuestions.length}`;
+  resultDiv.className = "";
+  resultDiv.classList.add("result", currentLevel);
+
+  const listDiv = document.getElementById("answers-list");
+  listDiv.innerHTML = "";
+  userAnswers.forEach((item,index)=>{
+    const p = document.createElement("p");
+    p.innerHTML = `<strong>Q${index+1}:</strong> ${item.question}<br>
+      Your answer: <span class="${item.chosen===item.correct?'correct':'wrong'}">${item.chosen}</span><br>
+      Correct answer: <span class="correct">${item.correct}</span>`;
+    listDiv.appendChild(p);
+  });
+
+  // Show Next Level button if exists
+  const nextBtn = document.getElementById("next-level-btn");
+  const levelIndex = levels.indexOf(currentLevel);
+  if(levelIndex < levels.length-1){
+    nextBtn.style.display = "inline-block";
+    nextBtn.dataset.next = levels[levelIndex+1];
+  } else {
+    nextBtn.style.display = "none";
+  }
+
+  // Set button colours
+  const buttons = resultScreen.querySelectorAll("button");
+  buttons.forEach(btn=>{
+    btn.classList.remove("easy","medium","difficult");
+    btn.classList.add("result-buttons",currentLevel);
+  });
+}
+
+function restartQuiz(){
+  document.getElementById("result-screen").classList.add("hidden");
+  document.getElementById("start-screen").classList.remove("hidden");
+}
+
+function nextLevel(){
+  const nextBtn = document.getElementById("next-level-btn");
+  startQuiz(nextBtn.dataset.next);
+}
+
+function getToolkit(){
+  alert(`Your toolkit: ${toolkitLinks[currentLevel]}`);
+}
+</script>
+</body>
+</html>

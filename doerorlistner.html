@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doer or Listener Quiz — Keep Well</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f9f6;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .quiz-container {
+      background: #ffffff;
+      margin: 30px;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      color: #2f5233;
+    }
+    .question {
+      margin: 20px 0;
+      font-weight: bold;
+      color: #333;
+    }
+    .answers button {
+      display: block;
+      width: 90%;
+      margin: 8px auto;
+      padding: 12px;
+      background: #e6f4ea;
+      border: 2px solid #2f5233;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .answers button:hover {
+      background: #c9e7d2;
+    }
+    .controls {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .controls button {
+      padding: 12px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .next-btn {
+      background: #4CAF50;
+      color: #fff;
+    }
+    .next-btn:hover {
+      background: #45a049;
+    }
+    .retry-btn {
+      background: #f57c00;
+      color: #fff;
+    }
+    .retry-btn:hover {
+      background: #ef6c00;
+    }
+    .results {
+      text-align: center;
+      margin-top: 20px;
+      padding: 15px;
+      background: #f0f9f4;
+      border: 2px dashed #2f5233;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Doer or Listener Quiz</h1>
+    <div id="quiz"></div>
+    <div class="controls">
+      <button id="next-btn" class="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+      <button id="retry-btn" class="retry-btn" onclick="retryQuiz()" style="display:none;">Retry Quiz</button>
+    </div>
+    <div id="results" class="results" style="display:none;"></div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "When starting a new project, what do you usually do first?", a: [
+        { text: "Jump straight in and figure it out as I go", type: "Doer" },
+        { text: "Pause, plan, and listen to advice before starting", type: "Listener" }
+      ]},
+      { q: "At a meeting, how do you behave?", a: [
+        { text: "Share my ideas quickly and take the lead", type: "Doer" },
+        { text: "Listen carefully and add input when needed", type: "Listener" }
+      ]},
+      { q: "When learning something new, you prefer to:", a: [
+        { text: "Try it hands-on immediately", type: "Doer" },
+        { text: "Listen to instructions or explanations first", type: "Listener" }
+      ]},
+      { q: "How do friends describe you?", a: [
+        { text: "Active, energetic, always on the move", type: "Doer" },
+        { text: "Calm, thoughtful, a good listener", type: "Listener" }
+      ]},
+      { q: "In a group activity, you usually:", a: [
+        { text: "Take charge and start doing", type: "Doer" },
+        { text: "Observe and support others first", type: "Listener" }
+      ]},
+      { q: "How do you solve a problem?", a: [
+        { text: "Test different solutions until one works", type: "Doer" },
+        { text: "Think it through and ask for input", type: "Listener" }
+      ]},
+      { q: "When working out, you prefer:", a: [
+        { text: "Just start moving and adjust as needed", type: "Doer" },
+        { text: "Follow a trainer’s instructions carefully", type: "Listener" }
+      ]},
+      { q: "If given a new gadget, you:", a: [
+        { text: "Start pressing buttons to see what it does", type: "Doer" },
+        { text: "Read or listen to instructions first", type: "Listener" }
+      ]},
+      { q: "Friends come to you for:", a: [
+        { text: "Energy and motivation", type: "Doer" },
+        { text: "Advice and a listening ear", type: "Listener" }
+      ]},
+      { q: "At the end of the day, you feel happiest when:", a: [
+        { text: "I got things done and achieved a lot", type: "Doer" },
+        { text: "I had meaningful conversations and supported others", type: "Listener" }
+      ]}
+    ];
+
+    let currentQuestion = 0;
+    let doerScore = 0;
+    let listenerScore = 0;
+
+    function loadQuestion() {
+      const quizDiv = document.getElementById("quiz");
+      quizDiv.innerHTML = "";
+      document.getElementById("next-btn").style.display = "none";
+
+      if (currentQuestion < questions.length) {
+        const q = document.createElement("div");
+        q.classList.add("question");
+        q.textContent = questions[currentQuestion].q;
+        quizDiv.appendChild(q);
+
+        const answersDiv = document.createElement("div");
+        answersDiv.classList.add("answers");
+        questions[currentQuestion].a.forEach(answer => {
+          const btn = document.createElement("button");
+          btn.textContent = answer.text;
+          btn.onclick = () => selectAnswer(answer.type);
+          answersDiv.appendChild(btn);
+        });
+        quizDiv.appendChild(answersDiv);
+      } else {
+        showResults();
+      }
+    }
+
+    function selectAnswer(type) {
+      if (type === "Doer") doerScore++;
+      else listenerScore++;
+      document.getElementById("next-btn").style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      loadQuestion();
+    }
+
+    function showResults() {
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("next-btn").style.display = "none";
+      document.getElementById("retry-btn").style.display = "inline-block";
+
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.style.display = "block";
+
+      let personality = "";
+      let message = "";
+
+      if (doerScore > listenerScore) {
+        personality = "You are a Doer!";
+        message = "You thrive on action, energy, and getting things done.";
+      } else if (listenerScore > doerScore) {
+        personality = "You are a Listener!";
+        message = "You excel at observing, understanding, and supporting others.";
+      } else {
+        personality = "Balanced!";
+        message = "You combine the strengths of both Doer and Listener.";
+      }
+
+      resultsDiv.innerHTML = `
+        <h2>Your Result</h2>
+        <p><strong>${personality}</strong></p>
+        <p>${message}</p>
+        <p><em>Doer Score: ${doerScore} | Listener Score: ${listenerScore}</em></p>
+      `;
+    }
+
+    function retryQuiz() {
+      currentQuestion = 0;
+      doerScore = 0;
+      listenerScore = 0;
+      document.getElementById("quiz").style.display = "block";
+      document.getElementById("results").style.display = "none";
+      loadQuestion();
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
+
