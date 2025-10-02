@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💧 Hydration Quiz</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #e0f7fa;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+}
+
+.quiz-container {
+  background: #ffffff;
+  max-width: 750px;
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  padding: 30px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+h1 { color: #00796B; margin-bottom: 15px; }
+
+.progress-bar {
+  height: 10px; background: #d3d3d3;
+  border-radius: 5px; margin-bottom: 20px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; width: 0%; background: #00796B;
+  transition: width 0.3s ease;
+}
+
+.question-card {
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: #B2EBF2;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.question-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.question-card h3 { margin-bottom: 15px; font-size: 18px; }
+
+.answers button {
+  display: block; width: 70%; max-width: 280px;
+  margin: 10px auto; padding: 10px; font-size: 16px;
+  border-radius: 10px; border: none; cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+  background: #4DD0E1; color: #fff;
+}
+.answers button:hover { transform: scale(1.05); background: #26C6DA; }
+
+.result {
+  display: none; margin-top: 20px;
+  padding: 20px; border-radius: 12px;
+  font-weight: bold; font-size: 18px;
+  text-align: center; background: #80DEEA; color: #004D40;
+}
+
+.answers-list {
+  text-align: left; margin-top: 20px;
+  background: #fdfdfd; padding: 15px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.05);
+}
+.answers-list p {
+  margin: 8px 0; display:flex;
+  justify-content:space-between;
+  padding:5px 10px; border-radius:6px;
+}
+.correct { color: green; font-weight: bold; }
+.wrong { color: red; font-weight: bold; }
+
+.result-buttons {
+  display: inline-block; padding: 12px 20px;
+  margin: 10px 5px; border-radius: 10px;
+  border: none; font-weight: bold; cursor: pointer;
+  transition: transform 0.2s;
+  background: #26C6DA; color:#fff;
+}
+.result-buttons:hover { transform: translateY(-2px) scale(1.05); }
+
+.badge { font-size: 50px; margin: 15px 0; display:block; }
+.hidden { display: none; }
+
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+</style>
+</head>
+<body>
+<div class="quiz-container">
+  <h1>💧 Hydration Quiz</h1>
+
+  <div class="progress-bar hidden"><div class="progress-bar-fill" id="progressFill"></div></div>
+  <div id="quiz-screen"></div>
+
+  <div id="result-screen" class="hidden">
+    <div class="badge" id="badge"></div>
+    <div class="result" id="result"></div>
+    <div class="answers-list" id="answers-list"></div>
+    <button class="result-buttons" onclick="restartQuiz()">🔄 Retry Quiz</button>
+    <button class="result-buttons" onclick="getToolkit()">📘 Get Hydration Toolkit</button>
+  </div>
+</div>
+
+<script>
+let currentQuestions=[], currentIndex=0, score=0, userAnswers=[];
+const toolkitLink="https://example.com/hydration-toolkit.pdf";
+
+const questions=[
+  {q:"How much water does the average adult need daily?",a:["About 2 litres","About 1 litre","About 4 litres","Only when thirsty"],correct:"About 2 litres"},
+  {q:"Best drink for hydration?",a:["Water","Coffee","Soda","Energy drink"],correct:"Water"},
+  {q:"Which food also helps with hydration?",a:["Watermelon","Bread","Cheese","Crisps"],correct:"Watermelon"},
+  {q:"What happens if you’re slightly dehydrated?",a:["You may feel tired and lose focus","You get stronger","Nothing happens","You feel less hungry only"],correct:"You may feel tired and lose focus"},
+  {q:"What’s the best time to drink a glass of water for digestion?",a:["40 minutes after a meal","Immediately before eating","Right after eating","Only in the morning"],correct:"40 minutes after a meal"},
+  {q:"What is a common sign of dehydration?",a:["Dark urine","Clear urine","Feeling full","Red eyes"],correct:"Dark urine"},
+  {q:"Why is sipping water slowly better than gulping?",a:["It hydrates more effectively","It burns calories","It tastes better","It prevents cravings"],correct:"It hydrates more effectively"}
+];
+
+function startQuiz(){
+  currentQuestions=[...questions]; currentIndex=0; score=0; userAnswers=[];
+  document.querySelector(".progress-bar").classList.remove("hidden");
+  document.getElementById("quiz-screen").classList.remove("hidden");
+  document.getElementById("result-screen").classList.add("hidden");
+  showQuestion();
+}
+function showQuestion(){
+  const qData=currentQuestions[currentIndex];
+  const quizDiv=document.getElementById("quiz-screen");
+  quizDiv.innerHTML="";
+  const card=document.createElement("div");
+  card.className="question-card";
+  const h3=document.createElement("h3");
+  h3.textContent=`${currentIndex+1}. ${qData.q}`;
+  card.appendChild(h3);
+  qData.a.sort(()=>Math.random()-0.5).forEach(ans=>{
+    const btn=document.createElement("button");
+    btn.textContent=ans;
+    btn.onclick=()=>checkAnswer(ans,qData.correct,btn);
+    const answersDiv=document.createElement("div");
+    answersDiv.className="answers";
+    answersDiv.appendChild(btn);
+    card.appendChild(answersDiv);
+  });
+  quizDiv.appendChild(card);
+  updateProgress();
+}
+function checkAnswer(ans,correct,btn){
+  if(ans===correct){ score++; btn.textContent="✅ "+ans; }
+  else { btn.textContent="❌ "+ans; }
+  userAnswers.push({question: currentQuestions[currentIndex].q, answer: ans, correct});
+  Array.from(btn.parentNode.children).forEach(b=>b.disabled=true);
+  setTimeout(()=>{ currentIndex++; if(currentIndex<currentQuestions.length) showQuestion(); else showResult(); },700);
+}
+function updateProgress(){
+  const percent=Math.floor((currentIndex/currentQuestions.length)*100);
+  document.getElementById("progressFill").style.width=percent+"%";
+}
+function showResult(){
+  document.getElementById("quiz-screen").classList.add("hidden");
+  const res=document.getElementById("result");
+  res.textContent=`🏁 Final Score: ${score}/${currentQuestions.length}`;
+  const badge=document.getElementById("badge");
+  if(score===currentQuestions.length) badge.textContent="🏆 Perfect!";
+  else if(score>=Math.floor(currentQuestions.length/2)) badge.textContent="🥇 Great!";
+  else badge.textContent="💡 Keep Hydrating!";
+  document.getElementById("answers-list").innerHTML="";
+  userAnswers.forEach(item=>{
+    const p=document.createElement("p");
+    p.innerHTML=`<span>${item.question}</span> 
+    <span>Your: <span class="${item.answer===item.correct?"correct":"wrong"}">${item.answer}</span> | Correct: <span class="correct">${item.correct}</span></span>`;
+    document.getElementById("answers-list").appendChild(p);
+  });
+  document.getElementById("result-screen").classList.remove("hidden");
+}
+function restartQuiz(){ startQuiz(); }
+function getToolkit(){ window.open(toolkitLink,"_blank"); }
+window.onload=startQuiz;
+</script>
+</body>
+</html>
