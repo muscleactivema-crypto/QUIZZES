@@ -16,7 +16,7 @@
     }
     .quiz-container {
       background: #ffffff;
-      margin: 30px;
+      margin: 20px;
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 6px 12px rgba(0,0,0,0.1);
@@ -26,6 +26,20 @@
     h1 {
       text-align: center;
       color: #2f5233;
+    }
+    .progress-container {
+      width: 100%;
+      background: #e6f4ea;
+      border-radius: 8px;
+      margin: 15px 0;
+      height: 20px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #4CAF50;
+      transition: width 0.3s ease;
     }
     .question {
       margin: 20px 0;
@@ -87,6 +101,9 @@
 <body>
   <div class="quiz-container">
     <h1>Doer or Listener Quiz</h1>
+    <div class="progress-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
     <div id="quiz"></div>
     <div class="controls">
       <button id="next-btn" class="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
@@ -128,14 +145,6 @@
       { q: "If given a new gadget, you:", a: [
         { text: "Start pressing buttons to see what it does", type: "Doer" },
         { text: "Read or listen to instructions first", type: "Listener" }
-      ]},
-      { q: "Friends come to you for:", a: [
-        { text: "Energy and motivation", type: "Doer" },
-        { text: "Advice and a listening ear", type: "Listener" }
-      ]},
-      { q: "At the end of the day, you feel happiest when:", a: [
-        { text: "I got things done and achieved a lot", type: "Doer" },
-        { text: "I had meaningful conversations and supported others", type: "Listener" }
       ]}
     ];
 
@@ -163,6 +172,10 @@
           answersDiv.appendChild(btn);
         });
         quizDiv.appendChild(answersDiv);
+
+        // Update progress bar
+        const progress = ((currentQuestion) / questions.length) * 100;
+        document.getElementById("progress-bar").style.width = progress + "%";
       } else {
         showResults();
       }
@@ -171,7 +184,10 @@
     function selectAnswer(type) {
       if (type === "Doer") doerScore++;
       else listenerScore++;
-      document.getElementById("next-btn").style.display = "inline-block";
+
+      const nextBtn = document.getElementById("next-btn");
+      nextBtn.style.display = "inline-block";
+      nextBtn.textContent = (currentQuestion === questions.length - 1) ? "Finish" : "Next";
     }
 
     function nextQuestion() {
@@ -207,6 +223,9 @@
         <p>${message}</p>
         <p><em>Doer Score: ${doerScore} | Listener Score: ${listenerScore}</em></p>
       `;
+
+      // Fill progress bar fully
+      document.getElementById("progress-bar").style.width = "100%";
     }
 
     function retryQuiz() {
@@ -222,4 +241,3 @@
   </script>
 </body>
 </html>
-
