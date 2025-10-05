@@ -2,36 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bungalow Legs Quiz</title>
+  <title>Bungalow Legs Quiz 🏠🦵</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f8f4;
+      font-family: 'Arial', sans-serif;
+      background: #f4f9f4;
       margin: 0;
       padding: 0;
     }
 
-    .container {
+    .quiz-container {
       width: 90%;
       max-width: 600px;
       margin: 30px auto;
       background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     h1 {
       text-align: center;
-      color: #2a4d2f;
+      color: #2d572c;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    p.intro {
+      text-align: center;
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 20px;
     }
 
     #progress-bar {
-      height: 18px;
+      height: 14px;
       background: #e0e0e0;
       border-radius: 10px;
-      margin-bottom: 20px;
       overflow: hidden;
+      margin-bottom: 20px;
     }
 
     #progress {
@@ -42,99 +52,109 @@
       transition: width 0.3s ease;
     }
 
-    .question {
-      margin-bottom: 20px;
-    }
-
     .question h2 {
-      font-size: 1.1em;
-      margin-bottom: 10px;
+      font-size: 1.1rem;
       color: #333;
+      margin-bottom: 12px;
+      line-height: 1.4;
     }
 
     .options button {
       display: block;
       width: 100%;
-      margin: 6px 0;
-      padding: 12px;
-      font-size: 1em;
-      border: none;
-      border-radius: 8px;
+      margin: 8px 0;
+      padding: 14px;
+      font-size: 1rem;
+      border: 2px solid #4CAF50;
+      border-radius: 10px;
       cursor: pointer;
-      background: #e8f5e9;
-      transition: background 0.3s;
+      background: #f0fff4;
+      transition: background 0.3s, transform 0.1s;
     }
 
     .options button:hover {
-      background: #c8e6c9;
+      background: #d9fcd9;
+      transform: scale(1.02);
     }
 
     #next-btn {
-      background: #2a7a3f;
-      color: #fff;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1em;
       display: none;
-      margin-top: 10px;
+      width: 100%;
+      background: #2d572c;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      margin-top: 15px;
+      transition: background 0.3s;
+    }
+
+    #next-btn:hover {
+      background: #1b3d1e;
     }
 
     #results {
       display: none;
       text-align: center;
       padding: 20px;
-      border-radius: 12px;
       background: #f0fdf4;
       border: 2px solid #a7f3d0;
+      border-radius: 12px;
       margin-top: 20px;
     }
 
     #results h2 {
-      margin-bottom: 15px;
       color: #065f46;
+      margin-bottom: 10px;
     }
 
     #tips {
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 10px;
-      background: #ecfdf5;
-      color: #065f46;
       text-align: left;
-      font-size: 0.95em;
+      font-size: 0.95rem;
+      background: #ecfdf5;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 15px;
     }
 
-    .btn-group {
-      margin-top: 20px;
-    }
-
-    .btn-group button {
-      margin: 5px;
-      padding: 10px 16px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.95em;
+    ul {
+      padding-left: 18px;
     }
 
     .retake-btn {
       background: #f59e0b;
       color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-size: 1rem;
     }
 
     .retake-btn:hover {
       background: #d97706;
     }
+
+    /* 📱 Responsive adjustments */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5rem; }
+      .quiz-container { padding: 18px; }
+      .options button { font-size: 1.1rem; padding: 16px; }
+      #next-btn, .retake-btn { font-size: 1.1rem; padding: 16px; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Have You Got Bungalow Legs?</h1>
+  <div class="quiz-container">
+    <h1>Bungalow Legs Quiz 🏠🦵</h1>
+    <p class="intro">Find out if your legs have gone “bungalow mode” — and how to rebuild stair strength! 💪</p>
+
     <div id="progress-bar"><div id="progress"></div></div>
     <div id="quiz"></div>
-    <button id="next-btn">Next</button>
+    <button id="next-btn">Next Question</button>
     <div id="results"></div>
   </div>
 
@@ -221,40 +241,38 @@
       let tips = "";
 
       if (score >= 4) {
-        message = "Yes – you may have Bungalow Legs! 🏠🚶‍♂️ Time to strengthen your stairs fitness!";
+        message = "Yes – you may have Bungalow Legs! 🏠🚶‍♂️ Time to strengthen your stair fitness!";
         tips = `
           <ul>
-            <li>Practice <strong>step-ups</strong> on a low step daily.</li>
-            <li>Add <strong>sit-to-stands</strong> from a chair to build thigh strength.</li>
-            <li>Include <strong>mini stair climbs</strong> into your daily routine.</li>
+            <li>Practice <strong>step-ups</strong> daily on a low step.</li>
+            <li>Add <strong>sit-to-stands</strong> to boost thigh strength.</li>
+            <li>Include <strong>mini stair climbs</strong> into your day.</li>
           </ul>`;
       } else if (score >= 2) {
-        message = "Maybe – you’re on the borderline. Adding stair or step exercises could help.";
+        message = "Maybe – you’re on the borderline. A few stair or step sessions each day will help.";
         tips = `
           <ul>
-            <li>Try <strong>walking up 1–2 extra flights</strong> when possible.</li>
-            <li>Do <strong>calf raises</strong> to improve leg power.</li>
-            <li>Incorporate <strong>gentle hill walks</strong> to boost stamina.</li>
+            <li>Walk up 1–2 extra flights when possible.</li>
+            <li>Do <strong>calf raises</strong> to build leg power.</li>
+            <li>Try gentle <strong>hill walks</strong> to increase stamina.</li>
           </ul>`;
       } else {
-        message = "No – your legs are in good shape for stairs! Keep moving!";
+        message = "No – your legs are in good shape for stairs! Keep it up!";
         tips = `
           <ul>
-            <li>Maintain your strength with <strong>regular stair climbing</strong>.</li>
-            <li>Add <strong>lunges or squats</strong> to stay strong.</li>
-            <li>Keep challenging your balance and stamina outdoors.</li>
+            <li>Maintain strength with <strong>stair climbing</strong>.</li>
+            <li>Add <strong>lunges or squats</strong> weekly.</li>
+            <li>Challenge your balance outdoors regularly.</li>
           </ul>`;
       }
 
       resultsEl.style.display = "block";
       resultsEl.innerHTML = `
-        <h2>Your Results</h2>
+        <h2>Your Results 🎉</h2>
         <p>${message}</p>
         <p>You scored ${score} out of ${questions.length}.</p>
         <div id="tips"><strong>Tips for You:</strong> ${tips}</div>
-        <div class="btn-group">
-          <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
-        </div>
+        <button class="retake-btn" onclick="retakeQuiz()">🔄 Retake Quiz</button>
       `;
     }
 
@@ -267,7 +285,6 @@
     }
 
     nextBtn.addEventListener("click", nextQuestion);
-
     loadQuestion();
   </script>
 </body>
