@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Doer or Listener Quiz — Keep Well</title>
   <style>
     body {
@@ -14,6 +15,7 @@
       align-items: flex-start;
       min-height: 100vh;
     }
+
     .quiz-container {
       background: #ffffff;
       margin: 20px;
@@ -22,72 +24,94 @@
       box-shadow: 0 6px 12px rgba(0,0,0,0.1);
       max-width: 600px;
       width: 100%;
+      box-sizing: border-box;
     }
+
     h1 {
       text-align: center;
       color: #2f5233;
+      font-size: 1.6rem;
+      line-height: 1.3;
+      margin-top: 0;
     }
+
     .progress-container {
       width: 100%;
       background: #e6f4ea;
       border-radius: 8px;
       margin: 15px 0;
-      height: 20px;
+      height: 18px;
       overflow: hidden;
     }
+
     .progress-bar {
       height: 100%;
       width: 0%;
       background: #4CAF50;
       transition: width 0.3s ease;
     }
+
     .question {
       margin: 20px 0;
       font-weight: bold;
       color: #333;
+      font-size: 1.1rem;
+      line-height: 1.4;
     }
+
     .answers button {
       display: block;
-      width: 90%;
-      margin: 8px auto;
-      padding: 12px;
+      width: 100%;
+      margin: 10px 0;
+      padding: 14px;
       background: #e6f4ea;
       border: 2px solid #2f5233;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 1rem;
+      line-height: 1.3;
       transition: all 0.3s ease;
     }
+
     .answers button:hover {
       background: #c9e7d2;
     }
+
     .controls {
-      margin-top: 20px;
+      margin-top: 25px;
       text-align: center;
     }
+
     .controls button {
-      padding: 12px 20px;
-      margin: 5px;
+      padding: 14px 20px;
+      margin: 8px;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
+      width: 48%;
+      max-width: 200px;
     }
+
     .next-btn {
       background: #4CAF50;
       color: #fff;
     }
+
     .next-btn:hover {
       background: #45a049;
     }
+
     .retry-btn {
       background: #f57c00;
       color: #fff;
     }
+
     .retry-btn:hover {
       background: #ef6c00;
     }
+
     .results {
       text-align: center;
       margin-top: 20px;
@@ -96,19 +120,47 @@
       border: 2px dashed #2f5233;
       border-radius: 10px;
     }
+
+    /* MOBILE OPTIMIZATION */
+    @media (max-width: 480px) {
+      .quiz-container {
+        margin: 10px;
+        padding: 18px;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      .question {
+        font-size: 1rem;
+      }
+      .answers button {
+        font-size: 0.95rem;
+        padding: 12px;
+      }
+      .controls button {
+        width: 100%;
+        margin: 6px 0;
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="quiz-container">
     <h1>Doer or Listener Quiz</h1>
+
     <div class="progress-container">
       <div id="progress-bar" class="progress-bar"></div>
     </div>
+
     <div id="quiz"></div>
+
     <div class="controls">
       <button id="next-btn" class="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
       <button id="retry-btn" class="retry-btn" onclick="retryQuiz()" style="display:none;">Retry Quiz</button>
     </div>
+
     <div id="results" class="results" style="display:none;"></div>
   </div>
 
@@ -174,7 +226,7 @@
         quizDiv.appendChild(answersDiv);
 
         // Update progress bar
-        const progress = ((currentQuestion) / questions.length) * 100;
+        const progress = (currentQuestion / questions.length) * 100;
         document.getElementById("progress-bar").style.width = progress + "%";
       } else {
         showResults();
