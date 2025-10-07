@@ -1,0 +1,166 @@
+<!-- Save as: CalorieQuiz.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Calorie Quiz — Keep Well Nutrition</title>
+<style>
+:root{--bg1:#a8edea;--bg2:#fed6e3;--card:#fff;--accent:#E67E22}
+body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+.back{position:fixed;left:16px;top:16px;background:#fff;padding:8px 12px;border-radius:10px;text-decoration:none;color:#2c3e50;box-shadow:0 4px 10px rgba(0,0,0,.08);font-weight:700}
+.card{background:var(--card);width:100%;max-width:760px;border-radius:14px;padding:26px;box-shadow:0 8px 30px rgba(0,0,0,.12);position:relative}
+h1{margin:0 0 10px;color:#234}
+p.lead{margin:6px 0 18px;color:#345}
+.level-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+button.level{flex:1;padding:10px 12px;border-radius:10px;border:0;color:#fff;font-weight:700;cursor:pointer}
+button.green{background:#3B7D3B} button.orange{background:#E67E22} button.red{background:#C0392B}
+.progress{color:#444;margin-bottom:12px}
+.question{font-weight:700;margin:14px 0}
+.answers{display:flex;flex-direction:column;gap:10px}
+.answers button{padding:10px;border-radius:10px;border:1px solid #ddd;background:#f4f6f6;cursor:pointer;font-weight:700}
+.answers button:hover{transform:translateY(-2px)}
+.result{margin-top:18px;padding:14px;border-radius:10px;background:#f9fff9;font-weight:700}
+.answers-list{margin-top:12px;background:#fff;padding:12px;border-radius:8px;box-shadow:inset 0 0 6px rgba(0,0,0,.03)}
+.answers-list p{margin:8px 0}
+.correct{color:green;font-weight:700}
+.wrong{color:red;font-weight:700}
+.actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.actions button{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+.tool{background:#6c5ce7;color:#fff}
+.retry{background:#3498db;color:#fff}
+.next{background:#2ecc71;color:#fff}
+.email-capture{margin-top:12px;border-top:1px dashed #eee;padding-top:12px}
+@media(max-width:520px){ .level-row{flex-direction:column} .actions{flex-direction:column} .back{left:10px;top:10px} }
+</style>
+</head>
+<body>
+
+<a class="back" href="index.html">❌ Back to Quiz Hub</a>
+
+<div class="card" id="card">
+  <h1>🔥 Calorie Quiz — Nutrition Awareness</h1>
+  <p class="lead">Test your calorie knowledge. Choose a level to begin.</p>
+
+  <div id="start">
+    <div class="level-row">
+      <button class="level green" onclick="start('easy')">🟢 Easy — 5 q</button>
+      <button class="level orange" onclick="start('medium')">🟠 Medium — 7 q</button>
+      <button class="level red" onclick="start('difficult')">🔴 Difficult — 10 q</button>
+    </div>
+  </div>
+
+  <div id="quiz" style="display:none">
+    <div class="progress" id="progressTxt"></div>
+    <div class="question" id="questionTxt"></div>
+    <div class="answers" id="answersBox"></div>
+  </div>
+
+  <div id="result" style="display:none">
+    <div class="result" id="resultTxt"></div>
+    <div class="answers-list" id="answersList"></div>
+
+    <div class="email-capture">
+      <p>📩 Want nutrition tips? Enter your email:</p>
+      <form action="https://formspree.io/f/xyzpdqrj" method="POST">
+        <input type="email" name="email" placeholder="you@example.com" required style="padding:10px;border-radius:8px;border:1px solid #ddd;width:60%;max-width:280px">
+        <button class="tool" type="submit">Get Tips</button>
+      </form>
+    </div>
+
+    <div class="actions">
+      <button class="retry" onclick="restart()">🔄 Retry</button>
+      <button class="next" id="nextLevelBtn" onclick="nextLevel()" style="display:none">➡️ Next Level</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questionBank = {
+  easy:[
+    {q:"Approx calories in an apple?", a:["50","200","500","5"], correct:"50"},
+    {q:"Approx calories in a slice of bread?", a:["80","20","150","300"], correct:"80"},
+    {q:"Calorie estimate for boiled egg?", a:["70","30","120","200"], correct:"70"},
+    {q:"1 tsp olive oil?", a:["40","10","100","70"], correct:"40"},
+    {q:"Approx calories in 100g banana?", a:["90","30","200","150"], correct:"90"}
+  ],
+  medium:[
+    {q:"Approx calories in 1 cup cooked rice?", a:["200","80","350","500"], correct:"200"},
+    {q:"Average calories in a small chocolate bar?", a:["220","100","400","50"], correct:"220"},
+    {q:"Calories in a medium avocado?", a:["240","120","500","80"], correct:"240"},
+    {q:"Calories in 100g chicken breast?", a:["165","90","250","50"], correct:"165"},
+    {q:"Calories burned walking 30 min?", a:["150","50","300","500"], correct:"150"},
+    {q:"Calories in 1 slice cheese?", a:["100","50","200","25"], correct:"100"},
+    {q:"Approx calories in 1 cup milk?", a:["100","50","200","120"], correct:"100"}
+  ],
+  difficult:[
+    {q:"Calories in 1 cup cooked quinoa?", a:["220","150","300","100"], correct:"220"},
+    {q:"Calories burned running 1 mile?", a:["100","80","200","50"], correct:"100"},
+    {q:"Calories in 1 tbsp peanut butter?", a:["90","60","150","30"], correct:"90"},
+    {q:"Calories in 100g salmon?", a:["206","150","300","100"], correct:"206"},
+    {q:"Daily avg calories for adult woman?", a:["2000","1500","3000","1000"], correct:"2000"},
+    {q:"Daily avg calories for adult man?", a:["2500","2000","3500","1800"], correct:"2500"},
+    {q:"Calories in 1 can soda?", a:["150","100","200","50"], correct:"150"},
+    {q:"Calories burned cycling 30 min?", a:["200","100","400","50"], correct:"200"},
+    {q:"Calories in 1 medium baked potato?", a:["160","80","250","120"], correct:"160"},
+    {q:"Calories in 100g dark chocolate?", a:["500","300","600","200"], correct:"500"}
+  ]
+};
+
+let level="", questions=[], idx=0, score=0, userAnswers=[];
+
+function start(l){
+  level=l;
+  questions = shuffleArray([...questionBank[l]]).slice(0, questionBank[l].length);
+  idx=0; score=0; userAnswers=[];
+  document.getElementById('start').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  document.getElementById('result').style.display='none';
+  showQ();
+}
+
+function showQ(){
+  const q = questions[idx];
+  document.getElementById('progressTxt').textContent = `Question ${idx+1} of ${questions.length}`;
+  document.getElementById('questionTxt').textContent = q.q;
+  const box = document.getElementById('answersBox'); box.innerHTML='';
+  shuffleArray([...q.a]).forEach(opt=>{
+    const b=document.createElement('button'); b.textContent=opt;
+    b.onclick = ()=>{ select(opt,q.correct); };
+    box.appendChild(b);
+  });
+}
+
+function select(chosen,correct){
+  userAnswers.push({question:questions[idx].q, chosen, correct});
+  if(chosen===correct) score++;
+  idx++;
+  if(idx<questions.length) showQ();
+  else showResult();
+}
+
+function showResult(){
+  document.getElementById('quiz').style.display='none';
+  const res = document.getElementById('result');
+  res.style.display='block';
+  document.getElementById('resultTxt').textContent = `You scored ${score} out of ${questions.length}`;
+  const list = document.getElementById('answersList'); list.innerHTML='';
+  userAnswers.forEach((it,i)=>{
+    const p=document.createElement('p');
+    p.innerHTML = `<strong>Q${i+1}:</strong> ${it.question}<br>Your: <span class="${it.chosen===it.correct?'correct':'wrong'}">${it.chosen}</span> | Correct: <span class="correct">${it.correct}</span>`;
+    list.appendChild(p);
+  });
+  // next-level logic
+  const next = document.getElementById('nextLevelBtn');
+  const order = ['easy','medium','difficult']; const cur = order.indexOf(level);
+  if(cur < order.length-1){ next.style.display='inline-block'; next.dataset.next = order[cur+1]; } else next.style.display='none';
+}
+
+function restart(){ document.getElementById('result').style.display='none'; document.getElementById('start').style.display='block'; }
+
+function nextLevel(){ start(document.getElementById('nextLevelBtn').dataset.next); }
+
+function shuffleArray(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
+</script>
+</body>
+</html>

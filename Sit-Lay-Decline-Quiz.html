@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sit–Lay–Decline Quiz — KeepWell</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    .container {
+      max-width: 650px;
+      margin: 60px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #3a3a8a;
+    }
+    .question {
+      margin-bottom: 18px;
+    }
+    .question h3 {
+      margin-bottom: 10px;
+      color: #2a2a72;
+    }
+    label {
+      display: block;
+      background: #e8eafc;
+      margin: 6px 0;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    label:hover {
+      background: #c5cae9;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: #3a3a8a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+    button:hover {
+      background: #1a237e;
+    }
+    #result {
+      margin-top: 20px;
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+    }
+    .email-form {
+      margin-top: 25px;
+      display: none;
+    }
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+    }
+    .close-button {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      background: #3a3a8a;
+      color: white;
+      border: none;
+      font-size: 20px;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+    }
+    .close-button:hover {
+      background: #1a237e;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="close-button" onclick="goHome()">✕</button>
+
+  <div class="container">
+    <h1>🪑 Sit–Lay–Decline Quiz</h1>
+    <p style="text-align:center;">Check your daily movement habits and see how active you really are!</p>
+    <form id="quizForm">
+
+      <div class="question">
+        <h3>1. How often do you stand up during the day?</h3>
+        <label><input type="radio" name="q1" value="3"> Every hour or more</label>
+        <label><input type="radio" name="q1" value="2"> 2–3 times a day</label>
+        <label><input type="radio" name="q1" value="1"> Rarely / sit most of the day</label>
+      </div>
+
+      <div class="question">
+        <h3>2. When watching TV or reading, do you:</h3>
+        <label><input type="radio" name="q2" value="3"> Take frequent movement breaks</label>
+        <label><input type="radio" name="q2" value="2"> Occasionally stand or stretch</label>
+        <label><input type="radio" name="q2" value="1"> Sit or lie down the whole time</label>
+      </div>
+
+      <div class="question">
+        <h3>3. How do you move after meals?</h3>
+        <label><input type="radio" name="q3" value="3"> Take a short walk or stretch</label>
+        <label><input type="radio" name="q3" value="2"> Sit for a while, then move</label>
+        <label><input type="radio" name="q3" value="1"> Lie down immediately</label>
+      </div>
+
+      <div class="question">
+        <h3>4. Do you use the stairs regularly?</h3>
+        <label><input type="radio" name="q4" value="3"> Every day</label>
+        <label><input type="radio" name="q4" value="2"> Sometimes</label>
+        <label><input type="radio" name="q4" value="1"> Rarely / avoid stairs</label>
+      </div>
+
+      <div class="question">
+        <h3>5. How often do you stretch or do light exercises?</h3>
+        <label><input type="radio" name="q5" value="3"> Daily</label>
+        <label><input type="radio" name="q5" value="2"> Few times a week</label>
+        <label><input type="radio" name="q5" value="1"> Rarely or never</label>
+      </div>
+
+      <div class="question">
+        <h3>6. How long do you usually sit without standing?</h3>
+        <label><input type="radio" name="q6" value="3"> Less than 45 minutes</label>
+        <label><input type="radio" name="q6" value="2"> About 1–2 hours</label>
+        <label><input type="radio" name="q6" value="1"> 3+ hours</label>
+      </div>
+
+      <div class="question">
+        <h3>7. How often do you go for outdoor walks?</h3>
+        <label><input type="radio" name="q7" value="3"> Daily</label>
+        <label><input type="radio" name="q7" value="2"> Few times a week</label>
+        <label><input type="radio" name="q7" value="1"> Rarely</label>
+      </div>
+
+      <button type="button" onclick="calculateResult()">See My Result</button>
+    </form>
+
+    <div id="result"></div>
+
+    <div class="email-form" id="emailForm">
+      <h3>Get the Sit–Lay–Decline Toolkit 📝</h3>
+      <p>Enter your email below to receive tips for improving daily movement and avoiding the sit-lay-decline cycle:</p>
+      <form action="https://formspree.io/f/xyzpdqrj" method="POST">
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <button type="submit">Send Me Toolkit</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function calculateResult() {
+      const form = document.getElementById('quizForm');
+      let score = 0;
+      for (let i = 1; i <= 7; i++) {
+        const question = form['q' + i];
+        for (let option of question) {
+          if (option.checked) score += parseInt(option.value);
+        }
+      }
+
+      const result = document.getElementById('result');
+      const emailForm = document.getElementById('emailForm');
+      let message = '';
+
+      if (score >= 17) {
+        message = "<strong>Great! You’re active!</strong> You move regularly throughout the day, keeping your body healthy and alert.";
+      } else if (score >= 12) {
+        message = "<strong>Not bad, but room for improvement!</strong> Try to add small movement breaks and light exercise to your day.";
+      } else {
+        message = "<strong>Warning: Sit–Lay–Decline pattern detected!</strong> Long periods of sitting or lying may affect your mobility. Start with short walks and stretches.";
+      }
+
+      result.innerHTML = `<h3>Your Score: ${score}</h3><p>${message}</p><p><em>Tip:</em> Aim for movement every hour and mix standing, walking, and stretching throughout your day.</p>`;
+      result.style.display = 'block';
+      emailForm.style.display = 'block';
+    }
+
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+  </script>
+
+</body>
+</html>

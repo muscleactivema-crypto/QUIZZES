@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keep Well Nutrition Quiz Hub</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f4f8;
+  margin: 0;
+  padding: 0;
+}
+header {
+  text-align: center;
+  padding: 40px 20px 20px;
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+}
+header h1 { 
+  margin: 0; 
+  font-size: 2.5rem; 
+  color: #2c3e50; 
+}
+header p { 
+  font-size: 1.2rem; 
+  color: #34495e; 
+  margin-top: 10px; 
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.card {
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  cursor: pointer;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.2);
+  filter: brightness(1.05);
+}
+.card h2 {
+  margin: 15px 0 10px;
+  font-size: 1.4rem;
+  color: #2c3e50;
+}
+.card p {
+  font-size: 0.95rem;
+  color: #555;
+}
+.card a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Pastel background colours for each quiz */
+.brain { background: #d6eaf8; }         /* Brain & Energy */
+.calorie { background: #fcd5ce; }       /* Calorie Quiz */
+.doer { background: #f9e79f; }          /* Doer or Listener */
+.bungalow { background: #f5cba7; }      /* Bungalow Legs */
+.healthyfood { background: #d5f5e3; }   /* Healthy Food */
+.healthyliving { background: #d0ece7; } /* Healthy Living */
+.hydration { background: #d6eaf8; }     /* Hydration Habits */
+.nutrition { background: #fdebd0; }     /* Nutrition Quiz */
+.physical { background: #fadbd8; }      /* Physical Activity */
+.sitlay { background: #f2d7d5; }        /* Sit–Lay–Decline */
+.vitamins { background: #e8daef; }      /* Vitamins & Minerals */
+.sleep { background: #d6eaf8; }         /* Sleep & Energy */
+</style>
+</head>
+<body>
+<header>
+  <h1>🎯 Keep Well Nutrition Quiz Hub</h1>
+  <p>Where knowledge meets challenge! Click a quiz to test yourself.</p>
+</header>
+
+<div class="grid-container">
+  <div class="card brain"><a href="Brain-energy-quiz.html"><h2>🧠 Brain & Energy</h2><p>Memory fitness quiz to boost your recall and focus.</p></a></div>
+  <div class="card calorie"><a href="CalorieQuiz.html"><h2>🔥 Calorie Quiz</h2><p>Test your knowledge of calorie counts and nutrition.</p></a></div>
+  <div class="card doer"><a href="doerorlistener.html"><h2>👥 Doer or Listener?</h2><p>Find out your action vs observation style in daily life.</p></a></div>
+  <div class="card bungalow"><a href="have-you-got-bungalow-legs.html"><h2>🦵 Bungalow Legs</h2><p>Fun quiz on lower body mobility and strength.</p></a></div>
+  <div class="card healthyfood"><a href="HealthyFoodQuiz.html"><h2>🥗 Healthy Food</h2><p>3-level quiz to test your nutrition knowledge.</p></a></div>
+  <div class="card healthyliving"><a href="Healthylivingquiz-3levels.html"><h2>🌿 Healthy Living</h2><p>3-level quiz on lifestyle, habits, and wellness.</p></a></div>
+  <div class="card hydration"><a href="HydrationHabitsQuiz.html"><h2>💧 Hydration Habits</h2><p>Learn how well you stay hydrated daily.</p></a></div>
+  <div class="card nutrition"><a href="NutritionQuiz-3level.html"><h2>🍎 Nutrition Quiz</h2><p>3-level nutrition knowledge challenge.</p></a></div>
+  <div class="card physical"><a href="PhysicalActivityQuiz-3Levels.html"><h2>🏃 Physical Activity</h2><p>3-level quiz to see how active you really are.</p></a></div>
+  <div class="card sitlay"><a href="Sit-Lay-Decline-Quiz.html"><h2>🛋️ Sit–Lay–Decline</h2><p>1-level quiz to check your daily movement habits.</p></a></div>
+  <div class="card vitamins"><a href="VitaminAndMineralsQuiz.html"><h2>💊 Vitamins & Minerals</h2><p>Test your knowledge on essential nutrients.</p></a></div>
+  <div class="card sleep"><a href="Sleep-Energy-Quiz.html"><h2>🌙 Sleep & Energy</h2><p>3-level quiz on sleep quality and energy habits.</p></a></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!-- Save as: HydrationHabitsQuiz.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hydration Habits Quiz — Keep Well Nutrition</title>
+<style>
+:root{--bg1:#a8edea;--bg2:#fed6e3;--card:#fff;--accent:#3B7D3B}
+body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+.back{position:fixed;left:16px;top:16px;background:#fff;padding:8px 12px;border-radius:10px;text-decoration:none;color:#2c3e50;box-shadow:0 4px 10px rgba(0,0,0,.08);font-weight:700}
+.card{background:var(--card);width:100%;max-width:760px;border-radius:14px;padding:26px;box-shadow:0 8px 30px rgba(0,0,0,.12);position:relative}
+h1{margin:0 0 10px;color:#234}
+p.lead{margin:6px 0 18px;color:#345}
+.progress{color:#444;margin-bottom:12px}
+.question{font-weight:700;margin:14px 0}
+.answers{display:flex;flex-direction:column;gap:10px}
+.answers button{padding:10px;border-radius:10px;border:1px solid #ddd;background:#f4f6f6;cursor:pointer;font-weight:700}
+.answers button:hover{transform:translateY(-2px)}
+.result{margin-top:18px;padding:14px;border-radius:10px;background:#f9fff9;font-weight:700}
+.actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.actions button{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+.tool{background:#6c5ce7;color:#fff}
+.retry{background:#3498db;color:#fff}
+.email-capture{margin-top:12px;border-top:1px dashed #eee;padding-top:12px}
+@media(max-width:520px){.actions{flex-direction:column}.back{left:10px;top:10px}}
+</style>
+</head>
+<body>
+
+<a class="back" href="index.html">❌ Back to Quiz Hub</a>
+
+<div class="card" id="card">
+  <h1>💧 Hydration Habits Quiz</h1>
+  <p class="lead">Check your daily hydration habits. Answer 8 quick questions!</p>
+
+  <div id="quiz">
+    <div class="progress" id="progressTxt"></div>
+    <div class="question" id="questionTxt"></div>
+    <div class="answers" id="answersBox"></div>
+  </div>
+
+  <div id="result" style="display:none">
+    <div class="result" id="resultTxt"></div>
+
+    <div class="email-capture">
+      <p>📩 Want our "Hydration Toolkit" to boost your daily water intake? Enter your email:</p>
+      <form action="https://formspree.io/f/xyzpdqrj" method="POST">
+        <input type="email" name="email" placeholder="you@example.com" required style="padding:10px;border-radius:8px;border:1px solid #ddd;width:60%;max-width:280px">
+        <button class="tool" type="submit">Get Toolkit</button>
+      </form>
+    </div>
+
+    <div class="actions">
+      <button class="retry" onclick="restart()">🔄 Retry</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {q:"How many glasses of water do you drink daily?", a:["8+ glasses","5-7 glasses","2-4 glasses","Less than 2"], correct:"8+ glasses"},
+  {q:"Do you feel thirsty frequently?", a:["Rarely","Sometimes","Often","Always"], correct:"Rarely"},
+  {q:"Do you drink water with meals?", a:["Always","Often","Sometimes","Never"], correct:"Always"},
+  {q:"Do you consume sugary drinks instead of water?", a:["Never","Rarely","Sometimes","Often"], correct:"Never"},
+  {q:"Do you carry a water bottle during the day?", a:["Yes, always","Sometimes","Rarely","Never"], correct:"Yes, always"},
+  {q:"Do you notice dark yellow urine?", a:["Never","Rarely","Sometimes","Often"], correct:"Never"},
+  {q:"Do you drink water before, during, and after exercise?", a:["Yes","Sometimes","Rarely","Never"], correct:"Yes"},
+  {q:"Do you replace fluids after sweating?", a:["Always","Sometimes","Rarely","Never"], correct:"Always"}
+];
+
+let idx=0, score=0, userAnswers=[];
+
+function showQ(){
+  const q = questions[idx];
+  document.getElementById('progressTxt').textContent = `Question ${idx+1} of ${questions.length}`;
+  document.getElementById('questionTxt').textContent = q.q;
+  const box = document.getElementById('answersBox'); box.innerHTML='';
+  q.a.forEach(opt=>{
+    const b=document.createElement('button'); b.textContent=opt;
+    b.onclick = ()=>{ select(opt,q.correct); };
+    box.appendChild(b);
+  });
+}
+
+function select(chosen,correct){
+  userAnswers.push({question:questions[idx].q, chosen, correct});
+  if(chosen===correct) score++;
+  idx++;
+  if(idx<questions.length) showQ();
+  else showResult();
+}
+
+function showResult(){
+  document.getElementById('quiz').style.display='none';
+  const res = document.getElementById('result'); res.style.display='block';
+  let msg = "";
+  if(score>=7) msg="🏆 Excellent! Your hydration habits are on point.";
+  else if(score>=5) msg="👍 Good! A bit more attention to water intake will help.";
+  else msg="⚠️ Consider improving daily water intake for better health.";
+  document.getElementById('resultTxt').textContent = `${msg} You scored ${score} out of ${questions.length}`;
+}
+
+function restart(){ idx=0; score=0; userAnswers=[]; document.getElementById('result').style.display='none'; showQ(); }
+
+showQ();
+</script>
+</body>
+</html>
