@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healthy Living Quiz — Keep Well Nutrition</title>
+<style>
+body {
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(135deg, #e0f7ec, #f5f9f8);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.quiz-container {
+  background: #ffffff;
+  width: 90%;
+  max-width: 600px;
+  margin: 40px 0;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h1 {
+  color: #2E7D32;
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+}
+
+.question {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1c3d5a;
+  margin-bottom: 20px;
+}
+
+.answers button {
+  display: block;
+  width: 100%;
+  background: #f0f8f3;
+  border: 2px solid #a0d6b4;
+  color: #1c3d5a;
+  font-size: 1rem;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.answers button:hover {
+  background: #aee1c0;
+  transform: scale(1.02);
+}
+
+#next-btn, #restart-btn {
+  background: #1c3d5a;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.3s ease;
+}
+
+#next-btn:hover, #restart-btn:hover {
+  background: #2f5c8a;
+}
+
+#result {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #1c3d5a;
+  margin-top: 20px;
+  display: none;
+}
+
+#feedback {
+  font-size: 1rem;
+  color: #2E7D32;
+  margin-top: 10px;
+  font-weight: normal;
+}
+
+.return-btn {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 14px 35px;
+  background: #1c3d5a;
+  color: #fff;
+  border-radius: 35px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.return-btn:hover {
+  background: #2f5c8a;
+}
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>Healthy Living Quiz</h1>
+  <div id="quiz">
+    <div id="question" class="question"></div>
+    <div id="answers" class="answers"></div>
+    <button id="next-btn">Next</button>
+    <div id="result"></div>
+    <div id="feedback"></div>
+    <button id="restart-btn" style="display:none;">Restart Quiz</button>
+  </div>
+  <a href="https://keepwellnutrition.com/blog" class="return-btn">⬅ Return to Blog</a>
+</div>
+
+<script>
+const quizData = [
+  {
+    question: "How many portions of fruit and vegetables do you eat most days?",
+    answers: [
+      { text: "1–2 portions", score: 1 },
+      { text: "3–4 portions", score: 2 },
+      { text: "5 or more portions", score: 3 }
+    ]
+  },
+  {
+    question: "How often do you exercise for at least 20–30 minutes?",
+    answers: [
+      { text: "Rarely or never", score: 1 },
+      { text: "1–2 times a week", score: 2 },
+      { text: "Most days", score: 3 }
+    ]
+  },
+  {
+    question: "How many hours of sleep do you usually get per night?",
+    answers: [
+      { text: "Less than 6 hours", score: 1 },
+      { text: "6–7 hours", score: 2 },
+      { text: "7–8 hours", score: 3 }
+    ]
+  },
+  {
+    question: "How often do you drink water throughout the day?",
+    answers: [
+      { text: "Rarely", score: 1 },
+      { text: "A few glasses", score: 2 },
+      { text: "Regularly stay hydrated", score: 3 }
+    ]
+  },
+  {
+    question: "How would you describe your stress levels?",
+    answers: [
+      { text: "High most days", score: 1 },
+      { text: "Up and down", score: 2 },
+      { text: "Mostly calm and balanced", score: 3 }
+    ]
+  },
+  {
+    question: "How often do you spend time outdoors or in nature?",
+    answers: [
+      { text: "Hardly ever", score: 1 },
+      { text: "A few times a week", score: 2 },
+      { text: "Almost every day", score: 3 }
+    ]
+  },
+  {
+    question: "How often do you take time to relax or do something you enjoy?",
+    answers: [
+      { text: "Rarely", score: 1 },
+      { text: "Sometimes", score: 2 },
+      { text: "Every day", score: 3 }
+    ]
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const nextBtn = document.getElementById("next-btn");
+const resultEl = document.getElementById("result");
+const feedbackEl = document.getElementById("feedback");
+const restartBtn = document.getElementById("restart-btn");
+
+function showQuestion() {
+  const current = quizData[currentQuestion];
+  questionEl.textContent = `${currentQuestion + 1}. ${current.question}`;
+  answersEl.innerHTML = "";
+  current.answers.forEach(answer => {
+    const button = document.createElement("button");
+    button.textContent = answer.text;
+    button.onclick = () => {
+      score += answer.score;
+      nextQuestion();
+    };
+    answersEl.appendChild(button);
+  });
+}
+
+function nextQuestion() {
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  questionEl.style.display = "none";
+  answersEl.style.display = "none";
+  nextBtn.style.display = "none";
+  resultEl.style.display = "block";
+  restartBtn.style.display = "inline-block";
+
+  const maxScore = quizData.length * 3;
+  const percentage = Math.round((score / maxScore) * 100);
+  resultEl.textContent = `Your Healthy Living Score: ${score}/${maxScore} (${percentage}%)`;
+
+  if (percentage <= 40) {
+    feedbackEl.textContent = "It’s time to make small daily changes — even a short walk or extra glass of water helps.";
+  } else if (percentage <= 70) {
+    feedbackEl.textContent = "You’re doing fairly well — keep adding more balance, movement, and self-care time!";
+  } else {
+    feedbackEl.textContent = "Excellent! You’ve built strong daily habits that support lasting health.";
+  }
+}
+
+restartBtn.onclick = () => {
+  currentQuestion = 0;
+  score = 0;
+  questionEl.style.display = "block";
+  answersEl.style.display = "block";
+  nextBtn.style.display = "inline-block";
+  resultEl.style.display = "none";
+  feedbackEl.textContent = "";
+  restartBtn.style.display = "none";
+  showQuestion();
+};
+
+showQuestion();
+</script>
+</body>
+</html>

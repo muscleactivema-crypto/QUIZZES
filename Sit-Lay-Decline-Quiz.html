@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛋 Sit–Lay–Decline Quiz</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #e6f2e6;
+  margin: 0;
+  padding: 10px 15px;  /* compact padding */
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+.quiz-container {
+  background: #fff;
+  width: 100%;
+  max-width: 700px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  padding: 20px;
+  margin: 20px 0; /* reduce top/bottom spacing */
+  text-align: center;
+}
+h1 { font-size: 1.9rem; color: #2E7D32; margin-bottom: 15px; }
+.question-card {
+  background: #DFF5E1;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+.answers button {
+  display: block;
+  width: 80%;
+  max-width: 280px;
+  margin: 8px auto;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #81C784;
+  color: #fff;
+  transition: transform 0.2s, background 0.3s;
+}
+.answers button:hover { transform: scale(1.05); background: #66BB6A; }
+
+.result {
+  display: none;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.return-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 14px 28px;
+  border-radius: 25px;
+  font-weight: bold;
+  background: #2E7D32;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+.return-btn:hover { transform: scale(1.05); background: #1B5E20; }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+<h1>🛋 Sit–Lay–Decline Quiz</h1>
+
+<div id="quiz-screen"></div>
+
+<div class="result" id="result"></div>
+
+<a href="https://keepwellnutrition.com/blog" class="return-btn">⬅ Return to Blog</a>
+</div>
+
+<script>
+// Questions array (example for older adults)
+const questions = [
+  { q: "Do you often sit for more than 1 hour without moving?", a: ["Yes", "Sometimes", "No"], correct: "No" },
+  { q: "Do you stretch or stand at least 2 times per hour?", a: ["Yes", "Sometimes", "No"], correct: "Yes" },
+  { q: "Do you take stairs instead of lifts when possible?", a: ["Yes", "Sometimes", "No"], correct: "Yes" },
+  { q: "Do you do light leg exercises while sitting?", a: ["Yes", "Sometimes", "No"], correct: "Yes" },
+  { q: "Do you feel stiff after long periods of sitting?", a: ["Yes", "Sometimes", "No"], correct: "No" },
+  { q: "Do you maintain good posture while sitting?", a: ["Yes", "Sometimes", "No"], correct: "Yes" },
+  { q: "Do you include short walks in your day?", a: ["Yes", "Sometimes", "No"], correct: "Yes" }
+];
+
+let currentIndex = 0, score = 0;
+
+function showQuestion() {
+  if(currentIndex >= questions.length) return showResult();
+  const quizScreen = document.getElementById("quiz-screen");
+  quizScreen.innerHTML = '';
+  
+  const card = document.createElement("div");
+  card.className = "question-card";
+  card.innerHTML = `<strong>Q${currentIndex+1}:</strong> ${questions[currentIndex].q}`;
+  
+  const answersDiv = document.createElement("div");
+  answersDiv.className = "answers";
+  questions[currentIndex].a.forEach(ans => {
+    const btn = document.createElement("button");
+    btn.textContent = ans;
+    btn.onclick = () => checkAnswer(ans);
+    answersDiv.appendChild(btn);
+  });
+  
+  card.appendChild(answersDiv);
+  quizScreen.appendChild(card);
+}
+
+function checkAnswer(ans) {
+  if(ans === questions[currentIndex].correct) score++;
+  currentIndex++;
+  showQuestion();
+}
+
+function showResult() {
+  document.getElementById("quiz-screen").style.display = "none";
+  const res = document.getElementById("result");
+  let comment = "";
+  if(score <= 3) comment = "Your posture and movement habits need attention. Try short walks and light exercises.";
+  else if(score <= 5) comment = "You're doing okay, but more frequent movement will help improve posture and strength.";
+  else comment = "Excellent! You maintain healthy posture and movement throughout the day.";
+  
+  res.innerHTML = `🏁 Your Score: ${score}/${questions.length}<br>${comment}`;
+  res.style.display = "block";
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>

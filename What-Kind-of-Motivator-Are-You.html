@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>What Kind of Motivator Are You? — Personality & Motivation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg1: #fff8f6;
+  --card: #ffffff;
+  --accent1: #FF7F6B; /* soft coral */
+  --accent2: #3BB2A0; /* teal */
+  --navy: #0b3d91;
+  --muted: #6b6b6b;
+  --radius: 14px;
+  --shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box}
+body{margin:0;padding:0;font-family:Inter,sans-serif;background:var(--bg1);color:#222;display:flex;justify-content:center;padding:12px}
+.wrap{width:100%;max-width:600px}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #e6e6e6}
+.logo{width:50px;height:50px;border-radius:10px;background:var(--accent1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.title-wrap{flex:1}
+h1{margin:0;font-size:1.2rem;color:var(--accent2)}
+p.lead{margin:4px 0 0;font-size:0.95rem;color:var(--muted)}
+.progress-bar-wrap{height:12px;background:#e6f0ef;width:80%;border-radius:999px;margin:14px auto}
+.progress-bar{height:12px;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent1));border-radius:999px;transition:width 420ms ease}
+.content{padding:16px}
+.slide{opacity:0;max-height:0;overflow:hidden;transition:opacity 360ms ease,max-height 360ms ease;margin-bottom:12px}
+.slide.active{opacity:1;max-height:1000px}
+.q-card{display:flex;flex-direction:column;gap:12px}
+.q-title{margin:0 0 12px;font-size:1rem}
+.options{display:grid;gap:10px}
+.option{display:flex;align-items:center;gap:12px;padding:14px;border-radius:10px;border:1px solid #ececec;cursor:pointer;transition:transform 150ms ease, box-shadow 150ms ease}
+.option:hover{transform:translateY(-2px)}
+.option input{display:none}
+.option .label-text{flex:1;font-size:0.95rem}
+.option.selected{background:linear-gradient(180deg,rgba(255,127,107,0.06),rgba(59,178,160,0.02));border-color:rgba(255,127,107,0.12)}
+.controls{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.counter{margin-left:auto;color:var(--muted);font-size:0.9rem}
+.result-screen{padding:16px}
+.result-card{border-radius:12px;padding:16px;color:#fff;margin-top:12px}
+.result-title{font-size:1.1rem;margin:0 0 8px}
+.result-body{margin:0;font-size:0.95rem}
+button.retake{margin-top:12px;padding:12px 16px;border:none;border-radius:10px;background:var(--accent2);color:#fff;cursor:pointer;font-weight:600;transition:background 250ms ease}
+button.retake:hover{background:var(--accent1)}
+button.returnHub{margin-top:12px;padding:12px 16px;border:none;border-radius:10px;background:#888;color:#fff;cursor:pointer;font-weight:600;transition:background 250ms ease}
+button.returnHub:hover{background:#555}
+@media (max-width:480px){.q-title{font-size:0.95rem}.option .label-text{font-size:0.9rem}} 
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="application" aria-labelledby="quizTitle">
+    <div class="header">
+      <div class="logo">PM</div>
+      <div class="title-wrap">
+        <h1 id="quizTitle">What Kind of Motivator Are You?</h1>
+        <p class="lead">Discover your personal drive and how it affects your wellness journey.</p>
+      </div>
+    </div>
+    <div class="progress-bar-wrap" aria-hidden>
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="content" id="slides"></div>
+  </div>
+</div>
+<script>
+const questions = [
+  {q:'What inspires you to stay consistent?', a:['Setting goals and visions 🎯','Being part of a community 🤝','Following a calm routine 🧘','Challenging myself daily 🔥'], v:['Vision Builder','Connector','Steady Soul','Challenger']},
+  {q:'How do you approach new habits?', a:['Plan everything ahead 📅','Seek advice and support 🗣','Stick to small, calm steps 🌿','Jump in and track results 🏋️‍♂️'], v:['Vision Builder','Connector','Steady Soul','Challenger']},
+  {q:'Your ideal wellness session involves…', a:['Visualization and goal mapping 📝','Group activities and encouragement 👯','Gentle, repetitive exercises 🧘‍♀️','Intense measurable workouts 💪'], v:['Vision Builder','Connector','Steady Soul','Challenger']},
+  {q:'When motivation dips, you…', a:['Revisit your goals 🔎','Talk to supportive friends 👂','Stick to familiar routines 🕊','Push yourself with a challenge ⚡'], v:['Vision Builder','Connector','Steady Soul','Challenger']},
+  {q:'Your wellness mantra?', a:['“I have a clear vision” 🌟','“Together we thrive” 🤝','“Slow and steady wins” 🐢','“Challenge brings growth” 🚀'], v:['Vision Builder','Connector','Steady Soul','Challenger']}
+];
+
+const content = document.getElementById('slides');
+const totalQuestions = questions.length;
+
+function createSlide(i){
+  const q = questions[i];
+  const slide = document.createElement('section');
+  slide.className='slide'+(i===0?' active':'');
+  slide.dataset.index=i;
+  let opts = '';
+  q.a.forEach((t,j)=>{
+    opts+=`<label class="option" tabindex="0"><input type="radio" name="q${i+1}" value="${q.v[j]}"><div class="label-text">${t}</div></label>`;
+  });
+  slide.innerHTML=`<div class="q-card"><h2 class="q-title">${i+1}. ${q.q}</h2><div class="options">${opts}</div>
+  <div class="controls"><div class="counter">Question ${i+1} of ${totalQuestions}</div></div></div>`;
+  content.appendChild(slide);
+}
+questions.forEach((q,i)=>createSlide(i));
+
+function bindOptions(){
+  document.querySelectorAll('.slide').forEach(slide=>{
+    const idx = parseInt(slide.dataset.index);
+    slide.querySelectorAll('.option').forEach(opt=>{
+      opt.addEventListener('click', ()=>{
+        const input = opt.querySelector('input'); input.checked=true;
+        opt.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+        opt.classList.add('selected');
+        showNextQuestion(idx);
+      });
+    });
+  });
+}
+bindOptions();
+
+function showSlide(newIdx){
+  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===newIdx));
+  document.getElementById('progressBar').style.width=`${Math.min(newIdx,totalQuestions)/totalQuestions*100}%`;
+}
+
+function showNextQuestion(currentIdx){
+  const nextIdx = currentIdx + 1;
+  if(nextIdx === totalQuestions){
+    showResult();
+    showSlide(totalQuestions);
+  } else {
+    showSlide(nextIdx);
+  }
+}
+
+const resultMeta = {
+  'Vision Builder':'Motivated by clear goals and purpose. You thrive when you have a vision to follow.',
+  'Connector':'Driven by people and community. Support and encouragement keep you going.',
+  'Steady Soul':'Calm, steady, and routine-focused. You prefer gentle, consistent progress.',
+  'Challenger':'Energetic and results-driven. You push boundaries and track measurable growth.'
+};
+
+function showResult(){
+  const counts={'Vision Builder':0,'Connector':0,'Steady Soul':0,'Challenger':0};
+  for(let i=1;i<=totalQuestions;i++){
+    const v=document.querySelector(`input[name='q${i}']:checked`);
+    if(v) counts[v.value]++;
+  }
+  let winner='Steady Soul',max=-1;
+  for(const k in counts){if(counts[k]>max){max=counts[k];winner=k;max=counts[k];}}
+  const res = document.createElement('section');
+  res.className='slide active';
+  res.innerHTML=`<div class="result-screen"><div class="result-card" style="background:${winner==='Vision Builder'? '#FF7F6B':winner==='Connector'? '#3BB2A0':winner==='Steady Soul'? '#888':'#FF9F7F'}"><h3 class="result-title">${winner}</h3><p class="result-body">${resultMeta[winner]}</p>
+  <button class="retake" onclick="retakeQuiz()">Retake Quiz</button>
+  <button class="returnHub" onclick="returnHub()">Return to Quiz Hub</button>
+  </div></div>`;
+  content.appendChild(res);
+  document.getElementById('progressBar').style.width='100%';
+}
+
+function retakeQuiz(){
+  content.innerHTML='';
+  questions.forEach((q,i)=>createSlide(i));
+  bindOptions();
+  showSlide(0);
+  document.getElementById('progressBar').style.width='0%';
+}
+
+function returnHub(){
+  window.location.href='#'; // Add your Quiz Hub link here
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>The Everyday Hero Quiz — Personality & Motivation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff9f7;
+  --card:#ffffff;
+  --coral:#FF7F6B;   /* soft coral */
+  --teal:#3BB2A0;    /* teal */
+  --muted:#6b6b6b;
+  --navy:#23455a;
+  --radius:14px;
+  --shadow:0 8px 26px rgba(23,33,38,0.06);
+}
+*{box-sizing:border-box}
+body{margin:0;padding:12px;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg),#f4f6f5);color:#222;display:flex;justify-content:center}
+.wrap{width:100%;max-width:640px}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--coral),var(--teal));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px}
+.title-wrap{flex:1}
+h1{margin:0;font-size:1.2rem;color:var(--navy)}
+.lead{margin:6px 0 0;color:var(--muted);font-size:0.95rem}
+.progress-wrap{height:12px;background:linear-gradient(90deg,#f0f5f4,#f7f7f6);width:84%;border-radius:999px;margin:14px auto}
+.progress{height:12px;width:0%;background:linear-gradient(90deg,var(--teal),var(--coral));border-radius:999px;transition:width 420ms ease}
+.content{padding:16px}
+.slide{opacity:0;max-height:0;overflow:hidden;transition:opacity 360ms ease,max-height 360ms ease;margin-bottom:12px}
+.slide.active{opacity:1;max-height:1200px}
+.q-card{display:flex;flex-direction:column;gap:12px}
+.q-title{margin:0 0 12px;font-size:1rem;color:#123}
+.options{display:grid;gap:10px}
+.option{display:flex;align-items:center;gap:12px;padding:14px;border-radius:10px;border:1px solid #eee;cursor:pointer;transition:transform 140ms ease,box-shadow 140ms ease,background 140ms}
+.option:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(17,24,30,0.06)}
+.option input{display:none}
+.option .label-text{flex:1;font-size:0.95rem;color:#222}
+.option.selected{background:linear-gradient(180deg,rgba(59,178,160,0.06),rgba(255,127,107,0.03));border-color:rgba(59,178,160,0.14)}
+.controls{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.counter{margin-left:auto;color:var(--muted);font-size:0.9rem}
+.result-screen{padding:16px;text-align:center}
+.result-card{border-radius:12px;padding:18px;color:#fff;margin-top:12px}
+.result-title{font-size:1.1rem;margin:0 0 8px}
+.result-body{margin:0;font-size:0.95rem}
+.btn-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+.btn-retake{background:var(--teal);color:#fff}
+.btn-hub{background:var(--coral);color:#fff}
+@media (max-width:520px){
+  h1{font-size:1.05rem}
+  .logo{width:48px;height:48px}
+  .progress-wrap{width:92%}
+  .option .label-text{font-size:0.92rem}
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="application" aria-labelledby="quizTitle">
+      <div class="header">
+        <div class="logo">EH</div>
+        <div class="title-wrap">
+          <h1 id="quizTitle">The Everyday Hero Quiz</h1>
+          <div class="lead">Which everyday strength helps you stay well? Get a short, friendly tip at the end.</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap" aria-hidden>
+        <div id="progressBar" class="progress"></div>
+      </div>
+
+      <div class="content" id="slides"></div>
+    </div>
+  </div>
+
+<script>
+// quiz data
+const questions = [
+  {
+    q: 'When someone needs support, you most often...',
+    a: [
+      'Listen closely and offer comfort 🤝',
+      'Take charge and organise help 🛠️',
+      'Think through possible solutions 🧠',
+      'Bring people together for a plan 🤗',
+      'Inspire others with a clear vision ✨'
+    ],
+    v: ['Nurturer','Doer','Thinker','Connector','Visionary']
+  },
+  {
+    q: 'Your typical approach to a new habit is to...',
+    a: [
+      'Adjust it gently to fit daily life 🌿',
+      'Start immediately and measure progress 🔢',
+      'Research and learn before trying 📚',
+      'Find someone to join you for accountability 👥',
+      'Picture the end goal and map steps 🎯'
+    ],
+    v: ['Nurturer','Doer','Thinker','Connector','Visionary']
+  },
+  {
+    q: 'When energy dips, you usually...',
+    a: [
+      'Create a calm, caring pause (tea, chat) ☕',
+      'Do a short burst of activity to re-energise ⚡',
+      'Plan a focused rest and strategy later 📝',
+      'Reach out to friends for motivation 📲',
+      'Remind yourself of the bigger purpose 🔎'
+    ],
+    v: ['Nurturer','Doer','Thinker','Connector','Visionary']
+  },
+  {
+    q: 'What makes you feel accomplished after a week?',
+    a: [
+      'Being useful to others and steady care 🕊️',
+      'Hitting measurable goals and tasks ✅',
+      'Learning something new or troubleshooting 🧩',
+      'Strengthening relationships and community 🤝',
+      'Progress toward a long-term dream or project 🌄'
+    ],
+    v: ['Nurturer','Doer','Thinker','Connector','Visionary']
+  },
+  {
+    q: 'Pick the phrase that feels most like you:',
+    a: [
+      '“I keep people comfortable and safe.”',
+      '“I get things done — small wins matter.”',
+      '“I like to understand and improve the system.”',
+      '“Together we make it easier.”',
+      '“I picture a better path and lead.”'
+    ],
+    v: ['Nurturer','Doer','Thinker','Connector','Visionary']
+  }
+];
+
+const totalQuestions = questions.length;
+const slidesContainer = document.getElementById('slides');
+
+// create slides
+function createSlide(i){
+  const q = questions[i];
+  const section = document.createElement('section');
+  section.className = 'slide' + (i === 0 ? ' active' : '');
+  section.dataset.index = i;
+
+  let optionsHtml = '';
+  q.a.forEach((text, idx) => {
+    // radio name q1..qN
+    optionsHtml += `<label class="option" tabindex="0">
+      <input type="radio" name="q${i+1}" value="${q.v[idx]}">
+      <div class="label-text">${text}</div>
+    </label>`;
+  });
+
+  section.innerHTML = `<div class="q-card">
+    <h2 class="q-title">${i+1}. ${q.q}</h2>
+    <div class="options">${optionsHtml}</div>
+    <div class="controls"><div class="counter">Question ${i+1} of ${totalQuestions}</div></div>
+  </div>`;
+
+  slidesContainer.appendChild(section);
+}
+questions.forEach((_,i)=>createSlide(i));
+
+// binding options — highlight + auto-advance
+function bindOptions(){
+  document.querySelectorAll('.slide').forEach(slide=>{
+    const idx = Number(slide.dataset.index);
+    slide.querySelectorAll('.option').forEach(opt=>{
+      opt.addEventListener('click', ()=>{
+        const input = opt.querySelector('input'); input.checked = true;
+        // visual
+        opt.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+        opt.classList.add('selected');
+        // slight delay for UI then next
+        setTimeout(()=> showNextQuestion(idx), 180);
+      });
+      // keyboard accessibility: allow Enter/Space to select
+      opt.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          opt.click();
+        }
+      });
+    });
+  });
+}
+bindOptions();
+
+function showSlide(index){
+  document.querySelectorAll('.slide').forEach((s,i)=> s.classList.toggle('active', i === index));
+  // progress: fraction of completed questions
+  const pct = Math.round((index / totalQuestions) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function showNextQuestion(currentIdx){
+  const nextIdx = currentIdx + 1;
+  if(nextIdx >= totalQuestions){
+    // show results
+    calculateAndShowResult();
+  } else {
+    showSlide(nextIdx);
+  }
+}
+
+// results metadata and tips
+const resultMeta = {
+  'Nurturer': {
+    title: 'The Nurturer 🤝',
+    desc: 'You bring steadiness, care and warmth — your support helps others heal and thrive.',
+    tips: [
+      'Schedule gentle self-care rituals (tea, short walks).',
+      'Prioritise protein-rich meals to keep energy steady.',
+      'Allow small boundaries so your own recovery time is protected.'
+    ],
+    color: '#3BB2A0'
+  },
+  'Doer': {
+    title: 'The Doer 🛠️',
+    desc: 'You take action and prefer measurable progress — small wins keep you motivated.',
+    tips: [
+      'Break recovery tasks into bite-sized goals.',
+      'Use short strength or mobility sessions to feel progress.',
+      'Track gentle wins — consistency beats intensity.'
+    ],
+    color: '#FF7F6B'
+  },
+  'Thinker': {
+    title: 'The Thinker 🧠',
+    desc: 'You like to understand systems and plan — knowledge empowers your recovery choices.',
+    tips: [
+      'Create a simple plan for meals, sleep and gentle activity.',
+      'Research one trusted nutritionally-focused resource weekly.',
+      'Use checklists to translate learning into action.'
+    ],
+    color: '#6C7A89'
+  },
+  'Connector': {
+    title: 'The Connector 🤗',
+    desc: 'You thrive in groups and feel energised by others — community boosts your wellness.',
+    tips: [
+      'Schedule weekly check-ins with a friend for accountability.',
+      'Join gentle group classes (walking, stretching).',
+      'Share simple meal ideas — cooking together helps recovery.'
+    ],
+    color: '#3A8DD5'
+  },
+  'Visionary': {
+    title: 'The Visionary ✨',
+    desc: 'You focus on future possibilities and long-term goals — big-picture thinking fuels you.',
+    tips: [
+      'Set one meaningful weekly goal tied to wellbeing.',
+      'Use visualization or journaling to keep direction clear.',
+      'Pair vision with a small daily habit to make progress steady.'
+    ],
+    color: '#9B59B6'
+  }
+};
+
+// calculate result (most-picked). tie-breaker: highest count then first in mapping order
+function calculateAndShowResult(){
+  const counts = {'Nurturer':0,'Doer':0,'Thinker':0,'Connector':0,'Visionary':0};
+  for(let i=1;i<=totalQuestions;i++){
+    const sel = document.querySelector(`input[name="q${i}"]:checked`);
+    if(sel) counts[sel.value]++;
+  }
+  // determine winner
+  let winner = 'Nurturer';
+  let max = -1;
+  const order = ['Nurturer','Doer','Thinker','Connector','Visionary'];
+  for(const k of order){
+    if(counts[k] > max){ max = counts[k]; winner = k; }
+  }
+
+  const meta = resultMeta[winner];
+  // build result slide
+  const res = document.createElement('section');
+  res.className = 'slide active';
+  const tipsHtml = meta.tips.map(t => `<li>${t}</li>`).join('');
+  res.innerHTML = `
+    <div class="result-screen">
+      <div class="result-card" style="background:${meta.color}">
+        <h3 class="result-title">${meta.title}</h3>
+        <p class="result-body">${meta.desc}</p>
+      </div>
+
+      <div style="background:#fff;border-radius:10px;padding:12px;margin-top:12px;box-shadow:0 6px 14px rgba(0,0,0,0.04);text-align:left">
+        <h4 style="margin:0 0 8px;color:#222">Quick Tips</h4>
+        <ul style="margin:0 0 0 18px;padding:0;color:#333">${tipsHtml}</ul>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-retake" id="retakeBtn">🔄 Retake Quiz</button>
+        <button class="btn btn-hub" id="hubBtn">🔙 Return to Quiz Hub</button>
+      </div>
+    </div>
+  `;
+
+  // clear and append
+  slidesContainer.innerHTML = '';
+  slidesContainer.appendChild(res);
+  document.getElementById('progressBar').style.width = '100%';
+
+  // attach buttons
+  document.getElementById('retakeBtn').addEventListener('click', ()=> {
+    resetQuiz();
+  });
+  document.getElementById('hubBtn').addEventListener('click', ()=> {
+    window.location.href = 'index.html'; // change target if needed
+  });
+
+  // scroll result into view
+  setTimeout(()=> document.querySelector('.result-screen')?.scrollIntoView({behavior:'smooth', block:'start'}),120);
+}
+
+// reset quiz to initial state
+function resetQuiz(){
+  slidesContainer.innerHTML = '';
+  questions.forEach((_,i)=>createSlide(i));
+  bindOptions();
+  showSlide(0);
+  document.getElementById('progressBar').style.width = '0%';
+}
+
+// ensure initial progress 0
+document.getElementById('progressBar').style.width = '0%';
+</script>
+</body>
+</html>

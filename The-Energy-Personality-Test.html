@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>The Energy Personality Test — Personality & Motivation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff9f7;
+  --card:#ffffff;
+  --coral:#FF7F6B;   /* soft coral */
+  --teal:#3BB2A0;    /* teal */
+  --muted:#6b6b6b;
+  --navy:#23455a;
+  --radius:14px;
+  --shadow:0 8px 26px rgba(23,33,38,0.06);
+}
+*{box-sizing:border-box}
+body{margin:0;padding:12px;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg),#f4f6f5);color:#222;display:flex;justify-content:center}
+.wrap{width:100%;max-width:640px}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--coral),var(--teal));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px}
+.title-wrap{flex:1}
+h1{margin:0;font-size:1.2rem;color:var(--navy)}
+.lead{margin:6px 0 0;color:var(--muted);font-size:0.95rem}
+.progress-wrap{height:12px;background:linear-gradient(90deg,#f0f5f4,#f7f7f6);width:84%;border-radius:999px;margin:14px auto}
+.progress{height:12px;width:0%;background:linear-gradient(90deg,var(--teal),var(--coral));border-radius:999px;transition:width 420ms ease}
+.content{padding:16px}
+.slide{opacity:0;max-height:0;overflow:hidden;transition:opacity 360ms ease,max-height 360ms ease;margin-bottom:12px}
+.slide.active{opacity:1;max-height:1200px}
+.q-card{display:flex;flex-direction:column;gap:12px}
+.q-title{margin:0 0 12px;font-size:1rem;color:#123}
+.options{display:grid;gap:10px}
+.option{display:flex;align-items:center;gap:12px;padding:14px;border-radius:10px;border:1px solid #eee;cursor:pointer;transition:transform 140ms ease,box-shadow 140ms ease,background 140ms}
+.option:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(17,24,30,0.06)}
+.option input{display:none}
+.option .label-text{flex:1;font-size:0.95rem;color:#222}
+.option.selected{background:linear-gradient(180deg,rgba(59,178,160,0.06),rgba(255,127,107,0.03));border-color:rgba(59,178,160,0.14)}
+.controls{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.counter{margin-left:auto;color:var(--muted);font-size:0.9rem}
+.result-screen{padding:16px;text-align:center}
+.result-card{border-radius:12px;padding:18px;color:#fff;margin-top:12px}
+.result-title{font-size:1.1rem;margin:0 0 8px}
+.result-body{margin:0;font-size:0.95rem}
+.btn-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+.btn-retake{background:var(--teal);color:#fff}
+.btn-hub{background:var(--coral);color:#fff}
+@media (max-width:520px){
+  h1{font-size:1.05rem}
+  .logo{width:48px;height:48px}
+  .progress-wrap{width:92%}
+  .option .label-text{font-size:0.92rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="application" aria-labelledby="quizTitle">
+    <div class="header">
+      <div class="logo">EP</div>
+      <div class="title-wrap">
+        <h1 id="quizTitle">The Energy Personality Test</h1>
+        <div class="lead">Are you a Morning Burst, Steady Flame, or Late-Night Thinker? Discover your energy type and daily rhythm tip.</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap" aria-hidden>
+      <div id="progressBar" class="progress"></div>
+    </div>
+
+    <div class="content" id="slides"></div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {q:'When do you feel most alert and energetic?', a:['Early morning 🌅','Mid-morning 🌞','Afternoon 💻','Evening 🌇','Late night 🌙'], v:['Morning Burst','Morning Burst','Steady Flame','Steady Flame','Late-Night Thinker']},
+  {q:'Your ideal work or focus period is:', a:['Before sunrise 🌄','Mid-morning focus 📝','Late morning tasks 📊','Evening projects 🎨','Nighttime creative 🌌'], v:['Morning Burst','Morning Burst','Steady Flame','Steady Flame','Late-Night Thinker']},
+  {q:'How do you feel after lunch?', a:['Refreshed and alert ☀️','Steady and functional ✅','Slight dip but manageable 😌','Energy starts to climb 🌆','Wide awake, productive 🌙'], v:['Morning Burst','Morning Burst','Steady Flame','Steady Flame','Late-Night Thinker']},
+  {q:'Ideal time for physical activity?', a:['Early jog or stretch 🏃','Mid-morning gym session 💪','Afternoon walk 🚶','Evening yoga 🧘','Late-night cycling 🚴'], v:['Morning Burst','Morning Burst','Steady Flame','Steady Flame','Late-Night Thinker']},
+  {q:'Which phrase feels most like your rhythm?', a:['Rise with the sun ☀️','Organized morning tasks 📅','Pace steadily through the day ⏳','Evening energy peaks 🌇','Night owl creativity 🌙'], v:['Morning Burst','Morning Burst','Steady Flame','Steady Flame','Late-Night Thinker']}
+];
+
+const totalQuestions = questions.length;
+const slidesContainer = document.getElementById('slides');
+
+function createSlide(i){
+  const q = questions[i];
+  const section = document.createElement('section');
+  section.className = 'slide'+(i===0?' active':'');
+  section.dataset.index=i;
+  let opts='';
+  q.a.forEach((t,j)=>{opts+=`<label class="option" tabindex="0"><input type="radio" name="q${i+1}" value="${q.v[j]}"><div class="label-text">${t}</div></label>`;});
+  section.innerHTML=`<div class="q-card"><h2 class="q-title">${i+1}. ${q.q}</h2><div class="options">${opts}</div><div class="controls"><div class="counter">Question ${i+1} of ${totalQuestions}</div></div></div>`;
+  slidesContainer.appendChild(section);
+}
+questions.forEach((_,i)=>createSlide(i));
+
+function bindOptions(){
+  document.querySelectorAll('.slide').forEach(slide=>{
+    const idx=Number(slide.dataset.index);
+    slide.querySelectorAll('.option').forEach(opt=>{
+      opt.addEventListener('click',()=>{
+        const input=opt.querySelector('input'); input.checked=true;
+        opt.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+        opt.classList.add('selected');
+        setTimeout(()=>showNextQuestion(idx),180);
+      });
+      opt.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();opt.click();}});
+    });
+  });
+}
+bindOptions();
+
+function showSlide(index){
+  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===index));
+  document.getElementById('progressBar').style.width = Math.round((index/totalQuestions)*100)+'%';
+}
+
+function showNextQuestion(currentIdx){
+  const nextIdx = currentIdx+1;
+  if(nextIdx>=totalQuestions){calculateAndShowResult();}
+  else{showSlide(nextIdx);}
+}
+
+const resultMeta = {
+  'Morning Burst': {title:'Morning Burst ☀️',desc:'You thrive early and get more done in the first half of the day.',tips:['Schedule important tasks in the morning.','Start the day with gentle movement.','Light breakfast to fuel energy.'],color:'#FF7F6B'},
+  'Steady Flame': {title:'Steady Flame 🔥',desc:'You maintain a steady energy throughout the day.',tips:['Plan breaks in mid-day.','Balanced meals for stable energy.','Short walks to keep alert.'],color:'#3BB2A0'},
+  'Late-Night Thinker': {title:'Late-Night Thinker 🌙',desc:'You feel most alert and creative in the evening or night.',tips:['Reserve deep thinking for evenings.','Avoid late caffeine for sleep quality.','Gentle evening stretch for recovery.'],color:'#FF7F6B'}
+};
+
+function calculateAndShowResult(){
+  const counts={'Morning Burst':0,'Steady Flame':0,'Late-Night Thinker':0};
+  for(let i=1;i<=totalQuestions;i++){const sel=document.querySelector(`input[name='q${i}']:checked`);if(sel)counts[sel.value]++;}
+  let winner='Morning Burst',max=-1;const order=['Morning Burst','Steady Flame','Late-Night Thinker'];for(const k of order){if(counts[k]>max){max=counts[k];winner=k;}}
+  
+  const res=document.createElement('section');
+  res.className='slide active';
+  const meta=resultMeta[winner];
+  let tipsHtml='<ul>';meta.tips.forEach(t=>{tipsHtml+=`<li>${t}</li>`;});tipsHtml+='</ul>';
+  res.innerHTML=`<div class="result-screen">
+    <div class="result-card" style="background:${meta.color}"><h3 class="result-title">${meta.title}</h3><p class="result-body">${meta.desc}</p>${tipsHtml}</div>
+    <div class="btn-row">
+      <button class="btn btn-retake" onclick="retakeQuiz()">Retake Quiz</button>
+      <button class="btn btn-hub" onclick="returnHub()">Return to Quiz Hub</button>
+    </div>
+  </div>`;
+  slidesContainer.innerHTML='';slidesContainer.appendChild(res);
+  document.getElementById('progressBar').style.width='100%';
+}
+
+function retakeQuiz(){slidesContainer.innerHTML='';questions.forEach((_,i)=>createSlide(i));bindOptions();showSlide(0);}
+function returnHub(){window.location.href='index.html';}
+</script>
+</body>
+</html>

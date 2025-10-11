@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wellness Quiz Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #f6f6f4;
+  color: #222;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #0b3d91;
+  margin: 40px 0 20px;
+  background: linear-gradient(90deg, #e6f2ff 0%, #f6f6f4 50%, #e6f2ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 20px;
+}
+
+.quiz-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+  padding: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.quiz-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.category-bar {
+  height: 6px;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.quiz-card.nutrition .category-bar { background: #3B7D3B; }
+.quiz-card.sleep .category-bar { background: #0b3d91; }
+.quiz-card.motivation .category-bar { background: #FF6F61; }
+.quiz-card.physical .category-bar { background: #20B2AA; }
+.quiz-card.brain .category-bar { background: #8B5CF6; }
+
+.quiz-card:hover .category-bar {
+  background: linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.4) 50%, #fff 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.quiz-title {
+  font-size: 1.1rem;
+  margin: 0 0 8px;
+  color: #0b3d91;
+}
+
+.quiz-desc {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+a.quiz-link {
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<h1>✨ Explore Your Wellness Quizzes ✨</h1>
+
+<div class="quiz-grid">
+
+  <!-- Nutrition -->
+  <a href="Nutrition-Recovery-Quiz.html" class="quiz-link">
+    <div class="quiz-card nutrition">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">The Rebuilder 🥦</h3>
+      <p class="quiz-desc">Focused on strength and nourishment.</p>
+    </div>
+  </a>
+
+  <a href="HealthyFoodQuiz.html" class="quiz-link">
+    <div class="quiz-card nutrition">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Healthy Food Quiz 🥗</h3>
+      <p class="quiz-desc">Test your knowledge of wholesome foods.</p>
+    </div>
+  </a>
+
+  <a href="7-Day-Reset-Readiness-Quiz.html" class="quiz-link">
+    <div class="quiz-card nutrition">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">7-Day Reset Readiness Quiz 🔄</h3>
+      <p class="quiz-desc">See if your body is ready for gentle recovery.</p>
+    </div>
+  </a>
+
+  <a href="The-Everyday-Hero-Quiz.html" class="quiz-link">
+    <div class="quiz-card nutrition">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">The Everyday Hero 💪</h3>
+      <p class="quiz-desc">Check your practical wellness habits.</p>
+    </div>
+  </a>
+
+  <a href="CalorieQuiz.html" class="quiz-link">
+    <div class="quiz-card nutrition">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Calorie Quiz 🔢</h3>
+      <p class="quiz-desc">Understand your energy intake awareness.</p>
+    </div>
+  </a>
+
+  <!-- Sleep -->
+  <a href="Sleep-Energy-Quiz.html" class="quiz-link">
+    <div class="quiz-card sleep">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Sleep & Energy 🌙</h3>
+      <p class="quiz-desc">Discover how well your body recovers during rest.</p>
+    </div>
+  </a>
+
+  <a href="Sleep-Quality-Quiz.html" class="quiz-link">
+    <div class="quiz-card sleep">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Sleep Quality Quiz 🛌</h3>
+      <p class="quiz-desc">Assess your nightly sleep health.</p>
+    </div>
+  </a>
+
+  <a href="Circadian-Rhythm-Quiz.html" class="quiz-link">
+    <div class="quiz-card sleep">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Circadian Rhythm Quiz ⏰</h3>
+      <p class="quiz-desc">Learn how aligned your body clock is.</p>
+    </div>
+  </a>
+
+  <a href="Deep-Recharge-Quiz.html" class="quiz-link">
+    <div class="quiz-card sleep">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Deep Recharge ⚡</h3>
+      <p class="quiz-desc">Check your restorative sleep patterns.</p>
+    </div>
+  </a>
+
+  <a href="Recovery-Mode-Check.html" class="quiz-link">
+    <div class="quiz-card sleep">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Recovery Mode Check 🧘</h3>
+      <p class="quiz-desc">Evaluate how ready your body is for recovery.</p>
+    </div>
+  </a>
+
+  <a href="Sleep-Sync-Quiz.html" class="quiz-link">
+    <div class="quiz-card sleep">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Sleep Sync 🔄</h3>
+      <p class="quiz-desc">Assess how well your sleep aligns with your rhythm.</p>
+    </div>
+  </a>
+
+  <!-- Motivation / Personality -->
+  <a href="What-Kind-of-Motivator-Are-You.html" class="quiz-link">
+    <div class="quiz-card motivation">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Motivation Style Quiz 🚀</h3>
+      <p class="quiz-desc">Find out what drives your wellness habits.</p>
+    </div>
+  </a>
+
+  <a href="Wellness-Personality-Quiz.html" class="quiz-link">
+    <div class="quiz-card motivation">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Wellness Personality Quiz 🌟</h3>
+      <p class="quiz-desc">Discover your wellness personality type.</p>
+    </div>
+  </a>
+
+  <a href="DoerorListener.html" class="quiz-link">
+    <div class="quiz-card motivation">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Doer or Listener? 🎧</h3>
+      <p class="quiz-desc">Understand how you approach challenges.</p>
+    </div>
+  </a>
+
+  <a href="Whats-your-stereotype-quiz.html" class="quiz-link">
+    <div class="quiz-card motivation">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">What's Your Stereotype? 🧐</h3>
+      <p class="quiz-desc">Uncover your wellness vibe personality.</p>
+    </div>
+  </a>
+
+  <a href="Have-You-Got-Bungalow-Legs.html" class="quiz-link">
+    <div class="quiz-card motivation">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Bungalow Legs 🏡</h3>
+      <p class="quiz-desc">Check your lower body strength and mobility.</p>
+    </div>
+  </a>
+
+  <a href="Healthy-Living-Quiz.html" class="quiz-link">
+    <div class="quiz-card motivation">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Healthy Living Quiz 🌱</h3>
+      <p class="quiz-desc">Test your general wellness habits.</p>
+    </div>
+  </a>
+
+  <!-- Physical -->
+  <a href="Strong-Bones-Quiz.html" class="quiz-link">
+    <div class="quiz-card physical">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Strong Bones Quiz 🦴</h3>
+      <p class="quiz-desc">Assess how well you’re maintaining bone strength.</p>
+    </div>
+  </a>
+
+  <a href="Muscle-Vitality-Quiz.html" class="quiz-link">
+    <div class="quiz-card physical">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Muscle Vitality Quiz 💪</h3>
+      <p class="quiz-desc">Check your muscle strength and recovery.</p>
+    </div>
+  </a>
+
+  <a href="Cardio-Balance-Quiz.html" class="quiz-link">
+    <div class="quiz-card physical">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Cardio Balance Quiz ❤️</h3>
+      <p class="quiz-desc">Measure your cardiovascular health.</p>
+    </div>
+  </a>
+
+  <a href="Aerobic-vs-Anaerobic-Quiz.html" class="quiz-link">
+    <div class="quiz-card physical">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Aerobic vs Anaerobic 🏃‍♂️</h3>
+      <p class="quiz-desc">Identify which type of exercise suits you best.</p>
+    </div>
+  </a>
+
+  <a href="Muscle-Power-Quiz.html" class="quiz-link">
+    <div class="quiz-card physical">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Muscle Power Quiz ⚡</h3>
+      <p class="quiz-desc">Evaluate explosive strength performance.</p>
+    </div>
+  </a>
+
+  <a href="Cardio-Fitness-Quiz.html" class="quiz-link">
+    <div class="quiz-card physical">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Cardio Fitness Quiz 🏃‍♀️</h3>
+      <p class="quiz-desc">Assess your overall cardiovascular fitness.</p>
+    </div>
+  </a>
+
+  <!-- Brain / Energy -->
+  <a href="Brain-Energy-Quiz.html" class="quiz-link">
+    <div class="quiz-card brain">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Brain & Energy 🧠</h3>
+      <p class="quiz-desc">Discover your cognitive energy patterns.</p>
+    </div>
+  </a>
+
+  <a href="VitaminAndMineralsQuiz.html" class="quiz-link">
+    <div class="quiz-card brain">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Vitamins & Minerals Quiz 💊</h3>
+      <p class="quiz-desc">Test your nutrient knowledge for brain health.</p>
+    </div>
+  </a>
+
+  <a href="Mental-Resilience-Quiz.html" class="quiz-link">
+    <div class="quiz-card brain">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Mental Resilience 🛡️</h3>
+      <p class="quiz-desc">Check your ability to handle stress and focus.</p>
+    </div>
+  </a>
+
+  <a href="Brain-Recharge-Check.html" class="quiz-link">
+    <div class="quiz-card brain">
+      <div class="category-bar"></div>
+      <h3 class="quiz-title">Brain Recharge Check 🔋</h3>
+      <p class="quiz-desc">Assess how well you restore mental energy.</p>
+    </div>
+  </a>
+
+</div>
+
+</body>
+</html>

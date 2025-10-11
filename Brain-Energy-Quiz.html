@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧠 Brain & Energy Quiz</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f7ff;
+  margin: 0;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+.quiz-container {
+  background: #fff;
+  width: 100%;
+  max-width: 700px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+h1 { font-size: 1.9rem; color: #1e5ba8; margin-bottom: 15px; }
+.question-card {
+  background: #e6f0ff;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 15px;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #1e3d7a;
+}
+.answers button {
+  display: block;
+  width: 80%;
+  max-width: 280px;
+  margin: 8px auto;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #5ba4f0;
+  color: #fff;
+  transition: transform 0.2s, background 0.3s;
+}
+.answers button:hover { transform: scale(1.05); background: #3f8ae0; }
+
+.result {
+  display: none;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.return-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 14px 28px;
+  border-radius: 25px;
+  font-weight: bold;
+  background: #1e5ba8;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+.return-btn:hover { transform: scale(1.05); background: #174682; }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+<h1>🧠 Brain & Energy Quiz</h1>
+
+<div id="quiz-screen"></div>
+
+<div class="result" id="result"></div>
+
+<a href="https://keepwellnutrition.com/blog" class="return-btn">⬅ Return to Blog</a>
+</div>
+
+<script>
+// Questions for older adults
+const questions = [
+  { q: "Do you start your day feeling mentally alert and refreshed?", a: ["Yes", "Sometimes", "No"], correct: "Yes" },
+  { q: "Do you eat breakfast with protein or healthy fats?", a: ["Yes", "Sometimes", "No"], correct: "Yes" },
+  { q: "Do you experience energy dips between 11am and 3pm?", a: ["No", "Sometimes", "Yes"], correct: "No" },
+  { q: "Do you stay mentally active through reading, puzzles, or learning?", a: ["Yes", "Sometimes", "No"], correct: "Yes" },
+  { q: "Do you drink enough water throughout the day?", a: ["Yes", "Sometimes", "No"], correct: "Yes" },
+  { q: "Do you manage stress through relaxation, walks, or deep breathing?", a: ["Yes", "Sometimes", "No"], correct: "Yes" },
+  { q: "Do you get at least 7 hours of sleep most nights?", a: ["Yes", "Sometimes", "No"], correct: "Yes" }
+];
+
+let currentIndex = 0, score = 0;
+
+function showQuestion() {
+  if (currentIndex >= questions.length) return showResult();
+  const quizScreen = document.getElementById("quiz-screen");
+  quizScreen.innerHTML = '';
+
+  const card = document.createElement("div");
+  card.className = "question-card";
+  card.innerHTML = `<strong>Q${currentIndex + 1}:</strong> ${questions[currentIndex].q}`;
+
+  const answersDiv = document.createElement("div");
+  answersDiv.className = "answers";
+  questions[currentIndex].a.forEach(ans => {
+    const btn = document.createElement("button");
+    btn.textContent = ans;
+    btn.onclick = () => checkAnswer(ans);
+    answersDiv.appendChild(btn);
+  });
+
+  card.appendChild(answersDiv);
+  quizScreen.appendChild(card);
+}
+
+function checkAnswer(ans) {
+  if (ans === questions[currentIndex].correct) score++;
+  currentIndex++;
+  showQuestion();
+}
+
+function showResult() {
+  document.getElementById("quiz-screen").style.display = "none";
+  const res = document.getElementById("result");
+  let comment = "";
+  
+  if (score <= 3) {
+    comment = "🧩 Your energy and focus might be running low. Try small, regular meals, hydration, and short activity breaks to boost alertness.";
+  } else if (score <= 5) {
+    comment = "⚡ You’re doing fairly well — a few adjustments to sleep or hydration can help you feel sharper throughout the day.";
+  } else {
+    comment = "🌟 Excellent! Your habits support a strong brain and steady energy. Keep feeding your mind and body well!";
+  }
+
+  res.innerHTML = `🏁 Your Score: ${score}/${questions.length}<br>${comment}`;
+  res.style.display = "block";
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>

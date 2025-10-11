@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physical Activity Quiz — Keep Well Nutrition</title>
+<style>
+:root{
+  --bg1:#a8edea;
+  --bg2:#fed6e3;
+  --card:#fff;
+  --accent:#3B7D3B;
+}
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  margin:0;
+  padding:20px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+.card{
+  background:var(--card);
+  width:100%;
+  max-width:760px;
+  border-radius:14px;
+  padding:26px;
+  box-shadow:0 8px 30px rgba(0,0,0,.12);
+  position:relative;
+}
+h1{
+  margin:0 0 10px;
+  color:#234;
+  text-align:center;
+}
+.progress-bar{
+  width:100%;
+  background:#eee;
+  height:18px;
+  border-radius:9px;
+  margin-bottom:16px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, #3B7D3B, #66BB6A);
+  transition: width 0.3s ease;
+}
+.question{
+  font-weight:700;
+  font-size:1.2rem;
+  margin:14px 0;
+}
+.answers{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.answers button{
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  background:#f4f6f6;
+  cursor:pointer;
+  font-weight:700;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.answers button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 15px rgba(0,0,0,.1);
+}
+.result{
+  margin-top:18px;
+  padding:14px;
+  border-radius:10px;
+  background:#f9fff9;
+  font-weight:700;
+}
+.actions{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.actions button{
+  padding:10px 14px;
+  border-radius:10px;
+  border:0;
+  cursor:pointer;
+  font-weight:700;
+}
+.retry{background:#3498db;color:#fff;}
+.next-level{background:#66BB6A;color:#fff;}
+.finish-quiz{background:#3B7D3B;color:#fff;}
+.back{position:fixed;left:16px;top:16px;background:#fff;padding:8px 12px;border-radius:10px;text-decoration:none;color:#2c3e50;box-shadow:0 4px 10px rgba(0,0,0,.08);font-weight:700}
+@media(max-width:520px){.actions{flex-direction:column}.back{left:10px;top:10px}}
+</style>
+</head>
+<body>
+
+<a class="back" href="https://keepwellnutrition.com/blog">⬅ Back to Blog</a>
+
+<div class="card" id="card">
+  <h1>💪 Physical Activity Quiz</h1>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div id="quiz">
+    <div class="question" id="questionTxt"></div>
+    <div class="answers" id="answersBox"></div>
+  </div>
+
+  <div id="result" style="display:none">
+    <div class="result" id="resultTxt"></div>
+    <div class="actions" id="resultActions"></div>
+  </div>
+</div>
+
+<script>
+const levels=[
+  {name:"Level 1: Easy", questions:[
+    {q:"How many days per week is it recommended to perform some physical activity?", a:["1-2","3-5","7","Everyday"], correct:"3-5"},
+    {q:"Which exercise is good for balance?", a:["Running","Single-leg stand","Bicep curl","None"], correct:"Single-leg stand"},
+    {q:"Stretching improves...", a:["Strength","Flexibility","Speed","Coordination"], correct:"Flexibility"},
+    {q:"Walking briskly is an example of...", a:["Aerobic","Anaerobic","Strength","Balance"], correct:"Aerobic"}
+  ]},
+  {name:"Level 2: Medium", questions:[
+    {q:"Strength training helps to increase...", a:["Bone density","Flexibility","Cardio endurance","Balance"], correct:"Bone density"},
+    {q:"How long should a moderate-intensity workout last?", a:["10 min","20-60 min","90 min","Over 2 hours"], correct:"20-60 min"},
+    {q:"Which activity is good for core strength?", a:["Plank","Walking","Stretching","Cycling"], correct:"Plank"},
+    {q:"High-intensity interval training (HIIT) alternates...", a:["Cardio and Rest","Strength and Flexibility","Yoga and Running","Balance exercises"], correct:"Cardio and Rest"},
+    {q:"Proper warm-up reduces...", a:["Injury risk","Muscle gain","Flexibility","Sleep quality"], correct:"Injury risk"}
+  ]},
+  {name:"Level 3: Hard", questions:[
+    {q:"Recommended weekly exercise for older adults includes...", a:["150 min moderate + strength 2x","30 min once","60 min only cardio","Daily HIIT"], correct:"150 min moderate + strength 2x"},
+    {q:"Which exercise improves bone strength?", a:["Yoga","Weight-bearing activities","Stretching","Pilates"], correct:"Weight-bearing activities"},
+    {q:"How often should you do flexibility exercises?", a:["Daily","Once a week","Rarely","Never"], correct:"Daily"},
+    {q:"Muscle endurance is improved by...", a:["Reps and sets","Cardio only","Stretching","Balance"], correct:"Reps and sets"},
+    {q:"Which is NOT recommended before exercise?", a:["Warm-up","Hydration","Skipping warm-up","Stretching"], correct:"Skipping warm-up"},
+    {q:"Cool-down helps with...", a:["Heart rate recovery","Weight loss","Bone density","Balance"], correct:"Heart rate recovery"}
+  ]}
+];
+
+let levelIndex=0, qIndex=0, score=0, totalScore=0, userAnswers=[];
+
+function showQuestion(){
+  const q = levels[levelIndex].questions[qIndex];
+  document.getElementById('questionTxt').textContent = `${levels[levelIndex].name} — Q${qIndex+1}: ${q.q}`;
+  const box = document.getElementById('answersBox'); box.innerHTML='';
+  q.a.forEach(opt=>{
+    const b=document.createElement('button'); b.textContent=opt;
+    b.onclick = ()=>{ selectAnswer(opt,q.correct); };
+    box.appendChild(b);
+  });
+  updateProgress();
+}
+
+function selectAnswer(selected, correct){
+  userAnswers.push({level:levelIndex+1, question:levels[levelIndex].questions[qIndex].q, chosen:selected, correct});
+  if(selected===correct) score++;
+  qIndex++;
+  if(qIndex<levels[levelIndex].questions.length){
+    showQuestion();
+  } else {
+    showLevelResult();
+  }
+}
+
+function showLevelResult(){
+  document.getElementById('quiz').style.display='none';
+  const res = document.getElementById('result'); res.style.display='block';
+  const levelScore = score;
+  totalScore += levelScore;
+  let msg="";
+  if(levelScore>=Math.ceil(levels[levelIndex].questions.length*0.8)) msg="Excellent! Great knowledge.";
+  else if(levelScore>=Math.ceil(levels[levelIndex].questions.length*0.5)) msg="Good! Keep learning and stay active.";
+  else msg="You might want to review some exercises and tips.";
+  document.getElementById('resultTxt').textContent = `${levels[levelIndex].name} complete — Score: ${levelScore} / ${levels[levelIndex].questions.length}\n${msg}`;
+
+  const actionsDiv=document.getElementById('resultActions');
+  actionsDiv.innerHTML = `
+    <button class="retry" onclick="retryLevel()">🔄 Retry Level</button>
+    ${levelIndex<levels.length-1 ? '<button class="next-level" onclick="nextLevel()">➡ Next Level</button>' 
+      : `<button class="finish-quiz" onclick="finishQuiz()">🏁 Finish Quiz</button>`}
+  `;
+}
+
+function retryLevel(){
+  qIndex=0; score=0; userAnswers=userAnswers.filter(a=>a.level!=levelIndex+1);
+  document.getElementById('result').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  showQuestion();
+}
+
+function nextLevel(){
+  levelIndex++; qIndex=0; score=0;
+  document.getElementById('result').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  showQuestion();
+}
+
+function finishQuiz(){
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('result').style.display='block';
+  let finalMsg="";
+  if(totalScore>=20) finalMsg="🏆 Fantastic! Your exercise knowledge is strong.";
+  else if(totalScore>=12) finalMsg="👍 Good job! Keep learning and stay active.";
+  else finalMsg="⚠️ Keep practicing and check our tips for improvement.";
+
+  document.getElementById('resultTxt').textContent = `Quiz Complete! Total Score: ${totalScore} / ${levels.reduce((acc,l)=>acc+l.questions.length,0)}\n${finalMsg}`;
+  document.getElementById('resultActions').innerHTML = `<a href="https://keepwellnutrition.com/blog" class="next-level">➡ Go to Blog</a>`;
+}
+
+function updateProgress(){
+  const totalQuestions = levels.reduce((acc,l)=>acc+l.questions.length,0);
+  let answered = userAnswers.length;
+  let pct = Math.round((answered/totalQuestions)*100);
+  document.getElementById('progressFill').style.width = pct + "%";
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>

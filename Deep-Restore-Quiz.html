@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>Deep Restore Quiz — Sleep & Recovery</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5f6;
+  --card:#fff;
+  --accent1:#2a3b58;  /* navy */
+  --accent2:#6b4bb1;  /* violet */
+  --muted:#6b6b6b;
+  --radius:14px;
+  --shadow:0 8px 26px rgba(23,33,38,0.06);
+}
+/* --- rest of CSS same as previous quiz --- */
+*{box-sizing:border-box}
+body{margin:0;padding:12px;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg),#f9faf9);color:#222;display:flex;justify-content:center}
+.wrap{width:100%;max-width:640px}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px}
+.title-wrap{flex:1}
+h1{margin:0;font-size:1.2rem;color:var(--accent1)}
+.lead{margin:6px 0 0;color:var(--muted);font-size:0.95rem}
+.progress-wrap{height:12px;background:linear-gradient(90deg,#f0f5f4,#f7f7f6);width:84%;border-radius:999px;margin:14px auto}
+.progress{height:12px;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent1));border-radius:999px;transition:width 420ms ease}
+.content{padding:16px}
+.slide{opacity:0;max-height:0;overflow:hidden;transition:opacity 360ms ease,max-height 360ms ease;margin-bottom:12px}
+.slide.active{opacity:1;max-height:1200px}
+.q-card{display:flex;flex-direction:column;gap:12px}
+.q-title{margin:0 0 12px;font-size:1rem;color:#123}
+.options{display:grid;gap:10px}
+.option{display:flex;align-items:center;gap:12px;padding:14px;border-radius:10px;border:1px solid #eee;cursor:pointer;transition:transform 140ms ease,box-shadow 140ms ease,background 140ms}
+.option:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(17,24,30,0.06)}
+.option input{display:none}
+.option .label-text{flex:1;font-size:0.95rem;color:#222}
+.option.selected{background:linear-gradient(180deg,rgba(107,75,177,0.06),rgba(42,59,88,0.03));border-color:rgba(107,75,177,0.14)}
+.controls{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.counter{margin-left:auto;color:var(--muted);font-size:0.9rem}
+.result-screen{padding:16px;text-align:center}
+.result-card{border-radius:12px;padding:18px;color:#fff;margin-top:12px}
+.result-title{font-size:1.1rem;margin:0 0 8px}
+.result-body{margin:0;font-size:0.95rem}
+.btn-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+.btn-retake{background:var(--accent2);color:#fff}
+.btn-hub{background:var(--accent1);color:#fff}
+@media (max-width:520px){h1{font-size:1.05rem}.logo{width:48px;height:48px}.progress-wrap{width:92%}.option .label-text{font-size:0.92rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="application" aria-labelledby="quizTitle">
+    <div class="header">
+      <div class="logo">DR</div>
+      <div class="title-wrap">
+        <h1 id="quizTitle">Deep Restore Quiz</h1>
+        <div class="lead">Check how efficiently your sleep and recovery support your energy and mental clarity.</div>
+      </div>
+    </div>
+    <div class="progress-wrap" aria-hidden>
+      <div id="progressBar" class="progress"></div>
+    </div>
+    <div class="content" id="slides"></div>
+  </div>
+</div>
+<script>
+const questions=[
+  {q:'How often do you wake up feeling refreshed?', a:['Always 🌅','Mostly ☀️','Sometimes 😴','Rarely 😪','Never 🛌'],v:['High','Moderate','Moderate','Low','Low']},
+  {q:'How long does it take you to fall asleep?', a:['<10min 🌙','10-20min ⏳','20-30min 💤','30-60min 😴','>60min 😪'],v:['High','Moderate','Moderate','Low','Low']},
+  {q:'Do you experience daytime fatigue?', a:['Never ✨','Rarely 😊','Sometimes 😐','Often 😴','Always 😪'],v:['High','High','Moderate','Low','Low']},
+  {q:'How consistent are your sleep patterns?', a:['Very consistent ⏰','Mostly consistent 🕰️','Somewhat variable ⚖️','Variable 😵','Very irregular 🌀'],v:['High','High','Moderate','Low','Low']},
+  {q:'How restorative are your naps?', a:['Very restorative 🌸','Moderately 🌼','Somewhat 🌿','Little 🍂','None ❌'],v:['High','Moderate','Moderate','Low','Low']}
+];
+const totalQuestions=questions.length;
+const slidesContainer=document.getElementById('slides');
+function createSlide(i){const q=questions[i];const section=document.createElement('section');section.className='slide'+(i===0?' active':'');section.dataset.index=i;let opts='';q.a.forEach((t,j)=>{opts+=`<label class="option" tabindex="0"><input type="radio" name="q${i+1}" value="${q.v[j]}"><div class="label-text">${t}</div></label>`;});section.innerHTML=`<div class="q-card"><h2 class="q-title">${i+1}. ${q.q}</h2><div class="options">${opts}</div><div class="controls"><div class="counter">Question ${i+1} of ${totalQuestions}</div></div></div>`;slidesContainer.appendChild(section);}
+questions.forEach((_,i)=>createSlide(i));
+function bindOptions(){document.querySelectorAll('.slide').forEach(slide=>{const idx=Number(slide.dataset.index);slide.querySelectorAll('.option').forEach(opt=>{opt.addEventListener('click',()=>{const input=opt.querySelector('input'); input.checked=true;opt.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));opt.classList.add('selected');setTimeout(()=>showNextQuestion(idx),180);});opt.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();opt.click();}});});});}
+bindOptions();
+function showSlide(index){document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===index));document.getElementById('progressBar').style.width=Math.round((index/totalQuestions)*100)+'%';}
+function showNextQuestion(currentIdx){const nextIdx=currentIdx+1;if(nextIdx>=totalQuestions){calculateAndShowResult();}else{showSlide(nextIdx);}}
+const resultMeta={'High':{title:'High Recovery 🌟',desc:'Your sleep and restorative habits are excellent.',color:'#6b4bb1'},'Moderate':{title:'Moderate Recovery ⚖️',desc:'Your sleep and recovery are decent but can improve.',color:'#2a3b58'},'Low':{title:'Low Recovery ⚠️',desc:'You might need to focus more on sleep quality and rest.',color:'#2a3b58'}};
+function calculateAndShowResult(){const counts={'High':0,'Moderate':0,'Low':0};for(let i=1;i<=totalQuestions;i++){const sel=document.querySelector(`input[name='q${i}']:checked`);if(sel)counts[sel.value]++;}let winner='Moderate',max=-1;const order=['High','Moderate','Low'];for(const k of order){if(counts[k]>max){max=counts[k];winner=k;}}const res=document.createElement('section');res.className='slide active';const meta=resultMeta[winner];res.innerHTML=`<div class="result-screen"><div class="result-card" style="background:${meta.color}"><h3 class="result-title">${meta.title}</h3><p class="result-body">${meta.desc}</p></div><div class="btn-row"><button class="btn btn-retake" onclick="retakeQuiz()">Retake Quiz</button><button class="btn btn-hub" onclick="returnHub()">Return to Quiz Hub</button></div></div>`;slidesContainer.innerHTML='';slidesContainer.appendChild(res);document.getElementById('progressBar').style.width='100%';}
+function retakeQuiz(){slidesContainer.innerHTML='';questions.forEach((_,i)=>createSlide(i));bindOptions();showSlide(0);}
+function returnHub(){window.location.href='index.html';}
+</script>
+</body>
+</html>

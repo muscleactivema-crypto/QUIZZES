@@ -1,0 +1,169 @@
+<!-- Save as: VitaminAndMineralsQuiz.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vitamin & Minerals Quiz — Keep Well Nutrition</title>
+<style>
+:root{--bg1:#a8edea;--bg2:#fed6e3;--card:#fff;--accent:#3B7D3B}
+body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+.back{position:fixed;left:16px;top:16px;background:#fff;padding:8px 12px;border-radius:10px;text-decoration:none;color:#2c3e50;box-shadow:0 4px 10px rgba(0,0,0,.08);font-weight:700}
+.card{background:var(--card);width:100%;max-width:760px;border-radius:14px;padding:26px;box-shadow:0 8px 30px rgba(0,0,0,.12);position:relative}
+h1{margin:0 0 10px;color:#234}
+p.lead{margin:6px 0 18px;color:#345}
+.level-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+button.level{flex:1;padding:10px 12px;border-radius:10px;border:0;color:#fff;font-weight:700;cursor:pointer}
+button.green{background:#3B7D3B} button.orange{background:#E67E22} button.red{background:#C0392B}
+.progress{color:#444;margin-bottom:12px}
+.question{font-weight:700;margin:14px 0}
+.answers{display:flex;flex-direction:column;gap:10px}
+.answers button{padding:10px;border-radius:10px;border:1px solid #ddd;background:#f4f6f6;cursor:pointer;font-weight:700}
+.answers button:hover{transform:translateY(-2px)}
+.result{margin-top:18px;padding:14px;border-radius:10px;background:#f9fff9;font-weight:700}
+.answers-list{margin-top:12px;background:#fff;padding:12px;border-radius:8px;box-shadow:inset 0 0 6px rgba(0,0,0,.03)}
+.answers-list p{margin:8px 0}
+.correct{color:green;font-weight:700}
+.wrong{color:red;font-weight:700}
+.actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.actions button{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+.tool{background:#6c5ce7;color:#fff}
+.retry{background:#3498db;color:#fff}
+.next{background:#2ecc71;color:#fff}
+.email-capture{margin-top:12px;border-top:1px dashed #eee;padding-top:12px}
+@media(max-width:520px){.level-row{flex-direction:column}.actions{flex-direction:column}.back{left:10px;top:10px}}
+</style>
+</head>
+<body>
+
+<a class="back" href="index.html">❌ Back to Quiz Hub</a>
+
+<div class="card" id="card">
+  <h1>💊 Vitamin & Minerals Quiz</h1>
+  <p class="lead">Test your knowledge! Choose a level to begin.</p>
+
+  <div id="start">
+    <div class="level-row">
+      <button class="level green" onclick="start('easy')">🟢 Easy — 5 q</button>
+      <button class="level orange" onclick="start('medium')">🟠 Medium — 7 q</button>
+      <button class="level red" onclick="start('difficult')">🔴 Difficult — 10 q</button>
+    </div>
+  </div>
+
+  <div id="quiz" style="display:none">
+    <div class="progress" id="progressTxt"></div>
+    <div class="question" id="questionTxt"></div>
+    <div class="answers" id="answersBox"></div>
+  </div>
+
+  <div id="result" style="display:none">
+    <div class="result" id="resultTxt"></div>
+    <div class="answers-list" id="answersList"></div>
+
+    <div class="email-capture">
+      <p>📩 Want our "Vitamin & Minerals Toolkit"? Enter your email:</p>
+      <form action="https://formspree.io/f/xyzpdqrj" method="POST">
+        <input type="email" name="email" placeholder="you@example.com" required style="padding:10px;border-radius:8px;border:1px solid #ddd;width:60%;max-width:280px">
+        <button class="tool" type="submit">Get Toolkit</button>
+      </form>
+    </div>
+
+    <div class="actions">
+      <button class="retry" onclick="restart()">🔄 Retry</button>
+      <button class="next" id="nextLevelBtn" onclick="nextLevel()" style="display:none">➡️ Next Level</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questionBank = {
+  easy:[
+    {q:"Which vitamin is essential for strong bones?", a:["Vitamin D","Vitamin C","Vitamin K","B12"], correct:"Vitamin D"},
+    {q:"Iron deficiency can cause?", a:["Fatigue","Weight gain","Hair growth","Clear skin"], correct:"Fatigue"},
+    {q:"Vitamin C helps with…", a:["Immune support","Hair growth","Sleep","Vision"], correct:"Immune support"},
+    {q:"Calcium is important for…", a:["Bones & teeth","Vision","Hearing","Skin"], correct:"Bones & teeth"},
+    {q:"Which nutrient helps prevent anemia?", a:["Iron","Vitamin A","Zinc","Vitamin E"], correct:"Iron"}
+  ],
+  medium:[
+    {q:"Which mineral supports muscle function?", a:["Magnesium","Sodium","Copper","Lead"], correct:"Magnesium"},
+    {q:"Vitamin K is important for…", a:["Blood clotting","Sleep","Hair","Vision"], correct:"Blood clotting"},
+    {q:"Potassium helps with…", a:["Heart & nerve function","Weight loss","Hair growth","Digestion only"], correct:"Heart & nerve function"},
+    {q:"Which vitamin supports skin health?", a:["Vitamin A","Vitamin B12","Vitamin C","Vitamin D"], correct:"Vitamin A"},
+    {q:"Zinc deficiency can cause?", a:["Immune problems","Improved energy","Weight gain","Clear skin"], correct:"Immune problems"},
+    {q:"Selenium is essential for…", a:["Thyroid function","Vision","Hearing","Hair only"], correct:"Thyroid function"},
+    {q:"Magnesium helps with…", a:["Muscle relaxation","Weight loss","Hair growth","Vision"], correct:"Muscle relaxation"}
+  ],
+  difficult:[
+    {q:"Which vitamin is fat-soluble?", a:["Vitamin E","Vitamin C","B12","Vitamin B6"], correct:"Vitamin E"},
+    {q:"Copper deficiency affects…", a:["Blood & nerves","Hair","Bones","Skin"], correct:"Blood & nerves"},
+    {q:"High sodium intake can…", a:["Raise blood pressure","Improve energy","Lower weight","Enhance memory"], correct:"Raise blood pressure"},
+    {q:"Which vitamin aids calcium absorption?", a:["Vitamin D","Vitamin C","Vitamin B12","Vitamin K"], correct:"Vitamin D"},
+    {q:"Iodine is important for…", a:["Thyroid","Heart","Muscle","Vision"], correct:"Thyroid"},
+    {q:"Which mineral helps antioxidant defence?", a:["Selenium","Lead","Mercury","Arsenic"], correct:"Selenium"},
+    {q:"Vitamin B12 deficiency can cause?", a:["Anemia","Hair loss","Vision loss","Weight gain"], correct:"Anemia"},
+    {q:"Which mineral supports bone health?", a:["Calcium","Sodium","Potassium","Iron"], correct:"Calcium"},
+    {q:"Vitamin A is important for…", a:["Vision","Hair","Nails","Hearing"], correct:"Vision"},
+    {q:"Which nutrient helps prevent goitre?", a:["Iodine","Zinc","Iron","Magnesium"], correct:"Iodine"}
+  ]
+};
+
+let level="", questions=[], idx=0, score=0, userAnswers=[];
+
+function start(l){
+  level=l;
+  questions = shuffleArray([...questionBank[l]]).slice(0, questionBank[l].length);
+  idx=0; score=0; userAnswers=[];
+  document.getElementById('start').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  document.getElementById('result').style.display='none';
+  showQ();
+}
+
+function showQ(){
+  const q = questions[idx];
+  document.getElementById('progressTxt').textContent = `Question ${idx+1} of ${questions.length}`;
+  document.getElementById('questionTxt').textContent = q.q;
+  const box = document.getElementById('answersBox'); box.innerHTML='';
+  shuffleArray([...q.a]).forEach(opt=>{
+    const b=document.createElement('button'); b.textContent=opt;
+    b.onclick = ()=>{ select(opt,q.correct); };
+    box.appendChild(b);
+  });
+}
+
+function select(chosen,correct){
+  userAnswers.push({question:questions[idx].q, chosen, correct});
+  if(chosen===correct) score++;
+  idx++;
+  if(idx<questions.length) showQ();
+  else showResult();
+}
+
+function showResult(){
+  document.getElementById('quiz').style.display='none';
+  const res = document.getElementById('result'); res.style.display='block';
+  let msg = "";
+  if(score >= questions.length*0.8) msg="🏆 Excellent! You know your vitamins & minerals well.";
+  else if(score >= questions.length*0.5) msg="👍 Good! Some areas to improve.";
+  else msg="⚠️ Consider learning more about essential nutrients for better health.";
+  document.getElementById('resultTxt').textContent = `${msg} You scored ${score} out of ${questions.length}`;
+
+  const list = document.getElementById('answersList'); list.innerHTML='';
+  userAnswers.forEach((it,i)=>{
+    const p=document.createElement('p');
+    p.innerHTML = `<strong>Q${i+1}:</strong> ${it.question}<br>Your: <span class="${it.chosen===it.correct?'correct':'wrong'}">${it.chosen}</span> | Correct: <span class="correct">${it.correct}</span>`;
+    list.appendChild(p);
+  });
+
+  const next = document.getElementById('nextLevelBtn');
+  const order=['easy','medium','difficult']; const cur=order.indexOf(level);
+  if(cur<order.length-1){ next.style.display='inline-block'; next.dataset.next=order[cur+1]; }
+  else next.style.display='none';
+}
+
+function restart(){ document.getElementById('result').style.display='none'; document.getElementById('start').style.display='block'; }
+function nextLevel(){ start(document.getElementById('nextLevelBtn').dataset.next); }
+function shuffleArray(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
+</script>
+</body>
+</html>
