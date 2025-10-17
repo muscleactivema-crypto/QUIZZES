@@ -1,148 +1,293 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
-<title>Circadian Rhythm Quiz — Sleep & Recovery</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>What’s Your Natural Body Clock?</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f4f6f5;
-  --card:#ffffff;
-  --accent1:#23455a;   /* midnight/navy */
-  --accent2:#3bb2a0;   /* light teal */
+  --bg:#fbf7f2;
+  --card:#fff;
+  --accent:#b86b3a;
+  --accent2:#c79b4a;
   --muted:#6b6b6b;
+  --text:#223;
   --radius:14px;
-  --shadow:0 8px 26px rgba(23,33,38,0.06);
+  --shadow:0 8px 30px rgba(0,0,0,0.08);
+  --btn:#2e8b57;
 }
-/* --- same style as previous quiz --- */
-*{box-sizing:border-box}
-body{margin:0;padding:12px;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg),#f9faf9);color:#222;display:flex;justify-content:center}
-.wrap{width:100%;max-width:640px}
-.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-.header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee}
-.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px}
-.title-wrap{flex:1}
-h1{margin:0;font-size:1.2rem;color:var(--accent1)}
-.lead{margin:6px 0 0;color:var(--muted);font-size:0.95rem}
-.progress-wrap{height:12px;background:linear-gradient(90deg,#f0f5f4,#f7f7f6);width:84%;border-radius:999px;margin:14px auto}
-.progress{height:12px;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent1));border-radius:999px;transition:width 420ms ease}
-.content{padding:16px}
-.slide{opacity:0;max-height:0;overflow:hidden;transition:opacity 360ms ease,max-height 360ms ease;margin-bottom:12px}
-.slide.active{opacity:1;max-height:1200px}
-.q-card{display:flex;flex-direction:column;gap:12px}
-.q-title{margin:0 0 12px;font-size:1rem;color:#123}
-.options{display:grid;gap:10px}
-.option{display:flex;align-items:center;gap:12px;padding:14px;border-radius:10px;border:1px solid #eee;cursor:pointer;transition:transform 140ms ease,box-shadow 140ms ease,background 140ms}
-.option:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(17,24,30,0.06)}
-.option input{display:none}
-.option .label-text{flex:1;font-size:0.95rem;color:#222}
-.option.selected{background:linear-gradient(180deg,rgba(59,178,160,0.06),rgba(35,69,90,0.03));border-color:rgba(59,178,160,0.14)}
-.controls{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
-.counter{margin-left:auto;color:var(--muted);font-size:0.9rem}
-.result-screen{padding:16px;text-align:center}
-.result-card{border-radius:12px;padding:18px;color:#fff;margin-top:12px}
-.result-title{font-size:1.1rem;margin:0 0 8px}
-.result-body{margin:0;font-size:0.95rem}
-.btn-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
-.btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
-.btn-retake{background:var(--accent2);color:#fff}
-.btn-hub{background:var(--accent1);color:#fff}
-@media (max-width:520px){h1{font-size:1.05rem}.logo{width:48px;height:48px}.progress-wrap{width:92%}.option .label-text{font-size:0.92rem}}
+*{box-sizing:border-box;}
+body{margin:0;padding:16px;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);display:flex;justify-content:center;}
+.wrap{width:100%;max-width:820px;}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.header{padding:18px 20px;display:flex;gap:14px;align-items:center;border-bottom:1px solid #efe6dd;}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px;}
+.title-wrap{flex:1;}
+h1{margin:0;font-size:1.2rem;color:var(--text);line-height:1.15;}
+p.lead{margin:6px 0 0;color:var(--muted);font-size:0.95rem;}
+.progress-wrap{padding:14px 20px;border-bottom:1px solid #f6efe6;}
+.progress-track{height:12px;background:#f0e9e2;border-radius:999px;overflow:hidden;position:relative;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width 360ms ease;}
+.progress-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:0.9rem;color:var(--muted);align-items:center;}
+
+.content{padding:18px;}
+.slide{opacity:0;max-height:0;overflow:hidden;transition:opacity 320ms ease,max-height 320ms ease;margin-bottom:12px;}
+.slide.active{opacity:1;max-height:2000px;}
+.q-card{display:flex;flex-direction:column;gap:12px;}
+.q-title{margin:0 0 6px;font-size:1rem;color:var(--text);font-weight:700;}
+.options{display:grid;gap:10px;}
+.option{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:1px solid #efe6e0;cursor:pointer;background:transparent;transition:transform .12s, box-shadow .12s;}
+.option:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.06);}
+.option input{display:none;}
+.option .label-text{flex:1;font-size:0.95rem;color:var(--text);}
+.option.selected{background:linear-gradient(180deg,rgba(199,155,74,0.06),rgba(184,107,58,0.03));border-color:rgba(199,155,74,0.12);}
+.controls{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap;}
+.counter{margin-left:auto;color:var(--muted);font-size:0.9rem;}
+.result-screen{padding:12px;}
+.result-card{border-radius:12px;padding:16px;color:#fff;margin-top:12px;}
+.result-title{font-size:1.05rem;margin:0 0 8px;}
+.result-body{margin:0;font-size:0.95rem;color:#fff;line-height:1.4;}
+.recommend{background:#fff;padding:14px;border-radius:10px;color:var(--text);margin-top:12px;border:1px solid #f0e6de;}
+.recommend h4{margin:0 0 8px;}
+.smallmuted{font-size:0.9rem;color:var(--muted);margin-top:6px;}
+.btn{display:inline-block;padding:10px 14px;border:none;border-radius:10px;background:var(--btn);color:#fff;font-weight:600;cursor:pointer;transition:0.18s;}
+.btn.secondary{background:#6c7a89;}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+@media (max-width:520px){.wrap{padding:8px}.header{padding:12px}.title-wrap h1{font-size:1rem}}
+.bar-row{display:flex;gap:10px;align-items:center;margin-top:10px;}
+.metric{flex:1;background:#faf6f2;border-radius:8px;padding:8px;}
+.meter{height:12px;border-radius:8px;background:#f3efe9;overflow:hidden;}
+.meter .fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0%;transition:width 420ms ease;}
+.note{font-size:0.9rem;color:var(--muted);margin-top:8px;}
 </style>
 </head>
 <body>
+<!-- Floating Back to Quiz Hub button -->
+<a href="https://keepwellnutrition.com/QUIZZES" 
+   style="position:fixed;top:16px;left:16px;z-index:9999;text-decoration:none;">
+   <button class="btn secondary" style="padding:8px 12px;font-size:0.9rem;">Back to Quiz Hub</button>
+</a>
+
 <div class="wrap">
-  <div class="card" role="application" aria-labelledby="quizTitle">
+  <div class="card" role="main" aria-labelledby="quizTitle">
     <div class="header">
-      <div class="logo">CR</div>
+      <div class="logo">🕰️</div>
       <div class="title-wrap">
-        <h1 id="quizTitle">Circadian Rhythm Quiz</h1>
-        <div class="lead">Check if your body clock and energy patterns are in sync for optimal sleep and daytime function.</div>
+        <h1 id="quizTitle">What’s Your Natural Body Clock?</h1>
+        <p class="lead">A short personality-style self-assessment to reveal whether you're an Early Bird, Midtype, Night Owl, or have an Irregular rhythm — friendly, warm, and practical.</p>
       </div>
     </div>
-    <div class="progress-wrap" aria-hidden>
-      <div id="progressBar" class="progress"></div>
+
+    <div class="progress-wrap" aria-hidden="true">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-meta">
+        <div id="progressCount">Answered 0 / 8</div>
+        <div id="progressPct">0%</div>
+      </div>
     </div>
+
     <div class="content" id="slides"></div>
   </div>
 </div>
 
 <script>
-const questions = [
-  {q:'What time do you naturally wake up?', a:['Before 6am 🌅','6-7am ⏰','7-9am 🌞','9-11am 🌤️','After 11am 🌙'], v:['Early Bird','Early Bird','Balanced Rhythm','Balanced Rhythm','Night Owl']},
-  {q:'When do you feel most energetic?', a:['Early morning ☀️','Late morning 🌄','Afternoon 🌞','Evening 🌆','Late night 🌌'], v:['Early Bird','Early Bird','Balanced Rhythm','Balanced Rhythm','Night Owl']},
-  {q:'Preferred time to eat main meals?', a:['Early morning breakfast 🍳','Mid-morning 🥗','Noon/afternoon 🍴','Evening 🌇','Late night 🌙'], v:['Early Bird','Early Bird','Balanced Rhythm','Balanced Rhythm','Night Owl']},
-  {q:'How often do you nap during the day?', a:['Never ❌','Rarely 🙃','Occasionally 😌','Often 😴','Almost daily 🌙'], v:['Early Bird','Balanced Rhythm','Balanced Rhythm','Night Owl','Night Owl']},
-  {q:'Ideal work/focus period?', a:['Sunrise 🌄','Morning 📝','Afternoon ⏳','Evening 🌇','Late night 🌌'], v:['Early Bird','Balanced Rhythm','Balanced Rhythm','Night Owl','Night Owl']}
+// ---------- QUESTIONS & SCORING ----------
+const qList = [
+  { q: "When do you feel most alert and focused during a normal day?", a:[
+      {t:"Very early morning (5–8am)", s:{early:2,mid:0,night:0,irregular:0}},
+      {t:"Morning (8–11am)", s:{early:1,mid:1,night:0,irregular:0}},
+      {t:"Midday (11am–2pm)", s:{early:0,mid:2,night:0,irregular:0}},
+      {t:"Late afternoon/evening (4–9pm)", s:{early:0,mid:1,night:1,irregular:0}},
+      {t:"Late night (after 10pm)", s:{early:0,mid:0,night:2,irregular:0}}
+    ]},
+  { q: "How easy is it for you to wake up without an alarm on a free morning?", a:[
+      {t:"Very easy — I wake naturally early", s:{early:2,mid:0,night:0,irregular:0}},
+      {t:"Fairly easy", s:{early:1,mid:1,night:0,irregular:0}},
+      {t:"Depends", s:{early:0,mid:1,night:0,irregular:1}},
+      {t:"Usually needs an alarm", s:{early:0,mid:0,night:1,irregular:0}},
+      {t:"I struggle to wake", s:{early:0,mid:0,night:2,irregular:0}}
+    ]},
+  { q: "What time do you usually go to bed on most nights?", a:[
+      {t:"Before 10pm", s:{early:2,mid:0,night:0,irregular:0}},
+      {t:"10–11pm", s:{early:1,mid:1,night:0,irregular:0}},
+      {t:"11pm–12am", s:{early:0,mid:2,night:0,irregular:0}},
+      {t:"12–1am", s:{early:0,mid:1,night:1,irregular:0}},
+      {t:"After 1am", s:{early:0,mid:0,night:2,irregular:0}}
+    ]},
+  { q: "How consistent are your sleep and wake times across the week?", a:[
+      {t:"Very consistent (±30 min)", s:{early:1,mid:1,night:1,irregular:0}},
+      {t:"Mostly consistent", s:{early:1,mid:1,night:0,irregular:0}},
+      {t:"Some variability", s:{early:0,mid:1,night:0,irregular:1}},
+      {t:"Often quite different (weekends vs weekdays)", s:{early:0,mid:0,night:0,irregular:2}},
+      {t:"Highly irregular", s:{early:0,mid:0,night:0,irregular:3}}
+    ]},
+  { q: "When do you prefer to do your best work or concentrate?", a:[
+      {t:"First thing in the morning", s:{early:2,mid:0,night:0,irregular:0}},
+      {t:"Mid-morning to midday", s:{early:1,mid:1,night:0,irregular:0}},
+      {t:"Early afternoon", s:{early:0,mid:2,night:0,irregular:0}},
+      {t:"Late afternoon / early evening", s:{early:0,mid:1,night:1,irregular:0}},
+      {t:"Night / late evening", s:{early:0,mid:0,night:2,irregular:0}}
+    ]},
+  { q: "How often do you take naps and when?", a:[
+      {t:"Rarely/never", s:{early:1,mid:1,night:0,irregular:0}},
+      {t:"Short occasional naps (1–2x/wk)", s:{early:0,mid:1,night:0,irregular:0}},
+      {t:"Regular short naps (3–4x/wk)", s:{early:0,mid:1,night:0,irregular:1}},
+      {t:"Long/late naps often", s:{early:0,mid:0,night:1,irregular:1}},
+      {t:"Daily naps or variable timing", s:{early:0,mid:0,night:0,irregular:2}}
+    ]},
+  { q: "How alert do you feel in the evening (9–11pm)?", a:[
+      {t:"Very sleepy — I wind down early", s:{early:2,mid:0,night:0,irregular:0}},
+      {t:"A bit sleepy", s:{early:1,mid:1,night:0,irregular:0}},
+      {t:"Neutral", s:{early:0,mid:1,night:0,irregular:0}},
+      {t:"Quite alert", s:{early:0,mid:0,night:1,irregular:0}},
+      {t:"Very alert — I have a 'second wind'", s:{early:0,mid:0,night:2,irregular:0}}
+    ]},
+  { q: "How much do external factors (work, kids, social life) shift your sleep schedule?", a:[
+      {t:"Not much — schedule is stable", s:{early:1,mid:1,night:1,irregular:0}},
+      {t:"Occasionally", s:{early:0,mid:1,night:0,irregular:0}},
+      {t:"Regularly shifts schedule", s:{early:0,mid:0,night:0,irregular:2}},
+      {t:"Often unpredictable", s:{early:0,mid:0,night:0,irregular:3}},
+      {t:"Completely variable", s:{early:0,mid:0,night:0,irregular:4}}
+    ]},
+  { q: "Which statement best describes your energy over a typical day?", a:[
+      {t:"High in morning, low by evening", s:{early:2,mid:0,night:0,irregular:0}},
+      {t:"Steady energy across day", s:{early:0,mid:2,night:0,irregular:0}},
+      {t:"Peak around midday", s:{early:0,mid:1,night:0,irregular:0}},
+      {t:"Peak late afternoon / evening", s:{early:0,mid:0,night:1,irregular:0}},
+      {t:"No regular pattern (varies a lot)", s:{early:0,mid:0,night:0,irregular:3}}
+    ]}
 ];
 
-const totalQuestions = questions.length;
-const slidesContainer = document.getElementById('slides');
+// ---------- STATE ----------
+const slidesEl = document.getElementById('slides');
+const progressFill = document.getElementById('progressFill');
+const progressCount = document.getElementById('progressCount');
+const progressPct = document.getElementById('progressPct');
 
-function createSlide(i){
-  const q=questions[i];
-  const section=document.createElement('section');
-  section.className='slide'+(i===0?' active':'');
-  section.dataset.index=i;
-  let opts='';
-  q.a.forEach((t,j)=>{opts+=`<label class="option" tabindex="0"><input type="radio" name="q${i+1}" value="${q.v[j]}"><div class="label-text">${t}</div></label>`;});
-  section.innerHTML=`<div class="q-card"><h2 class="q-title">${i+1}. ${q.q}</h2><div class="options">${opts}</div><div class="controls"><div class="counter">Question ${i+1} of ${totalQuestions}</div></div></div>`;
-  slidesContainer.appendChild(section);
-}
-questions.forEach((_,i)=>createSlide(i));
+let idx = 0;
+let tally = { early:0, mid:0, night:0, irregular:0 };
+let responses = [];
 
-function bindOptions(){
-  document.querySelectorAll('.slide').forEach(slide=>{
-    const idx=Number(slide.dataset.index);
-    slide.querySelectorAll('.option').forEach(opt=>{
-      opt.addEventListener('click',()=>{
-        const input=opt.querySelector('input'); input.checked=true;
-        opt.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
-        opt.classList.add('selected');
-        setTimeout(()=>showNextQuestion(idx),180);
-      });
-      opt.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();opt.click();}});
-    });
+// ---------- RENDERING ----------
+function renderQuestion(i){
+  const Q = qList[i];
+  const slide = document.createElement('section');
+  slide.className = 'slide active';
+  let optionsHtml = '';
+  Q.a.forEach((opt, oi)=>{
+    optionsHtml += `<label class="option" data-idx="${oi}"><input type="radio" name="q${i}" value="${oi}"><div class="label-text">${opt.t}</div></label>`;
   });
-}
-bindOptions();
+  slide.innerHTML = `<div class="q-card">
+    <h3 class="q-title">Q${i+1} of ${qList.length}: ${Q.q}</h3>
+    <div class="options">${optionsHtml}</div>
+    <div class="controls"><div class="counter">Answered ${responses.length}/${qList.length}</div></div>
+  </div>`;
+  slidesEl.innerHTML = '';
+  slidesEl.appendChild(slide);
 
-function showSlide(index){
-  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===index));
-  document.getElementById('progressBar').style.width=Math.round((index/totalQuestions)*100)+'%';
-}
-
-function showNextQuestion(currentIdx){
-  const nextIdx=currentIdx+1;
-  if(nextIdx>=totalQuestions){calculateAndShowResult();}
-  else{showSlide(nextIdx);}
-}
-
-const resultMeta={
-  'Early Bird': {title:'Early Bird 🌅',desc:'You wake up naturally early and feel most productive in the morning.',color:'#23455a'},
-  'Balanced Rhythm': {title:'Balanced Rhythm ⚖️',desc:'Your energy is fairly even across the day.',color:'#3bb2a0'},
-  'Night Owl': {title:'Night Owl 🌙',desc:'You are most alert in the evening or night.',color:'#23455a'}
-};
-
-function calculateAndShowResult(){
-  const counts={'Early Bird':0,'Balanced Rhythm':0,'Night Owl':0};
-  for(let i=1;i<=totalQuestions;i++){const sel=document.querySelector(`input[name='q${i}']:checked`);if(sel)counts[sel.value]++;}
-  let winner='Balanced Rhythm',max=-1;const order=['Early Bird','Balanced Rhythm','Night Owl'];for(const k of order){if(counts[k]>max){max=counts[k];winner=k;}}
-  const res=document.createElement('section');
-  res.className='slide active';
-  const meta=resultMeta[winner];
-  res.innerHTML=`<div class="result-screen"><div class="result-card" style="background:${meta.color}"><h3 class="result-title">${meta.title}</h3><p class="result-body">${meta.desc}</p></div>
-    <div class="btn-row">
-      <button class="btn btn-retake" onclick="retakeQuiz()">Retake Quiz</button>
-      <button class="btn btn-hub" onclick="returnHub()">Return to Quiz Hub</button>
-    </div></div>`;
-  slidesContainer.innerHTML='';slidesContainer.appendChild(res);
-  document.getElementById('progressBar').style.width='100%';
+  slide.querySelectorAll('.option').forEach(el => {
+    el.addEventListener('click', ()=>{
+      const choiceIdx = parseInt(el.dataset.idx,10);
+      slide.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+      el.classList.add('selected');
+      const selectedScore = Q.a[choiceIdx].s;
+      responses.push({ q: Q.q, choice: Q.a[choiceIdx].t, score: selectedScore });
+      Object.keys(selectedScore).forEach(k => { tally[k] = (tally[k] || 0) + selectedScore[k]; });
+      updateProgress();
+      slide.querySelectorAll('.option').forEach(o=>o.style.pointerEvents='none');
+      setTimeout(()=>{ idx++; if(idx < qList.length) renderQuestion(idx); else showResult(); }, 220);
+    }, { once: true });
+  });
+  updateProgress();
 }
 
-function retakeQuiz(){slidesContainer.innerHTML='';questions.forEach((_,i)=>createSlide(i));bindOptions();showSlide(0);}
-function returnHub(){window.location.href='index.html';}
+function updateProgress(){
+  const answered = responses.length;
+  const total = qList.length;
+  const pct = Math.round((answered/total)*100);
+  progressFill.style.width = pct + '%';
+  progressCount.textContent = `Answered ${answered} / ${total}`;
+  progressPct.textContent = pct + '%';
+}
+
+// ---------- RESULTS ----------
+function showResult(){
+  const keys = ['early','mid','night','irregular'];
+  const scores = keys.map(k=>({k, v: tally[k] || 0}));
+  scores.sort((a,b)=>b.v - a.v);
+  const top = scores[0], second = scores[1];
+  const margin = top.v - second.v;
+  let profileKey = top.k, confidence='strong';
+  if(margin <= Math.max(2, Math.ceil(qList.length*0.15))) confidence='moderate';
+  if(margin <= 0) confidence='mixed';
+
+  let title='', summary='', tips='';
+  if(profileKey==='early'){ title=confidence==='strong'?'Early Bird 🌅 — Strong Morning Type':'Morning-leaning 🌅'; summary='You naturally favour earlier hours — mornings are where you feel most awake and productive.'; tips=`<ul><li><strong>Morning sunlight:</strong> Get bright light soon after waking to stabilise rhythm.</li><li><strong>Morning exercise:</strong> Suits you — helps alertness and mood.</li><li><strong>Evening wind-down:</strong> Dim lights and avoid heavy late meals for best sleep.</li></ul>`;}
+  else if(profileKey==='mid'){ title=confidence==='strong'?'Steady Midtype ☀️ — Balanced Daytime Rhythm':'Midday-leaning ☀️'; summary='You’re steady through the day and don’t show a strong early/late preference — that flexibility is useful.'; tips=`<ul><li><strong>Keep regularity:</strong> Consistent sleep/wake times will preserve your balance.</li><li><strong>Align tasks:</strong> Use mornings for planning, midday for steady work, afternoons for movement.</li><li><strong>Light & meals:</strong> Morning light and balanced meal timing support stability.</li></ul>`;}
+  else if(profileKey==='night'){ title=confidence==='strong'?'Night Owl 🌙 — Strong Evening Type':'Evening-leaning 🌙'; summary='You naturally come alive later in the day. Evenings are likely when you feel most focused and creative.'; tips=`<ul><li><strong>Protect sleep:</strong> Use darkening & calming routines before bed even if you feel alert late.</li><li><strong>Strategic light:</strong> Bright daytime light helps anchor circadian timing; dim evenings help sleep onset.</li><li><strong>Schedule:</strong> If possible, schedule key tasks for later when you feel most awake.</li></ul>`;}
+  else{ title='Irregular Rhythm 🔄 — Variable Sleep–Wake Pattern'; summary='Your timing varies a lot day-to-day — this could be due to shift work, caregiving, stress, or inconsistent habits.'; tips=`<ul><li><strong>Stabilise routines:</strong> Aim for consistent wake times and sleep windows where possible.</li><li><strong>Light & meals:</strong> Use morning light and consistent meal times to help anchor your clock.</li><li><strong>Track & adapt:</strong> Short naps and controlled caffeine can help, but keep naps short (<30 min).</li></ul>`;}
+
+  const totalPoints = keys.reduce((s,k)=>s + (tally[k]||0),0)||1;
+  const percents={}; keys.forEach(k=>percents[k]=Math.round(((tally[k]||0)/totalPoints)*100));
+
+  const slide=document.createElement('section');
+  slide.className='slide active';
+  slide.innerHTML=`<div class="result-screen">
+    <div class="result-card" style="background:linear-gradient(90deg,var(--accent2),var(--accent))">
+      <h3 class="result-title">${title}</h3>
+      <p class="result-body">${summary}</p>
+    </div>
+
+    <div class="recommend">
+      <h4>Your pattern breakdown</h4>
+      <div class="bar-row">
+        <div style="width:24%;font-weight:700;color:var(--muted)">Morning</div>
+        <div style="width:24%;font-weight:700;color:var(--muted)">Mid</div>
+        <div style="width:24%;font-weight:700;color:var(--muted)">Night</div>
+        <div style="width:24%;font-weight:700;color:var(--muted)">Irregular</div>
+      </div>
+      <div class="bar-row" style="margin-top:8px;">
+        <div class="metric"><div class="meter"><div class="fill" style="width:${percents.early}%"></div></div><div class="note">${percents.early}%</div></div>
+        <div class="metric"><div class="meter"><div class="fill" style="width:${percents.mid}%"></div></div><div class="note">${percents.mid}%</div></div>
+        <div class="metric"><div class="meter"><div class="fill" style="width:${percents.night}%"></div></div><div class="note">${percents.night}%</div></div>
+        <div class="metric"><div class="meter"><div class="fill" style="width:${percents.irregular}%"></div></div><div class="note">${percents.irregular}%</div></div>
+      </div>
+
+      <div style="margin-top:12px">${tips}</div>
+
+      <div class="actions">
+        <button class="btn" id="saveBtn">Save Result</button>
+        <button class="btn secondary" id="retakeBtn">Retake</button>
+        <button class="btn" id="shareBtn">Share</button>
+      </div>
+
+      <p class="smallmuted">Result saved locally only. You can retake anytime to update your profile.</p>
+    </div>
+    
+    <div style="margin-top:14px" class="recommend">
+      <h4>Your responses</h4>
+      <div id="responseList" style="font-size:0.95rem;color:var(--muted)"></div>
+    </div>
+  </div>`;
+
+  slidesEl.innerHTML=''; slidesEl.appendChild(slide);
+
+  const respEl=document.getElementById('responseList');
+  responses.forEach((r,i)=>{
+    const p=document.createElement('p'); p.style.margin='8px 0'; p.innerHTML=`<strong>Q${i+1}:</strong> ${r.q}<br><em>Your answer:</em> ${r.choice}`; respEl.appendChild(p);
+  });
+
+  const snapshot={ title, summary, percents, timestamp:new Date().toISOString(), confidence };
+  try{ localStorage.setItem('circadian_profile', JSON.stringify(snapshot)); } catch(e){}
+
+  document.getElementById('retakeBtn').addEventListener('click', ()=>{ idx=0; tally={ early:0, mid:0, night:0, irregular:0 }; responses=[]; renderQuestion(0); updateProgress(); });
+  document.getElementById('saveBtn').addEventListener('click', ()=>{ try{ localStorage.setItem('circadian_profile', JSON.stringify(snapshot)); alert('Result saved locally.'); } catch(e){ alert('Save failed.'); } });
+  document.getElementById('shareBtn').addEventListener('click', ()=>{ const text=`${title}\n${summary}\nMorning:${percents.early}% Mid:${percents.mid}% Night:${percents.night}% Irregular:${percents.irregular}%\n(Shared from What's Your Natural Body Clock)`; if(navigator.share){ navigator.share({ title:'My Body Clock Profile', text }); } else { prompt('Copy and share your result:', text); } });
+}
+
+// ---------- INIT ----------
+renderQuestion(idx);
 </script>
 </body>
 </html>

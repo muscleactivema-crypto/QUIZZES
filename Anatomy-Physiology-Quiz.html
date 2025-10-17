@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Chair Exercise Quiz — Test Your Seated Fitness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#f6f6f4;
+  --card:#ffffff;
+  --accent:#0b3d91;
+  --accent2:#008080;
+  --accent3:#e0dac5;
+  --muted:#6b6b6b;
+  --radius:14px;
+  --shadow:0 6px 20px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:12px;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg1);display:flex;justify-content:center;}
+.wrap{width:100%;max-width:760px;}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #e6e6e6;}
+.logo{width:56px;height:56px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
+.title-wrap{flex:1;}
+h1{margin:0;font-size:1.2rem;color:var(--accent);}
+p.lead{margin:4px 0 0;font-size:0.95rem;color:var(--muted);}
+.progress-bar-wrap{height:12px;background:#eef3ef;width:82%;border-radius:999px;margin:14px auto;position:relative;}
+.progress-bar{height:12px;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width 420ms ease;}
+.counter{position:absolute;right:6px;top:-20px;font-size:0.85rem;color:var(--muted);}
+.content{padding:18px;}
+.slide{opacity:0;max-height:0;overflow:hidden;transition:opacity 320ms ease,max-height 320ms ease;margin-bottom:12px;}
+.slide.active{opacity:1;max-height:1200px;}
+.q-card{display:flex;flex-direction:column;gap:12px;}
+.q-title{margin:0 0 8px;font-size:1rem;color:#15324b;}
+.options{display:grid;gap:10px;}
+.option{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:1px solid #ececec;cursor:pointer;transition:transform 150ms ease, box-shadow 150ms ease;background:transparent;}
+.option:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(11,61,145,0.04);}
+.option input{display:none;}
+.option .label-text{flex:1;font-size:0.95rem;color:#223;}
+.option.selected{background:linear-gradient(180deg,rgba(11,61,145,0.06),rgba(0,128,128,0.02));border-color:rgba(11,61,145,0.12);}
+.controls{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap;}
+.result-screen{padding:12px;}
+.result-card{border-radius:12px;padding:16px;color:#fff;margin-top:12px;}
+.result-title{font-size:1.05rem;margin:0 0 8px;}
+.result-body{margin:0;font-size:0.95rem;}
+.btn{display:inline-block;padding:10px 14px;margin-top:12px;border:none;border-radius:10px;background:var(--accent2);color:#fff;font-weight:600;cursor:pointer;transition:0.18s;}
+.btn:hover{opacity:0.92;}
+.review{margin-top:10px;background:rgba(0,0,0,0.02);padding:12px;border-radius:8px;color:#102;}
+.review ul{margin:8px 0 0 18px;padding:0;}
+.review li{margin-bottom:10px;font-size:0.95rem;line-height:1.35;}
+.review .qtext{display:block;font-weight:600;margin-bottom:6px;color:#15324b;}
+.correct{color:#0b3d91;font-weight:700;}
+.wrong{color:#b02a2a;font-weight:700;}
+.smallmuted{font-size:0.9rem;color:var(--muted);margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="logo">CE</div>
+      <div class="title-wrap">
+        <h1>Chair Exercise Quiz — Test Your Seated Fitness</h1>
+        <p class="lead">Check your knowledge of safe, effective chair-based exercises!</p>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="counter" id="counterText"></div>
+    </div>
+
+    <div class="content" id="slides"></div>
+  </div>
+</div>
+
+<script>
+// ---------------- DATA ----------------
+const levels = [
+  { name:'Easy', theme:'Seated Basics', questions:[
+      { q:'Which is the safest chair type for exercise?', a:['Stable, no wheels','Swivel chair','Folding chair','Office chair with arms'], correct:0 },
+      { q:'Which exercise strengthens the chest using a band?', a:['Chest Press','Leg Lift','Toe Tap','Twist'], correct:0 },
+      { q:'Where should your feet be during seated exercises?', a:['Flat on floor','Crossed','Dangling','Pointed'], correct:0 },
+      { q:'What is the main benefit of seated marching?', a:['Improves circulation','Builds chest muscles','Improves balance only','Strengthens fingers'], correct:0 },
+      { q:'What part of the body does a “Seated Row” target?', a:['Upper back','Calves','Chest','Neck'], correct:0 },
+      { q:'What should you do if you feel pain?', a:['Stop and rest','Push through','Ignore it','Stretch harder'], correct:0 },
+      { q:'Which movement helps open the chest?', a:['Seated chest expansion','Ankle rotation','Toe tap','Knee lift'], correct:0 }
+  ]},
+  { name:'Moderate', theme:'Mobility & Coordination', questions:[
+      { q:'Which muscle is mainly used in a seated leg press?', a:['Quadriceps','Biceps','Deltoids','Forearms'], correct:0 },
+      { q:'How should you breathe during seated resistance work?', a:['Exhale on effort','Hold breath','Inhale on effort','Doesn’t matter'], correct:0 },
+      { q:'What does a seated overhead press strengthen?', a:['Shoulders and arms','Calves','Neck only','Back of legs'], correct:0 },
+      { q:'How does seated torso rotation help?', a:['Improves core flexibility','Strengthens calves','Relaxes arms','Improves grip strength'], correct:0 },
+      { q:'When doing ankle circles, what joint are you working?', a:['Ankle','Knee','Hip','Shoulder'], correct:0 },
+      { q:'What’s a key tip for posture in chair workouts?', a:['Sit tall, shoulders relaxed','Lean forward','Cross legs','Arch back'], correct:0 },
+      { q:'How can you make chair workouts harder?', a:['Use bands or light weights','Skip warm-up','Sit lower in chair','Hold your breath'], correct:0 },
+      { q:'Which is a good cooldown move?', a:['Gentle neck stretch','Fast leg kicks','Jumping jacks','Skipping'], correct:0 }
+  ]},
+  { name:'Advanced', theme:'Strength & Endurance', questions:[
+      { q:'Which move targets both chest and shoulders?', a:['Seated Chest Fly','Toe Tap','Ankle Roll','Leg Curl'], correct:0 },
+      { q:'Which muscle group is worked during seated knee extensions?', a:['Quadriceps','Hamstrings','Triceps','Abs'], correct:0 },
+      { q:'Why use resistance bands instead of weights?', a:['Less joint stress','Heavier load','More unstable','Shorter workouts'], correct:0 },
+      { q:'What is a good rep range for endurance?', a:['12–20 reps','4–6 reps','25–30 reps','3–5 reps'], correct:0 },
+      { q:'Which exercise helps hip mobility?', a:['Seated Hip Abduction','Shoulder Shrug','Chest Fly','Wrist Curl'], correct:0 },
+      { q:'Which cue ensures safety during seated workouts?', a:['Move slowly and control','Swing fast','Hold breath','Lean back heavily'], correct:0 },
+      { q:'What’s the main benefit of regular chair exercise?', a:['Improved strength and circulation','Bigger arms only','Faster sprinting','Less water intake'], correct:0 },
+      { q:'What should you do before starting any exercise program?', a:['Consult your GP','Skip warm-up','Exercise on an empty stomach','Sit in cold air'], correct:0 },
+      { q:'How often is it safe for older adults to do chair exercise?', a:['Most days of the week','Once a month','Only weekends','Never consecutively'], correct:0 },
+      { q:'Which seated move best activates the back?', a:['Resistance Band Row','Toe Point','Arm Circle','Knee Lift'], correct:0 }
+  ]}
+];
+
+// ---------------- STATE ----------------
+function shuffleArray(arr){ return arr.slice().sort(()=>Math.random()-0.5); }
+const questionsState = levels.map(level => ({
+  currentQ: 0,
+  score: 0,
+  questions: level.questions.map(q => ({
+    q: q.q,
+    a: q.a.slice(),
+    correct: q.correct,
+    options: shuffleArray(q.a.map((text,i)=>({ text, index:i }))),
+    selected: null
+  }))
+}));
+let currentLevel = 0;
+const content = document.getElementById('slides');
+const progressBar = document.getElementById('progressBar');
+const counterText = document.getElementById('counterText');
+
+function updateProgressBar(){
+  const st = questionsState[currentLevel];
+  const perc = (st.currentQ / st.questions.length) * 100;
+  progressBar.style.width = perc + '%';
+  counterText.textContent = `Answered ${st.currentQ}/${st.questions.length}`;
+}
+
+function playFireworks(){
+  const colors = ['#0b3d91','#008080','#e0dac5','#ff9a00','#ff4b5c'];
+  for(let i=0;i<100;i++){
+    const d=document.createElement('div');
+    d.style.position='fixed';
+    d.style.width='8px';d.style.height='8px';
+    d.style.borderRadius='50%';
+    d.style.background=colors[Math.floor(Math.random()*colors.length)];
+    d.style.left=Math.random()*window.innerWidth+'px';
+    d.style.top='-10px';
+    d.style.zIndex=9999;
+    d.style.opacity='0.9';
+    document.body.appendChild(d);
+    let fall=0;
+    const id=setInterval(()=>{
+      fall+=Math.random()*6+2;
+      d.style.top=fall+'px';
+      if(fall>window.innerHeight+20){clearInterval(id);d.remove();}
+    },16);
+  }
+}
+
+// ---------------- FLOW ----------------
+function showLevelSelector(){
+  const slide=document.createElement('section');
+  slide.className='slide active';
+  slide.innerHTML=`<div class="result-screen">
+    <div class="result-card" style="background:var(--accent)">
+      <h3 class="result-title">Choose a Level</h3>
+      <p class="result-body smallmuted">Select your challenge level to start the Chair Exercise Quiz.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" onclick="startLevel(0)">Easy</button>
+        <button class="btn" onclick="startLevel(1)">Moderate</button>
+        <button class="btn" onclick="startLevel(2)">Advanced</button>
+      </div>
+    </div>
+  </div>`;
+  content.innerHTML='';content.appendChild(slide);progressBar.style.width='0%';counterText.textContent='';
+}
+
+function startLevel(idx){
+  currentLevel=idx;
+  const st=questionsState[idx];
+  st.currentQ=0;st.score=0;
+  st.questions.forEach(q=>q.selected=null);
+  createQuestionSlide();
+}
+
+function createQuestionSlide(){
+  const st=questionsState[currentLevel];
+  const q=st.questions[st.currentQ];
+  let html='';
+  q.options.forEach(opt=>{
+    html+=`<label class="option"><input type="radio" name="q" value="${opt.index}"><div class="label-text">${opt.text}</div></label>`;
+  });
+  const slide=document.createElement('section');
+  slide.className='slide active';
+  slide.innerHTML=`<div class="q-card">
+    <h2 class="q-title">Level ${currentLevel+1} (${levels[currentLevel].name}) - Q${st.currentQ+1}: ${q.q}</h2>
+    <div class="options">${html}</div>
+  </div>`;
+  content.innerHTML='';content.appendChild(slide);updateProgressBar();
+  slide.querySelectorAll('.option').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      const input=opt.querySelector('input');
+      input.checked=true;
+      slide.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+      opt.classList.add('selected');
+      const choice=parseInt(input.value,10);
+      q.selected=choice;
+      if(choice===q.correct)st.score++;
+      st.currentQ++;
+      if(st.currentQ>=st.questions.length){progressBar.style.width='100%';setTimeout(()=>showReview(),300);}
+      else setTimeout(()=>createQuestionSlide(),180);
+    },{once:true});
+  });
+}
+
+function showReview(){
+  playFireworks();
+  const st=questionsState[currentLevel];
+  const meta=levels[currentLevel];
+  let list='<div class="review"><ul>';
+  st.questions.forEach((q,i)=>{
+    const sel=q.selected;
+    const isCorrect=sel===q.correct;
+    list+=`<li><span class="qtext">Q${i+1}: ${q.q}</span>
+      Your answer: <span class="${isCorrect?'correct':'wrong'}">${q.a[sel]||'No answer'}</span>
+      ${!isCorrect?`<div>Correct answer: <span class="correct">${q.a[q.correct]}</span></div>`:''}</li>`;
+  });
+  list+='</ul></div>';
+  const slide=document.createElement('section');
+  slide.className='slide active';
+  slide.innerHTML=`<div class="result-screen">
+    <div class="result-card" style="background:var(--accent2)">
+      <h3 class="result-title">Level ${currentLevel+1} Summary (${meta.name})</h3>
+      <p class="result-body">Score: ${st.score} / ${st.questions.length}</p>
+      ${list}
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="next">${currentLevel<levels.length-1?'Next Level':'Final Results'}</button>
+        <button class="btn" id="retry">Retry This Level</button>
+        <button class="btn" onclick="window.location.href='index.html'">Back to Hub</button>
+      </div>
+    </div></div>`;
+  content.innerHTML='';content.appendChild(slide);
+  document.getElementById('next').addEventListener('click',()=>{
+    if(currentLevel<levels.length-1){currentLevel++;createQuestionSlide();}
+    else showFinal();
+  });
+  document.getElementById('retry').addEventListener('click',()=>{
+    const s=questionsState[currentLevel];s.currentQ=0;s.score=0;s.questions.forEach(q=>q.selected=null);createQuestionSlide();
+  });
+}
+
+function showFinal(){
+  const totalQ=questionsState.reduce((t,l)=>t+l.questions.length,0);
+  const totalS=questionsState.reduce((t,l)=>t+l.score,0);
+  const slide=document.createElement('section');
+  slide.className='slide active';
+  slide.innerHTML=`<div class="result-screen">
+    <div class="result-card" style="background:var(--accent)">
+      <h3 class="result-title">Final Results</h3>
+      <p class="result-body">
+        Easy: ${questionsState[0].score}/${questionsState[0].questions.length}<br>
+        Moderate: ${questionsState[1].score}/${questionsState[1].questions.length}<br>
+        Advanced: ${questionsState[2].score}/${questionsState[2].questions.length}<br>
+        <strong>Total: ${totalS}/${totalQ}</strong>
+      </p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" onclick="location.reload()">Retake All</button>
+        <button class="btn" onclick="window.location.href='index.html'">Back to Hub</button>
+      </div>
+    </div></div>`;
+  content.innerHTML='';content.appendChild(slide);progressBar.style.width='100%';
+}
+showLevelSelector();
+</script>
+</body>
+</html>

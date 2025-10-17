@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 Calorie Awareness Quiz — Keep Well Nutrition</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #fffaf5;
+  margin: 0;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+.quiz-container {
+  background: #ffffff;
+  width: 100%;
+  max-width: 700px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+h1 {
+  font-size: 1.9rem;
+  color: #d95b00;
+  margin-bottom: 15px;
+}
+.question-card {
+  background: #fff3e0;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 15px;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #7b3f00;
+}
+.answers button {
+  display: block;
+  width: 80%;
+  max-width: 280px;
+  margin: 8px auto;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #ff9800;
+  color: #fff;
+  transition: transform 0.2s, background 0.3s;
+}
+.answers button:hover {
+  transform: scale(1.05);
+  background: #f57c00;
+}
+.result {
+  display: none;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.return-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 14px 28px;
+  border-radius: 25px;
+  font-weight: bold;
+  background: #d95b00;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+.return-btn:hover {
+  transform: scale(1.05);
+  background: #b94a00;
+}
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+<h1>🔥 Calorie Awareness Quiz</h1>
+
+<div id="quiz-screen"></div>
+
+<div class="result" id="result"></div>
+
+<a href="https://keepwellnutrition.com/blog" class="return-btn">⬅ Return to Blog</a>
+</div>
+
+<script>
+const questions = [
+  { q: "🍔 A Big Mac has roughly how many calories?", a: ["250", "540", "800"], correct: "540" },
+  { q: "🥤 A can of regular cola contains about:", a: ["50", "140", "250"], correct: "140" },
+  { q: "🥗 Which has fewer calories?", a: ["Chicken salad with dressing", "Plain jacket potato with beans"], correct: "Plain jacket potato with beans" },
+  { q: "🍞 Wholemeal bread vs. white bread — which is usually lower in calories?", a: ["Wholemeal", "White", "About the same"], correct: "About the same" },
+  { q: "🍷 A small glass of wine (125ml) is roughly:", a: ["80", "120", "200"], correct: "120" },
+  { q: "🍫 Which snack packs the most calories?", a: ["Banana", "Protein bar", "Chocolate bar"], correct: "Chocolate bar" },
+  { q: "🍟 What’s the best calorie-control tip?", a: ["Skip breakfast", "Smaller portions, eat slowly", "Only eat once a day"], correct: "Smaller portions, eat slowly" }
+];
+
+let currentIndex = 0, score = 0;
+
+function showQuestion() {
+  if (currentIndex >= questions.length) return showResult();
+  const quizScreen = document.getElementById("quiz-screen");
+  quizScreen.innerHTML = '';
+
+  const card = document.createElement("div");
+  card.className = "question-card";
+  card.innerHTML = `<strong>Q${currentIndex + 1}:</strong> ${questions[currentIndex].q}`;
+
+  const answersDiv = document.createElement("div");
+  answersDiv.className = "answers";
+  questions[currentIndex].a.forEach(ans => {
+    const btn = document.createElement("button");
+    btn.textContent = ans;
+    btn.onclick = () => checkAnswer(ans);
+    answersDiv.appendChild(btn);
+  });
+
+  card.appendChild(answersDiv);
+  quizScreen.appendChild(card);
+}
+
+function checkAnswer(ans) {
+  if (ans === questions[currentIndex].correct) score++;
+  currentIndex++;
+  showQuestion();
+}
+
+function showResult() {
+  document.getElementById("quiz-screen").style.display = "none";
+  const res = document.getElementById("result");
+  let comment = "";
+
+  if (score <= 3) {
+    comment = "😅 A bit calorie-clueless! Try reading labels and checking serving sizes. You’ll soon spot where sneaky extras hide.";
+  } else if (score <= 5) {
+    comment = "🥗 You’re calorie-smart! You understand balance — just keep refining your portion control and beverage choices.";
+  } else {
+    comment = "💪 You’re calorie-aware and in control. Great work! You clearly understand how to fuel your body wisely.";
+  }
+
+  res.innerHTML = `🏁 Your Score: ${score}/${questions.length}<br>${comment}`;
+  res.style.display = "block";
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>

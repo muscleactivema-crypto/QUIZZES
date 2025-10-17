@@ -2,171 +2,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sleep & Energy Quiz</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleep & Energy Quiz — Keep Well Nutrition</title>
 <style>
-:root{--bg1:#a8edea;--bg2:#fed6e3;--card:#fff;--green:#3B7D3B;--orange:#E67E22;--red:#C0392B;}
-body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
-.back{position:fixed;left:16px;top:16px;background:#fff;padding:8px 12px;border-radius:10px;text-decoration:none;color:#2c3e50;box-shadow:0 4px 10px rgba(0,0,0,.08);font-weight:700;}
-.card{background:var(--card);width:100%;max-width:760px;border-radius:14px;padding:26px;box-shadow:0 8px 30px rgba(0,0,0,.12);position:relative;}
-h1{margin:0 0 10px;color:#234;}
-p.lead{margin:6px 0 18px;color:#345;}
-.level-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;}
-button.level{flex:1;padding:16px 12px;border-radius:12px;border:0;cursor:pointer;font-weight:700;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;min-width:120px;}
-button.level span.title{font-size:1rem;color:#fff;margin-top:4px;}
-button.level small{display:block;font-weight:400;font-size:0.75rem;color:#f0f0f0;margin-top:4px;}
-button.green{background:var(--green);} button.orange{background:var(--orange);} button.red{background:var(--red);}
-.progress{color:#444;margin-bottom:12px;}
-.question{font-weight:700;margin:14px 0;}
-.answers{display:flex;flex-direction:column;gap:10px;}
-.answers button{padding:10px;border-radius:10px;border:1px solid #ddd;background:#f4f6f6;cursor:pointer;font-weight:700;}
-.answers button:hover{transform:translateY(-2px);}
-.result{margin-top:18px;padding:14px;border-radius:10px;background:#f9fff9;font-weight:700;}
-.answers-list{margin-top:12px;background:#fff;padding:12px;border-radius:8px;box-shadow:inset 0 0 6px rgba(0,0,0,.03);}
-.answers-list p{margin:8px 0;}
-.correct{color:green;font-weight:700;}
-.wrong{color:red;font-weight:700;}
-.actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;}
-.actions button{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
-.tool{background:#6c5ce7;color:#fff;}
-.retry{background:#3498db;color:#fff;}
-.next{background:#2ecc71;color:#fff;}
-.email-capture{margin-top:12px;border-top:1px dashed #eee;padding-top:12px;}
-@media(max-width:520px){.level-row{flex-direction:column}.actions{flex-direction:column}.back{left:10px;top:10px}}
+:root {
+  --bg1: #f0f7fa;
+  --bg2: #e8f0fe;
+  --card-bg: #ffffffcc;
+  --accent: #0b3d91;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.quiz-container {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  padding: 30px 25px;
+}
+
+h1 {
+  color: var(--accent);
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.question {
+  font-size: 1.1rem;
+  color: #333;
+  margin: 20px 0;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 1rem;
+  margin: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 85%;
+  max-width: 300px;
+}
+
+button:hover {
+  background: #072b66;
+}
+
+.result {
+  display: none;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+footer {
+  margin-top: 30px;
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
 </style>
 </head>
 <body>
+<div class="quiz-container">
+  <h1>🌙 Sleep & Energy Quiz</h1>
+  <p id="question" class="question"></p>
+  <div id="answers"></div>
+  <div class="result" id="result"></div>
 
-<a class="back" href="index.html">❌ Back to Quiz Hub</a>
-
-<div class="card" id="card">
-  <h1>💤 Sleep & Energy Quiz</h1>
-  <p class="lead">Check your sleep quality and daily energy habits. Choose a level to begin.</p>
-
-  <div id="start">
-    <div class="level-row">
-      <button class="level green" onclick="start('easy')">
-        🟢<span class="title">Easy — 5 q</span>
-        <small>Quick check of basic sleep habits</small>
-      </button>
-      <button class="level orange" onclick="start('medium')">
-        🟠<span class="title">Medium — 7 q</span>
-        <small>Assess your sleep routines & energy patterns</small>
-      </button>
-      <button class="level red" onclick="start('difficult')">
-        🔴<span class="title">Difficult — 10 q</span>
-        <small>Deep dive into sleep quality & energy optimization</small>
-      </button>
-    </div>
-  </div>
-
-  <div id="quiz" style="display:none">
-    <div class="progress" id="progressTxt"></div>
-    <div class="question" id="questionTxt"></div>
-    <div class="answers" id="answersBox"></div>
-  </div>
-
-  <div id="result" style="display:none">
-    <div class="result" id="resultTxt"></div>
-    <div class="answers-list" id="answersList"></div>
-
-    <div class="email-capture">
-      <p>📩 Want sleep & energy tips? Enter your email:</p>
-      <form action="https://formspree.io/f/xyzpdqrj" method="POST">
-        <input type="email" name="email" placeholder="you@example.com" required style="padding:10px;border-radius:8px;border:1px solid #ddd;width:60%;max-width:280px">
-        <button class="tool" type="submit">Get Tips</button>
-      </form>
-    </div>
-
-    <div class="actions">
-      <button class="retry" onclick="restart()">🔄 Retry</button>
-      <button class="next" id="nextLevelBtn" onclick="nextLevel()" style="display:none">➡️ Next Level</button>
-    </div>
-  </div>
+  <footer>
+    <a href="index.html">⬅ Return to Quiz Hub</a>
+  </footer>
 </div>
 
 <script>
-const questionBank = {
-  easy:[
-    {q:"Recommended sleep duration for adults?",a:["7-9 hours","4-5 hours","10-12 hours","6 hours"],correct:"7-9 hours"},
-    {q:"Best bedtime for most adults?",a:["10-11 PM","2-3 AM","6-7 PM","12-1 AM"],correct:"10-11 PM"},
-    {q:"Short nap duration that boosts energy?",a:["20 mins","60 mins","90 mins","45 mins"],correct:"20 mins"},
-    {q:"Screen use before bed affects?",a:["Sleep quality","Muscle growth","Eye color","Hunger"],correct:"Sleep quality"},
-    {q:"Caffeine timing to avoid sleep disruption?",a:["<6 hours before bed","1 hour","Immediately","12 hours"],correct:"<6 hours before bed"}
-  ],
-  medium:[
-    {q:"REM sleep primarily helps with?",a:["Memory consolidation","Weight gain","Vision","Hearing"],correct:"Memory consolidation"},
-    {q:"Which habit reduces energy?",a:["Skipping breakfast","Stretching","Meditation","Morning walk"],correct:"Skipping breakfast"},
-    {q:"Ideal sleep environment includes?",a:["Cool, dark, quiet","Bright lights","Loud music","Warm & noisy"],correct:"Cool, dark, quiet"},
-    {q:"Sleep debt accumulates leading to?",a:["Fatigue","Muscle gain","Height increase","Perfect recall"],correct:"Fatigue"},
-    {q:"Consistent bedtime improves?",a:["Circadian rhythm","Hair growth","Blood pressure","Hearing"],correct:"Circadian rhythm"},
-    {q:"Alcohol before bed affects?",a:["Sleep quality","Muscle strength","Vision","Hearing"],correct:"Sleep quality"},
-    {q:"Exercise timing can impact?",a:["Sleep onset","Skin tone","Eye color","Height"],correct:"Sleep onset"}
-  ],
-  difficult:[
-    {q:"Which hormone regulates sleep-wake cycle?",a:["Melatonin","Insulin","Cortisol","Dopamine"],correct:"Melatonin"},
-    {q:"Deep sleep stage is?",a:["Slow-wave sleep","REM only","Light sleep","Awake"],correct:"Slow-wave sleep"},
-    {q:"Sleep hygiene includes?",a:["Regular schedule","Skipping meals","Loud TV","Overworking"],correct:"Regular schedule"},
-    {q:"Chronic sleep deprivation increases risk of?",a:["Diabetes","Perfect recall","Height","Vision loss"],correct:"Diabetes"},
-    {q:"Sleep and energy are influenced by?",a:["Nutrition & exercise","Hair color","Eye color","Height"],correct:"Nutrition & exercise"},
-    {q:"Late-night screen exposure affects?",a:["Melatonin suppression","Height","Vision","Blood"],correct:"Melatonin suppression"},
-    {q:"Caffeine in evening impacts?",a:["Sleep latency","Muscle strength","Hair growth","Memory"],correct:"Sleep latency"},
-    {q:"Best morning routine for energy?",a:["Sunlight & movement","Sleeping more","Skipping breakfast","Sugar snack"],correct:"Sunlight & movement"},
-    {q:"Consistent wake time benefits?",a:["Mood & energy","Height","Eye color","Weight"],correct:"Mood & energy"}
-  ]
-};
+const quizData = [
+  {
+    question: "How many hours of sleep do you typically get each night?",
+    options: [
+      { text: "Less than 5 hours", score: 0 },
+      { text: "5–7 hours", score: 1 },
+      { text: "7–9 hours", score: 2 }
+    ]
+  },
+  {
+    question: "Do you feel refreshed when you wake up?",
+    options: [
+      { text: "Rarely", score: 0 },
+      { text: "Sometimes", score: 1 },
+      { text: "Usually", score: 2 }
+    ]
+  },
+  {
+    question: "How consistent is your sleep schedule?",
+    options: [
+      { text: "Very irregular", score: 0 },
+      { text: "Somewhat consistent", score: 1 },
+      { text: "Regular", score: 2 }
+    ]
+  },
+  {
+    question: "Do you avoid screens before bedtime?",
+    options: [
+      { text: "Rarely", score: 0 },
+      { text: "Sometimes", score: 1 },
+      { text: "Usually", score: 2 }
+    ]
+  },
+  {
+    question: "How often do you take short naps during the day?",
+    options: [
+      { text: "Frequently", score: 0 },
+      { text: "Occasionally", score: 1 },
+      { text: "Rarely", score: 2 }
+    ]
+  },
+  {
+    question: "Do you use relaxation techniques before sleeping?",
+    options: [
+      { text: "Never", score: 0 },
+      { text: "Sometimes", score: 1 },
+      { text: "Regularly", score: 2 }
+    ]
+  },
+  {
+    question: "How often do you feel energetic throughout the day?",
+    options: [
+      { text: "Rarely", score: 0 },
+      { text: "Sometimes", score: 1 },
+      { text: "Usually", score: 2 }
+    ]
+  }
+];
 
-let level="", questions=[], idx=0, score=0, userAnswers=[];
+let currentQuestion = 0;
+let totalScore = 0;
 
-function start(l){
-  level=l; questions=shuffleArray([...questionBank[l]]).slice(0, questionBank[l].length);
-  idx=0; score=0; userAnswers=[];
-  document.getElementById('start').style.display='none';
-  document.getElementById('quiz').style.display='block';
-  document.getElementById('result').style.display='none';
-  showQ();
-}
+function loadQuestion() {
+  const q = quizData[currentQuestion];
+  const questionEl = document.getElementById("question");
+  const answersEl = document.getElementById("answers");
 
-function showQ(){
-  const q=questions[idx];
-  document.getElementById('progressTxt').textContent=`Question ${idx+1} of ${questions.length}`;
-  document.getElementById('questionTxt').textContent=q.q;
-  const box=document.getElementById('answersBox'); box.innerHTML='';
-  shuffleArray([...q.a]).forEach(opt=>{
-    const b=document.createElement('button'); b.textContent=opt;
-    b.onclick=()=>{select(opt,q.correct);};
-    box.appendChild(b);
+  questionEl.textContent = q.question;
+  answersEl.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt.text;
+    btn.onclick = () => handleAnswer(opt.score);
+    answersEl.appendChild(btn);
   });
 }
 
-function select(chosen,correct){
-  userAnswers.push({question:questions[idx].q,chosen,correct});
-  if(chosen===correct) score++;
-  idx++;
-  if(idx<questions.length) showQ();
-  else showResult();
+function handleAnswer(score) {
+  totalScore += score;
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
 }
 
-function showResult(){
-  document.getElementById('quiz').style.display='none';
-  const res=document.getElementById('result'); res.style.display='block';
-  document.getElementById('resultTxt').textContent=`You scored ${score} out of ${questions.length}`;
-  const list=document.getElementById('answersList'); list.innerHTML='';
-  userAnswers.forEach((it,i)=>{
-    const p=document.createElement('p');
-    p.innerHTML=`<strong>Q${i+1}:</strong> ${it.question}<br>Your: <span class="${it.chosen===it.correct?'correct':'wrong'}">${it.chosen}</span> | Correct: <span class="correct">${it.correct}</span>`;
-    list.appendChild(p);
-  });
-  const next=document.getElementById('nextLevelBtn');
-  const order=['easy','medium','difficult']; const cur=order.indexOf(level);
-  if(cur<order.length-1){ next.style.display='inline-block'; next.dataset.next=order[cur+1]; } else next.style.display='none';
+function showResult() {
+  document.getElementById("question").style.display = "none";
+  document.getElementById("answers").style.display = "none";
+  const resultEl = document.getElementById("result");
+  resultEl.style.display = "block";
+
+  if (totalScore >= 11) {
+    resultEl.innerHTML = "🌟 <strong>Excellent Sleep & Energy</strong><br>Your sleep habits support high energy and alertness — keep your routine consistent!";
+  } else if (totalScore >= 6) {
+    resultEl.innerHTML = "⚖️ <strong>Moderate Sleep & Energy</strong><br>Some habits are good, but improving sleep hygiene can boost your daily energy.";
+  } else {
+    resultEl.innerHTML = "💤 <strong>Poor Sleep & Low Energy</strong><br>Focus on consistent sleep, relaxation techniques, and limiting screen time to restore energy.";
+  }
 }
 
-function restart(){document.getElementById('result').style.display='none'; document.getElementById('start').style.display='block';}
-function nextLevel(){start(document.getElementById('nextLevelBtn').dataset.next);}
-function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
+loadQuestion();
 </script>
-
 </body>
 </html>

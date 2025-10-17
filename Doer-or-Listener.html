@@ -1,14 +1,14 @@
-<!-- Save as: Brain-Energy-Quiz.html -->
+<!-- Save as: DoerorListener.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brain & Energy Quiz — Keep Well Nutrition</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Doer or Listener Quiz — Keep Well Nutrition</title>
 <style>
 :root {
-  --bg1: #f3f4f6;
-  --bg2: #e8f0fe;
+  --bg1: #fff9f2;
+  --bg2: #e3f2fd;
   --card-bg: #ffffffcc;
   --accent: #3b7d3b;
 }
@@ -84,7 +84,7 @@ footer a {
 </head>
 <body>
 <div class="quiz-container">
-  <h1>🧠 Brain & Energy Quiz</h1>
+  <h1>🧠 Doer or Listener Quiz</h1>
   <p id="question" class="question"></p>
   <div id="answers"></div>
   <div class="result" id="result"></div>
@@ -97,59 +97,52 @@ footer a {
 <script>
 const quizData = [
   {
-    question: "How often do you feel mentally alert during the day?",
+    question: "When faced with a challenge, what’s your first instinct?",
     options: [
-      { text: "Rarely", score: 0 },
-      { text: "Sometimes", score: 1 },
-      { text: "Usually", score: 2 }
+      { text: "Jump straight in and start fixing it", score: 2 },
+      { text: "Pause to reflect and plan before acting", score: 1 },
     ]
   },
   {
-    question: "How often do you engage in activities that challenge your brain?",
+    question: "In a group setting, you usually…",
     options: [
-      { text: "Rarely", score: 0 },
-      { text: "Occasionally", score: 1 },
-      { text: "Regularly", score: 2 }
+      { text: "Take the lead and get things moving", score: 2 },
+      { text: "Listen and observe before contributing", score: 1 },
     ]
   },
   {
-    question: "Do you take regular breaks to avoid mental fatigue?",
+    question: "When learning something new, you prefer to…",
     options: [
-      { text: "Never", score: 0 },
-      { text: "Sometimes", score: 1 },
-      { text: "Yes, often", score: 2 }
+      { text: "Try it yourself and learn by doing", score: 2 },
+      { text: "Listen carefully to instructions first", score: 1 },
     ]
   },
   {
-    question: "How would you rate your memory and recall?",
+    question: "When someone shares a problem, you tend to…",
     options: [
-      { text: "Poor", score: 0 },
-      { text: "Average", score: 1 },
-      { text: "Good", score: 2 }
+      { text: "Offer a solution quickly", score: 2 },
+      { text: "Let them talk and process it aloud", score: 1 },
     ]
   },
   {
-    question: "Do you consume brain-supportive foods (nuts, fish, vegetables)?",
+    question: "Your friends describe you as more of a…",
     options: [
-      { text: "Rarely", score: 0 },
-      { text: "Sometimes", score: 1 },
-      { text: "Regularly", score: 2 }
+      { text: "Doer — action-oriented and decisive", score: 2 },
+      { text: "Listener — calm and understanding", score: 1 },
     ]
   },
   {
-    question: "How consistent is your sleep schedule?",
+    question: "When plans change suddenly, you…",
     options: [
-      { text: "Irregular", score: 0 },
-      { text: "Somewhat consistent", score: 1 },
-      { text: "Regular", score: 2 }
+      { text: "Adapt and take charge", score: 2 },
+      { text: "Pause and see how everyone else reacts", score: 1 },
     ]
   },
   {
-    question: "Do you practice mindfulness, meditation, or relaxation techniques?",
+    question: "When working on a project, you feel most satisfied when…",
     options: [
-      { text: "Rarely", score: 0 },
-      { text: "Occasionally", score: 1 },
-      { text: "Regularly", score: 2 }
+      { text: "You’ve achieved visible results", score: 2 },
+      { text: "You’ve supported others effectively", score: 1 },
     ]
   }
 ];
@@ -189,11 +182,11 @@ function showResult() {
   resultEl.style.display = "block";
 
   if (totalScore >= 11) {
-    resultEl.innerHTML = "🧠 <strong>High Brain & Energy</strong><br>Your cognitive performance and energy habits are excellent. Keep challenging your mind and staying active!";
-  } else if (totalScore >= 6) {
-    resultEl.innerHTML = "⚖️ <strong>Moderate Brain & Energy</strong><br>You have some good habits — small improvements in sleep, diet, and mental stimulation can boost performance.";
+    resultEl.innerHTML = "🔥 <strong>You’re a Doer!</strong><br>You thrive on action, love momentum, and prefer learning through experience. Just remember to pause sometimes to recharge.";
+  } else if (totalScore >= 8) {
+    resultEl.innerHTML = "⚖️ <strong>You’re a Balanced Type!</strong><br>You act when needed but value reflection and communication equally — a great mix for steady progress.";
   } else {
-    resultEl.innerHTML = "🛌 <strong>Low Brain & Energy</strong><br>Focus on sleep, nutrition, mental exercises, and regular breaks to improve cognitive sharpness.";
+    resultEl.innerHTML = "🌿 <strong>You’re a Listener!</strong><br>You’re thoughtful, patient, and supportive. You take the time to understand before acting — a powerful trait for calm leadership.";
   }
 }
 

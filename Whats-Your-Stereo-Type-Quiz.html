@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>What's Your Stereotype? — Mobile Friendly</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg1: #f6f6f4;
+  --card:#ffffff;
+  --accent:#3B7D3B;
+  --navy:#0b3d91;
+  --muted:#6b6b6b;
+  --radius:14px;
+  --shadow:0 6px 20px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box}
+body{margin:0;padding:0;font-family:Inter,sans-serif;background:var(--bg1);color:#222;display:flex;justify-content:center;padding:12px}
+.wrap{width:100%;max-width:600px}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #e6e6e6}
+.logo{width:50px;height:50px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.title-wrap{flex:1}
+h1{margin:0;font-size:1.2rem;color:var(--navy)}
+p.lead{margin:4px 0 0;font-size:0.95rem;color:var(--muted)}
+.progress-bar-wrap{height:12px;background:#eef3ef;width:80%;border-radius:999px;margin:14px auto}
+.progress-bar{height:12px;width:0%;background:linear-gradient(90deg,var(--accent),var(--navy));border-radius:999px;transition:width 420ms ease}
+.content{padding:16px}
+.slide{opacity:0;max-height:0;overflow:hidden;transition:opacity 360ms ease,max-height 360ms ease;margin-bottom:12px}
+.slide.active{opacity:1;max-height:1000px}
+.q-card{display:flex;flex-direction:column;gap:12px}
+.q-title{margin:0 0 12px;font-size:1rem}
+.options{display:grid;gap:10px}
+.option{display:flex;align-items:center;gap:12px;padding:14px;border-radius:10px;border:1px solid #ececec;cursor:pointer;transition:transform 150ms ease, box-shadow 150ms ease}
+.option:hover{transform:translateY(-2px)}
+.option input{display:none}
+.option .label-text{flex:1;font-size:0.95rem}
+.option.selected{background:linear-gradient(180deg,rgba(59,125,59,0.06),rgba(11,61,145,0.02));border-color:rgba(59,125,59,0.12)}
+.controls{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.counter{margin-left:auto;color:var(--muted);font-size:0.9rem}
+.result-screen{padding:16px}
+.result-card{border-radius:12px;padding:16px;color:#fff;margin-top:12px}
+.result-title{font-size:1.1rem;margin:0 0 8px}
+.result-body{margin:0;font-size:0.95rem}
+@media (max-width:480px){.q-title{font-size:0.95rem}.option .label-text{font-size:0.9rem}} 
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="application" aria-labelledby="quizTitle">
+    <div class="header">
+      <div class="logo">WS</div>
+      <div class="title-wrap">
+        <h1 id="quizTitle">What's Your Stereotype?</h1>
+        <p class="lead">Find your wellness vibe — get a Personalised Wellness Plan when you finish.</p>
+      </div>
+    </div>
+    <div class="progress-bar-wrap" aria-hidden>
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="content" id="slides"></div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {q:'How do you usually start your day?', a:['A gentle stretch or meditation 🌅','Dive straight into work 💼','Hearty breakfast 🍳','Slip on trainers and head out 🏃‍♂️','Sip coffee and take quiet moments ☕'], v:['Zen Naturalist','Urban Powerhouse','Classic Traditionalist','Adventurous Explorer','Mindful Minimalist']},
+  {q:'Your ideal weekend looks like…', a:['Walk in park 🌿','Tackle tasks 💪','Family routine 🏠','Try new hobbies 🎨','Relax at home 📖'], v:['Zen Naturalist','Urban Powerhouse','Classic Traditionalist','Adventurous Explorer','Mindful Minimalist']},
+  {q:'When it comes to food…', a:['Fresh and plant-based 🌽','Quick high-protein 🍗','Comfort meals 🍞','Experiment with flavors 🌮','Simple clean meals 🥗'], v:['Zen Naturalist','Urban Powerhouse','Classic Traditionalist','Adventurous Explorer','Mindful Minimalist']},
+  {q:'Exercise feels best when…', a:['Outdoors 🌲','Challenging 🔥','Routine ⏰','Fun & different 🎾','Calm & mindful 🧘'], v:['Zen Naturalist','Urban Powerhouse','Classic Traditionalist','Adventurous Explorer','Mindful Minimalist']},
+  {q:'Your main wellness goal right now is…', a:['Balance 🌼','Strength 🏋️‍♀️','Reliable habits ⚖️','Explore 🌈','Reduce stress 🌙'], v:['Zen Naturalist','Urban Powerhouse','Classic Traditionalist','Adventurous Explorer','Mindful Minimalist']}
+];
+
+const resultColors = {
+  'Zen Naturalist':'#6fa8dc',
+  'Urban Powerhouse':'#e69138',
+  'Classic Traditionalist':'#93c47d',
+  'Adventurous Explorer':'#ffd966',
+  'Mindful Minimalist':'#a64d79'
+};
+
+const resultMeta = {
+  'Zen Naturalist':'Calm, grounded, and in tune with nature.',
+  'Urban Powerhouse':'Energetic and motivated — you love measurable results.',
+  'Classic Traditionalist':'Steady, reliable, and consistent.',
+  'Adventurous Explorer':'Curious, playful, and open-minded.',
+  'Mindful Minimalist':'Simple, thoughtful, and stress-free.'
+};
+
+const content = document.getElementById('slides');
+const totalQuestions = questions.length;
+
+function createSlide(i){
+  const q = questions[i];
+  const slide = document.createElement('section');
+  slide.className='slide'+(i===0?' active':'');
+  slide.dataset.index=i;
+  let opts = '';
+  q.a.forEach((t,j)=>{
+    opts+=`<label class="option" tabindex="0"><input type="radio" name="q${i+1}" value="${q.v[j]}"><div class="label-text">${t}</div></label>`;
+  });
+  slide.innerHTML=`<div class="q-card"><h2 class="q-title">${i+1}. ${q.q}</h2><div class="options">${opts}</div>
+  <div class="controls"><div class="counter">Question ${i+1} of ${totalQuestions}</div></div></div>`;
+  content.appendChild(slide);
+}
+
+questions.forEach((q,i)=>createSlide(i));
+
+function bindOptions(){
+  document.querySelectorAll('.slide').forEach(slide=>{
+    const idx = parseInt(slide.dataset.index);
+    slide.querySelectorAll('.option').forEach(opt=>{
+      opt.addEventListener('click', ()=>{
+        const input = opt.querySelector('input'); input.checked=true;
+        opt.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+        opt.classList.add('selected');
+        showNextQuestion(idx);
+      });
+    });
+  });
+}
+bindOptions();
+
+function showSlide(newIdx){
+  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===newIdx));
+  document.getElementById('progressBar').style.width=`${Math.min(newIdx,totalQuestions)/totalQuestions*100}%`;
+}
+
+function showNextQuestion(currentIdx){
+  const nextIdx = currentIdx + 1;
+  if(nextIdx === totalQuestions){
+    showResult();
+  } else {
+    showSlide(nextIdx);
+  }
+}
+
+function showResult(){
+  const counts={'Zen Naturalist':0,'Urban Powerhouse':0,'Classic Traditionalist':0,'Adventurous Explorer':0,'Mindful Minimalist':0};
+  for(let i=1;i<=totalQuestions;i++){
+    const v=document.querySelector(`input[name='q${i}']:checked`);
+    if(v) counts[v.value]++;
+  }
+  let winner='Classic Traditionalist',max=-1;
+  for(const k in counts){if(counts[k]>max){max=counts[k];winner=k;}}
+
+  const res = document.createElement('section');
+  res.className='slide active';
+  res.innerHTML=`
+    <div class="result-screen" id="resultScreen">
+      <div class="result-card" style="background:${resultColors[winner]}">
+        <h3 class="result-title">${winner}</h3>
+        <p class="result-body">${resultMeta[winner]}</p>
+      </div>
+      <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="retakeBtn" style="padding:10px 16px;border:none;border-radius:8px;background:var(--navy);color:#fff;cursor:pointer;font-weight:600;">Retake Quiz</button>
+        <button id="doneBtn" style="padding:10px 16px;border:none;border-radius:8px;background:#555;color:#fff;cursor:pointer;font-weight:600;">Done</button>
+      </div>
+    </div>
+  `;
+  content.innerHTML='';
+  content.appendChild(res);
+  document.getElementById('progressBar').style.width='100%';
+
+  // Smooth scroll to results
+  const resultScreen = document.getElementById('resultScreen');
+  if(resultScreen){
+    resultScreen.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // Retake Quiz
+  document.getElementById('retakeBtn').addEventListener('click', ()=>{
+    document.querySelectorAll('input[type="radio"]').forEach(inp=>inp.checked=false);
+    document.querySelectorAll('.option').forEach(opt=>opt.classList.remove('selected'));
+    content.innerHTML='';
+    questions.forEach((q,i)=>createSlide(i));
+    bindOptions();
+    showSlide(0);
+    document.getElementById('progressBar').style.width='0%';
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  // Done button (link can be added later)
+  document.getElementById('doneBtn').addEventListener('click', ()=>{
+    window.location.href = '#'; // replace '#' with your Quiz Hub link
+  });
+}
+</script>
+</body>
+</html>
