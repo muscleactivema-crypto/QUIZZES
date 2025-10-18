@@ -3,134 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✨ Quiz Hub — Explore Your Wellness Quizzes ✨</title>
+<title>✨ Explore Your Wellness Quizzes ✨</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg1:#FFE6EB; /* pastel pink background */
-  --card:#ffffff;
-  --accent:#D85C7B;
-  --navy:#A63D5A;
-  --muted:#6b6b6b;
-  --radius:14px;
-  --shadow:0 6px 20px rgba(0,0,0,0.08);
-  --nutrition:#FFA07A;
-  --sleep:#FFDDEE;
-  --motivation:#FFB6C1;
-  --physical:#FF69B4;
-  --brain:#FFC0CB;
+  --pink:#FADADD;
+  --mint:#DFF7E1;
+  --lavender:#E8DFFF;
+  --button-radius:12px;
+  --button-hover:rgba(0,0,0,0.08);
+  --card-bg:#fff;
+  --card-radius:14px;
+  --card-shadow:0 4px 16px rgba(0,0,0,0.08);
+  --iframe-height:700px;
 }
-
-body {
-  margin:0; 
-  padding:12px; 
-  font-family:Inter,sans-serif; 
-  background: linear-gradient(135deg, #FFE6EB, #FFDDEE, #FFF0F5, #FFEFF8);
-  background-size: 400% 400%;
-  animation: bgAnimate 25s ease infinite;
-  color:#222; 
-  text-align:center;
-}
-
-@keyframes bgAnimate {
-  0% { background-position:0% 50%; }
-  50% { background-position:100% 50%; }
-  100% { background-position:0% 50%; }
-}
-
-h1 {
-  font-size:1.8em; 
-  margin:0.5em 0;
-  background: linear-gradient(90deg,#D85C7B,#A63D5A,#D85C7B);
-  background-size:300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 6s infinite linear;
-}
-
-@keyframes shimmer {
-  0% { background-position:0% 50%; }
-  100% { background-position:100% 50%; }
-}
-
-.category-bar {
-  display:flex; 
-  justify-content:center; 
-  gap:8px; 
-  margin:0.5em auto 1em auto; 
-  flex-wrap:wrap;
-}
-
-.category-button {
-  padding:8px 16px; 
-  border-radius:12px; 
-  background:#fff; 
-  border:2px solid #ddd;
-  cursor:pointer; 
-  font-size:0.95em; 
-  transition:all 0.3s ease; 
-  min-width:90px;
-}
-
-.category-button:hover {
-  background:#f9f9f9; 
-  border-color:#bbb; 
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-iframe {
-  width:100%; 
-  min-height:1200px; /* reduced for less empty space on mobile */
-  border:none; 
-  border-radius:12px;
-  box-shadow:0 0 16px rgba(0,0,0,0.05);
-  transition:height 0.3s ease;
-  margin-bottom:0;
-}
-
-@media(max-width:480px){
-  h1{font-size:1.4em;}
-  iframe{min-height:1000px;}
-}
+*{box-sizing:border-box}
+body{margin:0;padding:0;font-family:Inter,sans-serif;background:#f6f6f4;color:#222;}
+.wrap{max-width:1200px;margin:0 auto;padding:20px}
+h1{font-size:1.8rem;text-align:center;margin-bottom:16px;color:#0b3d91;text-shadow:0 1px 2px rgba(0,0,0,0.05);}
+.tabs{display:flex;justify-content:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;}
+.tab-btn{padding:10px 20px;border:none;border-radius:var(--button-radius);cursor:pointer;font-weight:600;transition:all 0.3s ease;}
+.tab-btn:hover{box-shadow:0 4px 10px var(--button-hover);}
+.tab-active{transform:scale(1.05);}
+.quiz-grid{display:grid;gap:16px;margin-bottom:40px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));}
+.quiz-card{background:var(--card-bg);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:16px;display:flex;flex-direction:column;gap:12px;transition:transform 0.2s ease;}
+.quiz-card:hover{transform:translateY(-3px);}
+.quiz-title{font-size:1rem;font-weight:600;display:flex;align-items:center;gap:6px;}
+.quiz-btn{padding:8px 14px;border:none;border-radius:var(--button-radius);background:#0b3d91;color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s ease;}
+.quiz-btn:hover{background:#1b4fa5;}
+#quiz-iframe{width:100%;border:none;border-radius:var(--card-radius);box-shadow:var(--card-shadow);min-height:var(--iframe-height);}
 </style>
 </head>
 <body>
+<div class="wrap">
+  <h1>✨ Explore Your Wellness Quizzes ✨</h1>
+  
+  <!-- Category Buttons -->
+  <div class="tabs">
+    <button class="tab-btn tab-active" style="background:var(--pink);" data-cat="all">📋 Show All</button>
+    <button class="tab-btn" style="background:var(--pink);" data-cat="mind">🧠 Mind & Mood</button>
+    <button class="tab-btn" style="background:var(--mint);" data-cat="body">💪 Body & Movement</button>
+    <button class="tab-btn" style="background:var(--lavender);" data-cat="nutrition">🥗 Nutrition & Recovery</button>
+    <button class="tab-btn" style="background:var(--pink);" data-cat="lifestyle">🌿 Lifestyle & Personality</button>
+  </div>
 
-<h1>✨ Explore Your Wellness Quizzes ✨</h1>
+  <!-- Quiz Grid -->
+  <div class="quiz-grid" id="quiz-grid">
+    <!-- Mind & Mood -->
+    <div class="quiz-card" data-cat="mind"><div class="quiz-title">🧠 Brain-Energy-Quiz</div><button class="quiz-btn" data-src="Brain-Energy-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="mind"><div class="quiz-title">🧠 Brain-Recharge-Check</div><button class="quiz-btn" data-src="Brain-Recharge-Check.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="mind"><div class="quiz-title">🧠 Sleep-Energy-Quiz</div><button class="quiz-btn" data-src="Sleep-Energy-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="mind"><div class="quiz-title">🧠 Sleep-Quality-Quiz</div><button class="quiz-btn" data-src="Sleep-Quality-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="mind"><div class="quiz-title">🧠 Circadian-Rhythm-Quiz</div><button class="quiz-btn" data-src="Circadian-Rhythm-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="mind"><div class="quiz-title">🧠 Deep-Recharge-Quiz</div><button class="quiz-btn" data-src="Deep-Recharge-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="mind"><div class="quiz-title">🧠 Deep-Restore-Quiz</div><button class="quiz-btn" data-src="Deep-Restore-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="mind"><div class="quiz-title">🧠 Mental-Resilience-Quiz</div><button class="quiz-btn" data-src="Mental-Resilience-Quiz.html">Take Quiz</button></div>
 
-<div class="category-bar">
-  <div class="category-button" data-target="nutrition" style="border-color:var(--nutrition)">Nutrition</div>
-  <div class="category-button" data-target="sleep" style="border-color:var(--sleep)">Sleep</div>
-  <div class="category-button" data-target="motivation" style="border-color:var(--motivation)">Motivation</div>
-  <div class="category-button" data-target="physical" style="border-color:var(--physical)">Physical</div>
-  <div class="category-button" data-target="brain" style="border-color:var(--brain)">Brain</div>
+    <!-- Body & Movement -->
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Aerobic-vs-Anaerobic-Quiz</div><button class="quiz-btn" data-src="Aerobic-vs-Anaerobic-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Anatomy-Physiology-Quiz</div><button class="quiz-btn" data-src="Anatomy-Physiology-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Physical-Activity-Quiz-3Levels</div><button class="quiz-btn" data-src="Physical-Activity-Quiz-3Levels.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Strong-Bones-Quiz</div><button class="quiz-btn" data-src="Strong-Bones-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Muscle-Vitality-Quiz</div><button class="quiz-btn" data-src="Muscle-Vitality-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Muscle-Power-Quiz</div><button class="quiz-btn" data-src="Muscle-Power-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Cardio-Fitness-Quiz</div><button class="quiz-btn" data-src="Cardio-Fitness-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Cardio-Balance-Quiz</div><button class="quiz-btn" data-src="Cardio-Balance-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Chair-to-Champion-Quiz</div><button class="quiz-btn" data-src="Chair-to-Champion-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Have-You-Got-Bungalow-Legs</div><button class="quiz-btn" data-src="Have-You-Got-Bungalow-Legs.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="body"><div class="quiz-title">💪 Sit-Lay-Decline-Quiz</div><button class="quiz-btn" data-src="Sit-Lay-Decline-Quiz.html">Take Quiz</button></div>
+
+    <!-- Nutrition & Recovery -->
+    <div class="quiz-card" data-cat="nutrition"><div class="quiz-title">🥗 7-Day-Reset-Readiness-Quiz</div><button class="quiz-btn" data-src="7-Day-Reset-Readiness-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="nutrition"><div class="quiz-title">🥗 Calorie-Quiz</div><button class="quiz-btn" data-src="Calorie-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="nutrition"><div class="quiz-title">🥗 Nutrition-Recovery-Quiz</div><button class="quiz-btn" data-src="Nutrition-Recovery-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="nutrition"><div class="quiz-title">🥗 Healthy-Food-Quiz</div><button class="quiz-btn" data-src="Healthy-Food-Quiz.html">Take Quiz</button></div>
+
+    <!-- Lifestyle & Personality -->
+    <div class="quiz-card" data-cat="lifestyle"><div class="quiz-title">🌿 Whats-Your-Stereotype-Quiz</div><button class="quiz-btn" data-src="Whats-Your-Stereotype-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="lifestyle"><div class="quiz-title">🌿 What-Kind-of-Motivator-Are-You</div><button class="quiz-btn" data-src="What-Kind-of-Motivator-Are-You.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="lifestyle"><div class="quiz-title">🌿 Wellness-Personality-Quiz</div><button class="quiz-btn" data-src="Wellness-Personality-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="lifestyle"><div class="quiz-title">🌿 Doer-or-Listener</div><button class="quiz-btn" data-src="Doer-or-Listener.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="lifestyle"><div class="quiz-title">🌿 Healthy-Living-Quiz</div><button class="quiz-btn" data-src="Healthy-Living-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="lifestyle"><div class="quiz-title">🌿 The-Everyday-Hero-Quiz</div><button class="quiz-btn" data-src="The-Everyday-Hero-Quiz.html">Take Quiz</button></div>
+    <div class="quiz-card" data-cat="lifestyle"><div class="quiz-title">🌿 Vitamin-and-Minerals-Quiz</div><button class="quiz-btn" data-src="Vitamin-and-Minerals-Quiz.html">Take Quiz</button></div>
+  </div>
+
+  <!-- Quiz iframe -->
+  <iframe id="quiz-iframe" src=""></iframe>
 </div>
 
-<iframe id="quizHubIframe" src="https://muscleactivema-crypto.github.io/QUIZZES/index.html"></iframe>
-
 <script>
-const iframe = document.getElementById('quizHubIframe');
-
-// Handle category button clicks
-document.querySelectorAll('.category-button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const cat = btn.dataset.target;
-    iframe.contentWindow.postMessage({scrollToCategory:cat}, '*');
+// Filter by category
+const tabButtons = document.querySelectorAll('.tab-btn');
+const quizCards = document.querySelectorAll('.quiz-card');
+tabButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const cat = btn.dataset.cat;
+    quizCards.forEach(card=>{
+      if(cat==='all'){card.style.display='flex';}
+      else{card.style.display = (card.dataset.cat===cat)?'flex':'none';}
+    });
+    tabButtons.forEach(b=>b.classList.remove('tab-active'));
+    btn.classList.add('tab-active');
+    document.getElementById('quiz-iframe').src='';
   });
 });
 
-// Listen for height messages from iframe
-window.addEventListener('message', event => {
-  if(event.data && event.data.quizHubHeight){
-    iframe.style.height = event.data.quizHubHeight + 'px';
-  }
+// Load quiz in iframe
+const quizButtons = document.querySelectorAll('.quiz-btn');
+quizButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const src = btn.dataset.src;
+    document.getElementById('quiz-iframe').src=src;
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
 });
-
-// Ask iframe for height every 500ms
-setInterval(() => {
-  iframe.contentWindow.postMessage({requestHeight:true}, '*');
-}, 500);
 </script>
-
 </body>
 </html>
