@@ -1,275 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KeepWell Quiz Hub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keep Well Nutrition — Quiz Hub</title>
 <style>
-:root {
-  --bg-pink: #ffeaf1;
-  --mint: #c7f0db;
-  --lavender: #e2d9ff;
-  --peach: #ffe1cc;
-  --text-dark: #333;
-  --shadow: rgba(0,0,0,0.1);
-}
-
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: var(--bg-pink);
-  margin: 0;
-  padding: 0;
-  color: var(--text-dark);
-  scroll-behavior: smooth;
-}
-
-header {
-  text-align: center;
-  padding: 2rem 1rem 1rem;
-}
-
-header h1 {
-  font-size: 2rem;
-  margin: 0;
-  color: #333;
-}
-
-header p {
-  margin: 0.5rem 0 1rem;
-}
-
-#quizSearch {
-  width: 90%;
-  max-width: 400px;
-  padding: 0.6rem 1rem;
-  border-radius: 30px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.category {
-  margin: 2rem auto;
-  max-width: 800px;
-  background: white;
-  box-shadow: 0 4px 12px var(--shadow);
-  border-radius: 20px;
-  padding: 1.5rem;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.7s ease;
-}
-
-.category.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.category h2 {
-  text-align: center;
-  margin-top: 0;
-  color: #333;
-  font-size: 1.4rem;
-}
-
-.quiz-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.8rem;
-  margin-top: 1rem;
-}
-
-.quiz-buttons button {
-  background: var(--mint);
-  border: none;
-  border-radius: 30px;
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 3px 6px var(--shadow);
-}
-
-.quiz-buttons button:nth-child(3n+1) { background: var(--mint); }
-.quiz-buttons button:nth-child(3n+2) { background: var(--lavender); }
-.quiz-buttons button:nth-child(3n+3) { background: var(--peach); }
-
-.quiz-buttons button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 10px var(--shadow);
-}
-
-#quizContainer {
-  max-width: 1000px;
-  margin: 2rem auto;
-  position: relative;
-}
-
-#quizFrame {
-  width: 100%;
-  height: 700px;
-  border: none;
-  border-radius: 20px;
-}
-
-/* Floating Back to Hub button */
-#backToHub {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: #e2d9ff;
-  color: #333;
-  border: none;
-  border-radius: 25px;
-  padding: 0.5rem 0.9rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  z-index: 1000;
-  transition: all 0.3s ease;
-}
-#backToHub:hover {
-  background: #c7f0db;
-  transform: scale(1.05);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-}
-
-@media (max-width: 480px) {
-  #backToHub {
-    top: 10px;
-    left: 10px;
-    padding: 0.4rem 0.7rem;
-    font-size: 0.8rem;
-    border-radius: 20px;
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #ffeef2;
+    color: #333;
   }
-}
 
-footer {
-  text-align: center;
-  padding: 2rem 1rem;
-  font-size: 0.9rem;
-  color: #666;
-}
+  header {
+    text-align: center;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin: 10px 0;
+  }
+
+  #quizSearch {
+    width: 90%;
+    max-width: 420px;
+    padding: 10px 14px;
+    border-radius: 30px;
+    border: 1px solid #d6d6d6;
+    font-size: 0.98rem;
+    outline: none;
+    margin-bottom: 16px;
+  }
+
+  .category-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .category-buttons button {
+    padding: 8px 16px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+  .category-buttons button.fitness { background-color: #ffd1dc; }
+  .category-buttons button.mind { background-color: #d1f0ff; }
+  .category-buttons button.sleep { background-color: #e6d1ff; }
+  .category-buttons button.nutrition { background-color: #d1ffd8; }
+  .category-buttons button:hover { opacity: 0.85; }
+
+  .quiz-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto 40px;
+  }
+
+  .quiz-card {
+    background-color: #fff;
+    padding: 18px;
+    border-radius: 16px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .quiz-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .quiz-card h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .quiz-card button {
+    background-color: #ffd1dc;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .quiz-card button:hover {
+    background-color: #ff9eb6;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100vh;
+    border: none;
+    display: none;
+  }
+
+  .back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #ff9eb6;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: none;
+  }
+
+  .back-button:hover {
+    background-color: #ff7399;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>KeepWell Quiz Hub 💪🧠🌙🥗</h1>
-  <p>Explore your fitness, mind, sleep, and nutrition balance.</p>
-  <input type="text" id="quizSearch" placeholder="🔍 Search quizzes...">
+  <h1>💪 Keep Well Nutrition Quiz Hub</h1>
+  <input type="search" id="quizSearch" placeholder="🔍 Search quizzes..." onkeyup="searchQuizzes()">
+
+  <div class="category-buttons">
+    <button class="fitness" onclick="filterCategory('Fitness')">🏋️‍♂️ Fitness & Strength</button>
+    <button class="mind" onclick="filterCategory('Mind')">🧠 Mind & Motivation</button>
+    <button class="sleep" onclick="filterCategory('Sleep')">🌙 Sleep & Recovery</button>
+    <button class="nutrition" onclick="filterCategory('Nutrition')">🥗 Nutrition & Lifestyle</button>
+    <button onclick="filterCategory('All')">Show All</button>
+  </div>
 </header>
 
-<!-- Quiz Categories -->
-<div id="quizCategories">
+<main class="quiz-list" id="quizList">
 
-  <!-- FITNESS & STRENGTH -->
-  <div class="category">
-    <h2>🏋️‍♂️ Fitness & Strength</h2>
-    <div class="quiz-buttons">
-      <button onclick="loadQuiz('Aerobic-vs-Anaerobic-Quiz.html')">Aerobic vs Anaerobic</button>
-      <button onclick="loadQuiz('Cardio-Balance-Quiz.html')">Cardio Balance</button>
-      <button onclick="loadQuiz('Cardio-Fitness-Quiz.html')">Cardio Fitness</button>
-      <button onclick="loadQuiz('Chair-to-Champion-Quiz.html')">Chair to Champion</button>
-      <button onclick="loadQuiz('Muscle-Power-Quiz.html')">Muscle Power</button>
-      <button onclick="loadQuiz('Muscle-Vitality-Quiz.html')">Muscle Vitality</button>
-      <button onclick="loadQuiz('Physical-Activity-Quiz-3Levels.html')">Physical Activity (3 Levels)</button>
-      <button onclick="loadQuiz('Strong-Bones-Quiz.html')">Strong Bones</button>
-      <button onclick="loadQuiz('Have-You-Got-Bungalow-Legs.html')">Have You Got Bungalow Legs?</button>
-    </div>
-  </div>
+  <!-- 🏋️‍♂️ Fitness & Strength -->
+  <div class="quiz-card" data-category="Fitness"><h3>7-Day Reset Readiness Quiz</h3><button onclick="openQuiz('7-Day-Reset-Readiness-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Aerobic vs Anaerobic Quiz</h3><button onclick="openQuiz('Aerobic-vs-Anaerobic-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Anatomy & Physiology Quiz</h3><button onclick="openQuiz('Anatomy-Physiology-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Cardio Balance Quiz</h3><button onclick="openQuiz('Cardio-Balance-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Cardio Fitness Quiz</h3><button onclick="openQuiz('Cardio-Fitness-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Chair to Champion Quiz</h3><button onclick="openQuiz('Chair-to-Champion-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Muscle Power Quiz</h3><button onclick="openQuiz('Muscle-Power-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Muscle Vitality Quiz</h3><button onclick="openQuiz('Muscle-Vitality-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Physical Activity Quiz 3 Levels</h3><button onclick="openQuiz('Physical-Activity-Quiz-3Levels.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Strong Bones Quiz</h3><button onclick="openQuiz('Strong-Bones-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Fitness"><h3>Have You Got Bungalow Legs</h3><button onclick="openQuiz('Have-You-Got-Bungalow-Legs.html')">Start Quiz</button></div>
 
-  <!-- MIND & MOTIVATION -->
-  <div class="category">
-    <h2>🧠 Mind & Motivation</h2>
-    <div class="quiz-buttons">
-      <button onclick="loadQuiz('Brain-Energy-Quiz.html')">Brain Energy</button>
-      <button onclick="loadQuiz('Brain-Recharge-Check.html')">Brain Recharge Check</button>
-      <button onclick="loadQuiz('Doer-or-Listener.html')">Doer or Listener</button>
-      <button onclick="loadQuiz('Mental-Resilience-Quiz.html')">Mental Resilience</button>
-      <button onclick="loadQuiz('The-Everyday-Hero-Quiz.html')">The Everyday Hero</button>
-      <button onclick="loadQuiz('What-Kind-of-Motivator-Are-You.html')">What Kind of Motivator Are You?</button>
-      <button onclick="loadQuiz('Whats-Your-Stereotype-Quiz.html')">What's Your Stereotype?</button>
-    </div>
-  </div>
+  <!-- 🧠 Mind & Motivation -->
+  <div class="quiz-card" data-category="Mind"><h3>Brain Energy Quiz</h3><button onclick="openQuiz('Brain-Energy-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Mind"><h3>Brain Recharge Check</h3><button onclick="openQuiz('Brain-Recharge-Check.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Mind"><h3>Doer or Listener</h3><button onclick="openQuiz('Doer-or-Listener.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Mind"><h3>Mental Resilience Quiz</h3><button onclick="openQuiz('Mental-Resilience-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Mind"><h3>The Everyday Hero Quiz</h3><button onclick="openQuiz('The-Everyday-Hero-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Mind"><h3>What Kind of Motivator Are You</h3><button onclick="openQuiz('What-Kind-of-Motivator-Are-You.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Mind"><h3>What's Your Stereotype Quiz</h3><button onclick="openQuiz('Whats-Your-Stereotype-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Mind"><h3>Wellness Personality Quiz</h3><button onclick="openQuiz('Wellness-Personality-Quiz.html')">Start Quiz</button></div>
 
-  <!-- SLEEP & RECOVERY -->
-  <div class="category">
-    <h2>🌙 Sleep & Recovery</h2>
-    <div class="quiz-buttons">
-      <button onclick="loadQuiz('Circadian-Rhythm-Quiz.html')">Circadian Rhythm</button>
-      <button onclick="loadQuiz('Deep-Recharge-Quiz.html')">Deep Recharge</button>
-      <button onclick="loadQuiz('Deep-Restore-Quiz.html')">Deep Restore</button>
-      <button onclick="loadQuiz('Recovery-Mode-Check.html')">Recovery Mode Check</button>
-      <button onclick="loadQuiz('Sleep-Energy-Quiz.html')">Sleep Energy</button>
-      <button onclick="loadQuiz('Sleep-Quality-Quiz.html')">Sleep Quality</button>
-      <button onclick="loadQuiz('Sleep-Sync-Quiz.html')">Sleep Sync</button>
-      <button onclick="loadQuiz('7-Day-Reset-Readiness-Quiz.html')">7-Day Reset Readiness</button>
-    </div>
-  </div>
+  <!-- 🌙 Sleep & Recovery -->
+  <div class="quiz-card" data-category="Sleep"><h3>Sleep Chronotype Quiz</h3><button onclick="openQuiz('Circadian-Rhythm-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Sleep"><h3>Deep Recharge Quiz</h3><button onclick="openQuiz('Deep-Recharge-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Sleep"><h3>Deep Restore Quiz</h3><button onclick="openQuiz('Deep-Restore-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Sleep"><h3>Recovery Mode Check</h3><button onclick="openQuiz('Recovery-Mode-Check.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Sleep"><h3>Sleep Energy Quiz</h3><button onclick="openQuiz('Sleep-Energy-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Sleep"><h3>Sleep Quality Quiz</h3><button onclick="openQuiz('Sleep-Quality-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Sleep"><h3>Sleep Sync Quiz</h3><button onclick="openQuiz('Sleep-Sync-Quiz.html')">Start Quiz</button></div>
 
-  <!-- NUTRITION & LIFESTYLE -->
-  <div class="category">
-    <h2>🥗 Nutrition & Lifestyle</h2>
-    <div class="quiz-buttons">
-      <button onclick="loadQuiz('Calorie-Quiz.html')">Calorie Quiz</button>
-      <button onclick="loadQuiz('Healthy-Food-Quiz.html')">Healthy Food Quiz</button>
-      <button onclick="loadQuiz('Healthy-Living-Quiz.html')">Healthy Living Quiz</button>
-      <button onclick="loadQuiz('Nutrition-Recovery-Quiz.html')">Nutrition Recovery</button>
-      <button onclick="loadQuiz('Sit-Lay-Decline-Quiz.html')">Sit–Lay–Decline Quiz</button>
-      <button onclick="loadQuiz('Vitamin-and-Minerals-Quiz.html')">Vitamin & Minerals</button>
-      <button onclick="loadQuiz('Wellness-Personality-Quiz.html')">Wellness Personality</button>
-      <button onclick="loadQuiz('Anatomy-Physiology-Quiz.html')">Anatomy & Physiology</button>
-    </div>
-  </div>
+  <!-- 🥗 Nutrition & Lifestyle -->
+  <div class="quiz-card" data-category="Nutrition"><h3>Calorie Quiz</h3><button onclick="openQuiz('Calorie-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Nutrition"><h3>Healthy Food Quiz</h3><button onclick="openQuiz('Healthy-Food-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Nutrition"><h3>Healthy Living Quiz</h3><button onclick="openQuiz('Healthy-Living-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Nutrition"><h3>Nutrition Recovery Quiz</h3><button onclick="openQuiz('Nutrition-Recovery-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Nutrition"><h3>Sit Lay Decline Quiz</h3><button onclick="openQuiz('Sit-Lay-Decline-Quiz.html')">Start Quiz</button></div>
+  <div class="quiz-card" data-category="Nutrition"><h3>Vitamin and Minerals Quiz</h3><button onclick="openQuiz('Vitamin-and-Minerals-Quiz.html')">Start Quiz</button></div>
 
-</div>
+</main>
 
-<!-- Iframe Container -->
-<div id="quizContainer">
-  <iframe id="quizFrame" src=""></iframe>
-  <button id="backToHub" onclick="returnToHub()">🏠 Back to Hub</button>
-</div>
-
-<footer>
-  <p>© KeepWell Nutrition | Discover your strengths. Rebuild your health.</p>
-</footer>
+<iframe id="quizFrame"></iframe>
+<button class="back-button" onclick="returnToHub()">← Back to Quiz Hub</button>
 
 <script>
-// Load quiz into iframe
-function loadQuiz(url) {
-  document.getElementById('quizFrame').src = url;
-  // Scroll to iframe smoothly
-  document.getElementById('quizFrame').scrollIntoView({behavior: 'smooth'});
+function openQuiz(file) {
+  document.querySelector('header').style.display = 'none';
+  document.getElementById('quizList').style.display = 'none';
+  const quizFrame = document.getElementById('quizFrame');
+  quizFrame.src = `https://muscleactivema.github.io/QUIZZES/${file}`;
+  quizFrame.style.display = 'block';
+  document.querySelector('.back-button').style.display = 'block';
 }
 
-// Return to hub (hide iframe)
 function returnToHub() {
-  document.getElementById('quizFrame').src = '';
-  // Scroll back to top
-  window.scrollTo({top:0, behavior:'smooth'});
+  const quizFrame = document.getElementById('quizFrame');
+  quizFrame.style.display = 'none';
+  quizFrame.src = '';
+  document.querySelector('.back-button').style.display = 'none';
+  document.querySelector('header').style.display = 'block';
+  document.getElementById('quizList').style.display = 'grid';
 }
 
-// Fade-in categories on scroll
-const categories = document.querySelectorAll('.category');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
+function searchQuizzes() {
+  const input = document.getElementById('quizSearch').value.toLowerCase();
+  document.querySelectorAll('.quiz-card').forEach(card => {
+    const title = card.querySelector('h3').textContent.toLowerCase();
+    card.style.display = title.includes(input) ? 'block' : 'none';
+  });
+}
+
+function filterCategory(category) {
+  document.querySelectorAll('.quiz-card').forEach(card => {
+    if(category === 'All' || card.dataset.category === category) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
     }
   });
-}, { threshold: 0.2 });
-categories.forEach(cat => observer.observe(cat));
-
-// Search bar functionality
-const searchInput = document.getElementById('quizSearch');
-searchInput.addEventListener('input', () => {
-  const filter = searchInput.value.toLowerCase();
-  const buttons = document.querySelectorAll('.quiz-buttons button');
-  buttons.forEach(btn => {
-    btn.style.display = btn.textContent.toLowerCase().includes(filter) ? 'inline-block' : 'none';
-  });
-});
+}
 </script>
 
 </body>
